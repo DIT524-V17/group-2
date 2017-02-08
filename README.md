@@ -1,3 +1,22 @@
+<<<<<<< HEAD
+# G.U.A.R.D
+ 
+## Getting started
+ 
+### Prerequisites
+
+### Installing
+
+## Running the tests
+
+## Deployment
+
+## Authors
+
+## License
+
+## Acknowledgments
+=======
 # Smartcar Mock
 A testing and mocking framework for the [Smartcar](http://plat.is/smartcar) Arduino library. You can use this to unit test your Smartcar sketches.
 
@@ -165,3 +184,4 @@ E.g. on the README or LICENSE files
 An effort will be made to keep this repository stable, with as little (substantial) changes as possible. So after you clone this, you should not need to pull again. This is done to enable the ones who have cloned it in the past, to seamlessly develop and maintain their production code in the `src/` directory. Whatever important changes that could be introduced will be through the `smartcar_mock` submodule that can be independently updated by running without having a dependency to this repository, by running:
 
 `git submodule foreach git pull --rebase origin master`
+>>>>>>> smartcar-gmock/master
