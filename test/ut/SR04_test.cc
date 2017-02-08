@@ -36,6 +36,7 @@ TEST_F(SR04Fixture, initsAreCalled) {
     setup();
 }
 
+//-Check that the ultrasonic returns values correctly (check)
 TEST_F(SR04Fixture, expectGetDistanceCall) {
     EXPECT_CALL(*SR04_mock, getMedianDistance(5));
     loop();

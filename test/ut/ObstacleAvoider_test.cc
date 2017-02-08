@@ -52,6 +52,20 @@ TEST_F(SmartcarObstacleAvoiderFixture, obstacleDetected_stop) {
   EXPECT_CALL(*carMock, setSpeed(0));
   loop();
 }
+//-Check that the car stops when obstacles are 1 cm in front when driving forward (check)
+TEST_F(SmartcarObstacleAvoiderFixture, obstacleDetectedMin_stop) {
+  EXPECT_CALL(*SR04_mock, getDistance())
+  .WillOnce(Return(1));
+  EXPECT_CALL(*carMock, setSpeed(0));
+  loop();
+}
+//-Check that the car stops when obstacles are 15 cm in front when driving forward (check)
+TEST_F(SmartcarObstacleAvoiderFixture, obstacleDetectedMax_stop) {
+  EXPECT_CALL(*SR04_mock, getDistance())
+  .WillOnce(Return(15));
+  EXPECT_CALL(*carMock, setSpeed(0));
+  loop();
+}
 
 //-check that you can turn despite having an objected detected (check)
 TEST_F(SmartcarObstacleAvoiderFixture, obstacleDetected_rotate) {
@@ -75,13 +89,6 @@ TEST_F(SmartcarObstacleAvoiderFixture, obstacleDetected_reverse) {
   EXPECT_CALL(*carMock, setSpeed(-70));
   loop();
 }
-//-Check that the ultrasonic returns values correctly (check)
-/*TEST_F(SmartcarObstacleAvoiderFixture, testSR04_signal) {
-  EXPECT_CALL(*SR04_mock, getMedianDistance(5));
-  loop();
-}
-*/
-
 
 int main(int argc, char* argv[]) {
     ::testing::InitGoogleTest(&argc, argv);

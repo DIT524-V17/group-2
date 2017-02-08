@@ -28,7 +28,7 @@ void setup() {
 
 void loop() {
   distance = sonar.getDistance();                                                             //updates the distance according to the ultrasonic sensor
-  if((distance < 15 && distance > 0) && input != 'b' && input != 'l' && input != 'r'){    //stops the car if going forward and obstacle detected within a of distance 15 cm
+  if((distance < 16 && distance > 0) && input != 'b' && input != 'l' && input != 'r'){    //stops the car if going forward and obstacle detected within a of distance 15 cm
     fSpeed = 0;                                                                           //changes fSpeed to 0
     car.setSpeed(fSpeed);                                                                 //updates the current speed (i.e. stops the car)
   }else{
