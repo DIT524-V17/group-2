@@ -1,0 +1,55 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_99043/fast"
+/usr/bin/make -f CMakeFiles/cmTC_99043.dir/build.make CMakeFiles/cmTC_99043.dir/build
+make[1]: Entering directory '/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_99043.dir/CheckSymbolExists.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_99043.dir/CheckSymbolExists.c.o   -c /home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_99043
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_99043.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_99043.dir/CheckSymbolExists.c.o  -o cmTC_99043 -rdynamic 
+CMakeFiles/cmTC_99043.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_99043.dir/build.make:97: recipe for target 'cmTC_99043' failed
+make[1]: *** [cmTC_99043] Error 1
+make[1]: Leaving directory '/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_99043/fast' failed
+make: *** [cmTC_99043/fast] Error 2
+
+File /home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2ab22/fast"
+/usr/bin/make -f CMakeFiles/cmTC_2ab22.dir/build.make CMakeFiles/cmTC_2ab22.dir/build
+make[1]: Entering directory '/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2ab22.dir/CheckFunctionExists.c.o
+/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_2ab22.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_2ab22
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2ab22.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_2ab22.dir/CheckFunctionExists.c.o  -o cmTC_2ab22 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_2ab22.dir/build.make:97: recipe for target 'cmTC_2ab22' failed
+make[1]: *** [cmTC_2ab22] Error 1
+make[1]: Leaving directory '/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_2ab22/fast' failed
+make: *** [cmTC_2ab22/fast] Error 2
+
+

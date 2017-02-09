@@ -1,0 +1,13 @@
+# Target labels
+ arduino_mock
+# Source files and their labels
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/CMakeFiles/arduino_mock
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/CMakeFiles/arduino_mock.rule
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/CMakeFiles/arduino_mock-complete.rule
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-install.rule
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-mkdir.rule
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-download.rule
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-update.rule
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-patch.rule
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-configure.rule
+/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-build.rule

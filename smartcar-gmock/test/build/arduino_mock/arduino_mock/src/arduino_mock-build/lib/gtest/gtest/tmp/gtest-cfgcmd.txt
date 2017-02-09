@@ -1,0 +1,1 @@
+cmd='/usr/bin/cmake;-GUnix Makefiles;/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-build/lib/gtest/gtest/src/gtest'

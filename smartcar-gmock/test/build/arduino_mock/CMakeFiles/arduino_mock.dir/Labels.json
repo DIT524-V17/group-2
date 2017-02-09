@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/CMakeFiles/arduino_mock"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/CMakeFiles/arduino_mock.rule"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/CMakeFiles/arduino_mock-complete.rule"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-install.rule"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-mkdir.rule"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-download.rule"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-update.rule"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-patch.rule"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-configure.rule"
+		},
+		{
+			"file" : "/home/jeberlen/School/project2/testenviroment/smartcar-gmock/test/build/arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"arduino_mock"
+		],
+		"name" : "arduino_mock"
+	}
+}

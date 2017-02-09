@@ -1,0 +1,10 @@
+# Hashes of file build rules.
+10aa5e3b9d0ad0f1c86de5bf2d8116b5 arduino_mock/CMakeFiles/arduino_mock
+95a151bef984f73002a97e16a1ab9ca8 arduino_mock/CMakeFiles/arduino_mock-complete
+bb153472facad5b879d9eaa453e66db9 arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-build
+4d90ae3b6b1c9adf6d29f0b790e50de8 arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-configure
+60f4b405024343ede2b17502c38b77c2 arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-download
+c27e4babd9e17cedac7cfaa6995bb4e7 arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-install
+763b2179df9816b754e7ded98c52a8fb arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-mkdir
+068b3b531f7067b1b773a3bc7b296787 arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-patch
+25d0bd5af2b8083e61adf7354f1d0c52 arduino_mock/arduino_mock/src/arduino_mock-stamp/arduino_mock-update
