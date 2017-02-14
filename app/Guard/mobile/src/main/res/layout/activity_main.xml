@@ -8,10 +8,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.group02.dit524.guard.MainActivity">
+    tools:context="com.group02.dit524.guard.MainActivity"
+    android:background="#000000">
 
     <TextView
+        android:id="@+id/showCoords"
+        android:textColor="#F4F4F4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        />
+
+    <com.group02.dit524.guard.Control
+        android:id="@+id/controlView1"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        />
 </RelativeLayout>
