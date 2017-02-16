@@ -1,0 +1,5 @@
+Control
+com.group02.dit524.guard.MainActivity
+com.group02.dit524.guard.BuildConfig
+com.group02.dit524.guard.Manifest
+com.group02.dit524.guard.R
