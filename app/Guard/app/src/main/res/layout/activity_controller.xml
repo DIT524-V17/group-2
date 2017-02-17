@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.group02.guard.ControllerActivity"
+    android:background="#000000">
+
+    <TextView
+        android:id="@+id/coords"
+        android:textColor="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:textSize="30dp"/>
+
+    <com.group02.guard.Control
+        android:id="@+id/controlView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"/>
+
+
+
+</RelativeLayout>

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Guard</string>
+    <string name="title_activity_controller">ControllerActivity</string>
+    <string name="title_activity_testremove">testremove</string>
+</resources>
