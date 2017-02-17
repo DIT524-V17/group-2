@@ -1,6 +1,7 @@
 package com.group02.guard;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,8 @@ public class MainActivity extends Activity {
         manualControlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setContentView(R.layout.activity_controller);
+                Intent i = new Intent(MainActivity.this, ControllerActivity.class);
+                MainActivity.this.startActivity(i);
             }
         });
 

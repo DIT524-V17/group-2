@@ -12,10 +12,9 @@
         android:id="@+id/coords"
         android:textColor="#FFFFFF"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"
-        android:textSize="30dp"/>
+        android:textAlignment="center"/>
 
     <com.group02.guard.Control
         android:id="@+id/controlView"

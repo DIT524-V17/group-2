@@ -1,6 +1,5 @@
 package com.group02.guard;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,16 +20,25 @@ public class ControllerActivity extends AppCompatActivity {
 
         analogue.setOnMoveListener(new Control.OnMoveListener()
         {
-            @Override
-            public void onMoveInDirection(double polarAngle) {
+            public void onMoveInDirection(final double polarAngle) {
                 if (polarAngle <= 0) {
-                    double speed = analogue.getSpeed(100.0);
-                    Log.e("", "" + speed);
-                    showMoveEvent.append("Max move in " + polarAngle + " direction. " + "\nSpeed: " + speed);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            double speed = analogue.getSpeed(100.0);
+                            Log.e("", "" + speed);
+                            showMoveEvent.setText("Max move in " + polarAngle + " direction. " + "\nSpeed: " + speed);
+                        }
+                    });
                 } else if (polarAngle > 0) {
-                    double speed = analogue.getSpeed(-100.0);
-                    Log.e("", "" + speed);
-                    showMoveEvent.append("Max move in " + polarAngle + " direction. " + "\nSpeed: " + speed);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            double speed = analogue.getSpeed(-100.0);
+                            Log.e("", "" + speed);
+                            showMoveEvent.setText("Max move in " + polarAngle + " direction. " + "\nSpeed: " + speed);
+                        }
+                    });
                 }
             }
         });
