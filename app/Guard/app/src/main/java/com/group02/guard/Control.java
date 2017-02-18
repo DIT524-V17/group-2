@@ -24,9 +24,11 @@ public class Control extends View {
 
     public Control(Context context, AttributeSet attrs) {
         super(context, attrs);
-        backGround.setColor(Color.parseColor("#000000"));
+
+        backGround.setColor(Color.TRANSPARENT);
         smallDotAndOuterBorder.setColor(Color.parseColor("#813772"));
         smallDotBorder.setColor(Color.parseColor("#062F4F"));
+
         backGround.setFlags(Paint.ANTI_ALIAS_FLAG);
         smallDotBorder.setFlags(Paint.ANTI_ALIAS_FLAG);
         smallDotAndOuterBorder.setFlags(Paint.ANTI_ALIAS_FLAG);
