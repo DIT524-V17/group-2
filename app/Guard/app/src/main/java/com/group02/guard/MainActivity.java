@@ -25,6 +25,16 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button mapsButton;
+        mapsButton = (Button) findViewById(R.id.mapsButton);
+        mapsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, MapsActivity.class);
+                MainActivity.this.startActivity(i);
+            }
+        });
+
 
     }
 

@@ -17,8 +17,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="GuardBasic" parent="Theme.AppCompat.NoActionBar" >
+    <style name="GuardBasic" parent="Theme.AppCompat.NoActionBar">
         <item name="colorAccent">@color/colorMutedDark</item>
     </style>
+
+    <style name="GuardBasic.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="GuardBasic.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

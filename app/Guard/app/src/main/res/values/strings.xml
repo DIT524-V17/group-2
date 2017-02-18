@@ -2,4 +2,6 @@
     <string name="app_name">Guard</string>
     <string name="title_activity_controller">ControllerActivity</string>
     <string name="title_activity_testremove">testremove</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
