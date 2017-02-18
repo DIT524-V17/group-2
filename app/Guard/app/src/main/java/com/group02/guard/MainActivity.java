@@ -5,29 +5,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
+    Button connect;
+    Button control;
+    Button camera;
+    Button map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button manualControlButton;
-        manualControlButton = (Button) findViewById(R.id.manualControlButton);
-        manualControlButton.setOnClickListener(new View.OnClickListener() {
+        connect = (Button) findViewById(R.id.connectButton);
+
+        control = (Button) findViewById(R.id.controlButton);
+        control.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, ControllerActivity.class);
-                MainActivity.this.startActivity(i);
+                startActivity(i);
             }
         });
 
+        camera = (Button) findViewById(R.id.cameraButton);
+
+        map = (Button) findViewById(R.id.mapButton);
 
     }
-
-
-
 }
