@@ -23,15 +23,14 @@
             android:layout_height="wrap_content"
             android:text="G.U.A.R.D."
             android:textAlignment="center"
-            android:textSize="20.0"
             android:id="@+id/title"
             android:layout_weight="0.80"/>
 
-        <ImageButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/ic_launcher"
-            android:id="@+id/battery"
+            app:srcCompat="@mipmap/guard"
+            android:id="@+id/batteryButton"
             android:layout_weight="0.1" />
 
     </LinearLayout>
