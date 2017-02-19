@@ -8,13 +8,17 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
-import android.widget.Toolbar;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 
-
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private Notification notification;
     public NotificationManager notificationManager;
     private static final String TAG = "CriticalBatteryNotification";
@@ -24,6 +28,7 @@ public class MainActivity extends Activity {
     Button camera;
     Button map;
     Button battery;
+    ImageButton optionMenu;
 
     Toolbar appBar;
 
@@ -31,6 +36,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        appBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(appBar);
+//        appBar.setTitle("G.U.A.R.D.");
 
         connect = (Button) findViewById(R.id.connectButton);
 
@@ -54,9 +63,59 @@ public class MainActivity extends Activity {
             }
         });
 
+        optionMenu = (ImageButton) findViewById(R.id.menuButton);
         battery = (Button) findViewById(R.id.batteryButton);
         setBatteryLevel(10);
     }
+
+    /**
+     * @author justinas
+     * @purpose creates a popup option menu
+     * @linked in activity_main.xml with the ImageButton id/menuButton
+     * @param v
+     */
+    public void showOptionMenu(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_options, popup.getMenu());
+        popup.show();
+    }
+
+    /**
+     * @author justinas
+     * @purpose is to identify selected option from menu ny comparing their ids
+     * TODO change from Toast to actual Intent that initiate new activities
+     * @param item >>> one of the options in the menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_profile:
+                Toast.makeText(MainActivity.this, "Profile Selected", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.menu_security:
+                Toast.makeText(MainActivity.this, "Security Selected", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.menu_settings:
+                Toast.makeText(MainActivity.this, "Settings Selected", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.menu_themes:
+                Toast.makeText(MainActivity.this, "App Themes Selected", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.menu_feedback:
+                Toast.makeText(MainActivity.this, "Help & Feedback Selected", Toast.LENGTH_SHORT).show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public Button setBatteryLevel(double analogReadVoltage) {
         double voltage = getVoltage(analogReadVoltage);
         battery.setText(String.format("%.2f", voltage)+ " V");
