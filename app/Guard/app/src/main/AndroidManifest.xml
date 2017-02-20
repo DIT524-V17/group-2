@@ -45,6 +45,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.group02.guard.MainActivity" />
         </activity>
+        <activity
+            android:name=".BluetoothActivity"
+            android:label="@string/title_activity_bluetooth"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/GuardBasic">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.group02.guard.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
