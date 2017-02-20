@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.util.AttributeSet;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,10 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private Notification notification;
-    public NotificationManager notificationManager;
-    private static final String TAG = "CriticalBatteryNotification";
-    private static final int NOTIFICATION_ID = 101;
     Button connect;
     Button control;
     Button camera;
@@ -65,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
         battery = (Button) findViewById(R.id.batteryButton);
-        setBatteryLevel(10);
+        new Battery(getApplicationContext(), 234);
+        battery = Battery.getBatteryButton();
     }
 
     /**
@@ -114,60 +112,5 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public Button setBatteryLevel(double analogReadVoltage) {
-        double voltage = getVoltage(analogReadVoltage);
-        battery.setText(String.format("%.2f", voltage)+ " V");
-        battery.setTextColor(Color.WHITE);
-        voltage /=8;
-
-        if(voltage >= 1.40) {
-            battery.setBackgroundResource(R.drawable.full_battery);
-        }
-        else if(voltage >= 1.30 && voltage < 1.40) {
-            battery.setBackgroundResource(R.drawable.charged_battery);
-        }
-        else if(voltage >= 1.20 && voltage < 1.30) {
-            battery.setBackgroundResource(R.drawable.half_charged_battery);
-        }
-        else if(voltage >= 1.10 && voltage < 1.20) {
-            battery.setBackgroundResource(R.drawable.low_battery);
-        }
-        if(voltage < 1){
-            battery.setBackgroundResource(R.drawable.empty_battery);
-            criticalBatteryLevelToast();
-            criticalBatteryLevelNotification();
-        }
-        return battery;
-    }
-
-    public Toast criticalBatteryLevelToast(){
-        Context context = getApplicationContext();
-        CharSequence text = "Critical battery level!";
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-        return toast;
-    }
-
-    public void criticalBatteryLevelNotification(){
-        notification = new Notification.Builder(this)
-                .setContentTitle("SmartCar Critical Battery Level")
-                .setContentText("placeholder")
-                .setSmallIcon(R.drawable.notification_battery)
-                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
-                        R.mipmap.guard))
-                .setAutoCancel(true)
-                .build();
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notificationManager.notify(TAG, NOTIFICATION_ID, notification);
-    }
-
-    public double getVoltage(double analogReadVoltage){
-        double voltage = analogReadVoltage * (5.0 / 1023.0); // Converts the analog reading to voltage
-        voltage *= 5; //Restores the actual voltage measured (divided by 5 from the voltage divider before entiring the Arduino
-        return voltage;
     }
 }

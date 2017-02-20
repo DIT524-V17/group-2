@@ -35,7 +35,7 @@
                 android:id="@+id/toolbarTitle"
                 android:layout_weight=".90"/>
 
-            <Button
+            <com.group02.guard.Battery
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@mipmap/guard"
