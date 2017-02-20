@@ -8,9 +8,13 @@
     android:background="@color/colorMutedBlack"
     tools:context="com.group02.guard.ControllerActivity">
 
-    <include layout="@layout/top_toolbar"
+    <include layout="@layout/toolbar_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
+
+    <include layout="@layout/toolbar_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/coords"

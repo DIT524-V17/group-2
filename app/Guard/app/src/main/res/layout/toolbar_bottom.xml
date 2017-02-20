@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/bottom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="0dp"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:drawableTop="@drawable/connect"
+                android:text="Connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/connectIcon"
+                android:layout_weight="0.25"/>
+
+            <Button
+                android:drawableTop="@drawable/control"
+                android:text="Control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/controlIcon"
+                android:layout_weight="0.25"/>
+
+            <Button
+                android:drawableTop="@drawable/camera"
+                android:text="Camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cameraIcon"
+                android:layout_weight="0.25"/>
+
+            <Button
+                android:drawableTop="@drawable/map"
+                android:text="Map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/mapIcon"
+                android:layout_weight="0.25"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+</RelativeLayout>

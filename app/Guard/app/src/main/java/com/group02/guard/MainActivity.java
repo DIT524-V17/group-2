@@ -30,15 +30,18 @@ public class MainActivity extends AppCompatActivity {
     Button battery;
     ImageButton optionMenu;
 
-    Toolbar appBar;
+    Toolbar topBar;
+    Toolbar bottomBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        appBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(appBar);
+        topBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(topBar);
+        bottomBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(bottomBar);
 
         connect = (Button) findViewById(R.id.connectButton);
         control = (Button) findViewById(R.id.controlButton);
