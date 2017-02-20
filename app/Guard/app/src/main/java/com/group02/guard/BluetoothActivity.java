@@ -1,5 +1,6 @@
 package com.group02.guard;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,7 +16,7 @@ import java.util.Set;
 
 public class BluetoothActivity extends AppCompatActivity {
 
-    private BluetoothAdapter bluetoothAdapter = null;
+    private BluetoothAdapter bluetoothAdapter;
     private Set pairedDevices;
 
     @Override
@@ -23,9 +24,14 @@ public class BluetoothActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
 
+        Intent connectionThread = new Intent();
+        BluetoothConnection startBluetoothConnection = new BluetoothConnection();
+
+
+
 
     }
 
-    }
+
 
 }
