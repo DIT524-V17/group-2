@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Guard</string>
+    <string name="title_activity_controller">ControllerActivity</string>
+    <string name="title_activity_testremove">testremove</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_app_menu">AppMenuActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
