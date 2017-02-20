@@ -5,4 +5,11 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.group02.guard.MapsActivity" />
+    tools:context="com.group02.guard.MapsActivity" >
+
+    <include layout="@layout/top_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</fragment>
+
+

@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
-public class ControllerActivity extends AppCompatActivity {
+public class ControllerActivity extends MainActivity {
 
     Control analogue;
     TextView showMoveEvent;

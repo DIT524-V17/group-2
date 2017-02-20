@@ -39,33 +39,45 @@ public class MainActivity extends AppCompatActivity {
 
         appBar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(appBar);
-//        appBar.setTitle("G.U.A.R.D.");
 
         connect = (Button) findViewById(R.id.connectButton);
-
         control = (Button) findViewById(R.id.controlButton);
-        control.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ControllerActivity.class);
-                startActivity(i);
-            }
-        });
-
         camera = (Button) findViewById(R.id.cameraButton);
-
         map = (Button) findViewById(R.id.mapsButton);
-        map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, MapsActivity.class);
-                MainActivity.this.startActivity(i);
-            }
-        });
-
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
         battery = (Button) findViewById(R.id.batteryButton);
         setBatteryLevel(10);
+    }
+    /**
+     * @author justinas
+     * @purpose initiate new activities when a button is pressed in the MainScreen
+     * TODO change from Toast for camera and connect to actual Intent that initiate new activities
+     * @param v
+     */
+    public boolean onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.connectButton:
+                Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.controlButton:
+                Intent controlCar = new Intent(MainActivity.this, ControllerActivity.class);
+                startActivity(controlCar);
+                return true;
+
+            case R.id.cameraButton:
+                Toast.makeText(MainActivity.this, "Camera not yet implemented", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.mapsButton:
+                Intent openMap = new Intent(MainActivity.this, MapsActivity.class);
+                MainActivity.this.startActivity(openMap);
+                return true;
+
+            default:
+                return false;
+        }
     }
 
     /**
