@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
-    <!-- Muted SCHEME -->
+        <!-- Muted SCHEME -->
     <color name="colorMutedLight">#f4f4f4</color>
     <color name="colorMutedMedium">#dcd0c0</color>
     <color name="colorMutedDark">#c0b283</color>

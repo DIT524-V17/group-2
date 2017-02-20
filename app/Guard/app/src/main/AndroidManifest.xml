@@ -45,6 +45,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.group02.guard.MainActivity" />
         </activity>
+        <activity android:name=".BatteryActivity"></activity>
     </application>
 
 </manifest>

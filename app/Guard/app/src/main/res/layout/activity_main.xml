@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +13,8 @@
         android:background="?attr/colorPrimary"
         android:theme="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar">
+        android:id="@+id/toolbar"
+        android:weightSum="1">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -21,25 +23,27 @@
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 app:srcCompat="@drawable/menu"
                 android:id="@+id/menuButton"
-                android:layout_weight=".10"
+                android:layout_weight="0.1"
                 android:onClick="showOptionMenu"/>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="G.U.A.R.D."
                 android:textAlignment="center"
                 android:id="@+id/toolbarTitle"
-                android:layout_weight=".90"/>
+                android:layout_weight=".8"/>
 
-            <com.group02.guard.Battery
+            <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@mipmap/guard"
-                android:id="@+id/batteryButton"/>
+                android:layout_height="match_parent"
+                android:id="@+id/batteryButton"
+                android:layout_weight="0.1"
+                android:onClick="displayBatteryStats"
+            />
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
