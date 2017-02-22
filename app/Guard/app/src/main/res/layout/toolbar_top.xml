@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/menu"
                 android:id="@+id/menuButton"
-                android:layout_weight=".10"
+                android:layout_weight=".1"
                 android:onClick="showOptionMenu"/>
 
             <TextView
@@ -33,13 +33,14 @@
                 android:text="G.U.A.R.D."
                 android:textAlignment="center"
                 android:id="@+id/toolbarTitle"
-                android:layout_weight=".90"/>
+                android:layout_weight=".8"/>
 
-            <Button
+            <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@mipmap/guard"
-                android:id="@+id/batteryButton"/>
+                android:layout_height="match_parent"
+                android:id="@+id/batteryButton"
+                android:layout_weight="0.1"
+                android:onClick="displayBatteryStats"/>
 
         </LinearLayout>
 
