@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.Toolbar
@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:minHeight="0dp"
         android:layout_alignParentBottom="true">
 
         <LinearLayout
@@ -16,37 +15,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:drawableTop="@drawable/connect"
-                android:text="Connect"
+            <ToggleButton
+                android:id="@+id/homeNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connectIcon"
-                android:layout_weight="0.25"/>
+                android:background="@drawable/select_home"
+                android:textOn=""
+                android:textOff=""
+                android:layout_weight="0.20"
+                android:onClick="onClick"/>
 
-            <Button
-                android:drawableTop="@drawable/control"
-                android:text="Control"
+            <ToggleButton
+                android:id="@+id/connectNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/controlIcon"
-                android:layout_weight="0.25"/>
+                android:background="@drawable/select_connect"
+                android:textOn=""
+                android:textOff=""
+                android:layout_weight="0.20"
+                android:onClick="onClick"/>
 
-            <Button
-                android:drawableTop="@drawable/camera"
-                android:text="Camera"
+            <ToggleButton
+                android:id="@+id/controlNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/cameraIcon"
-                android:layout_weight="0.25"/>
+                android:background="@drawable/select_control"
+                android:textOn=""
+                android:textOff=""
+                android:layout_weight="0.20"
+                android:onClick="onClick"/>
 
-            <Button
-                android:drawableTop="@drawable/map"
-                android:text="Map"
+            <ToggleButton
+                android:id="@+id/cameraNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/mapIcon"
-                android:layout_weight="0.25"/>
+                android:background="@drawable/select_camera"
+                android:textOn=""
+                android:textOff=""
+                android:layout_weight="0.20"
+                android:onClick="onClick"/>
+
+            <ToggleButton
+                android:id="@+id/mapsNavigation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/select_map"
+                android:textOn=""
+                android:textOff=""
+                android:layout_weight="0.20"
+                android:onClick="onClick"/>
 
         </LinearLayout>
 

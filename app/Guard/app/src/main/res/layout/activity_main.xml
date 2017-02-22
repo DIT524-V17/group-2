@@ -4,11 +4,18 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:weightSum="1.0">
+
     <include layout="@layout/toolbar_top"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:visibility="visible"/>
+
+    <include layout="@layout/toolbar_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -17,19 +24,19 @@
         android:layout_width="match_parent">
 
         <Button
-            android:drawableTop="@drawable/connect"
+            android:drawableTop="@drawable/activity_icon_connection_selected"
             android:text="Connect"
             android:id="@+id/connectButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight=".50"
             android:onClick="onClick"/>
 
         <Button
-            android:drawableTop="@drawable/control"
+            android:drawableTop="@drawable/activity_icon_controller_selected"
             android:text="Control"
             android:id="@+id/controlButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight=".50"
             android:onClick="onClick"/>
@@ -42,21 +49,23 @@
         android:layout_weight="0.45">
 
         <Button
-            android:drawableTop="@drawable/camera"
+            android:drawableTop="@drawable/activity_icon_camera_selected"
             android:text="Camera"
             android:id="@+id/cameraButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight=".50"
             android:onClick="onClick"/>
 
         <Button
-            android:drawableTop="@drawable/map"
+            android:drawableTop="@drawable/activity_icon_map_selected"
             android:text="Map"
             android:id="@+id/mapsButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight=".50"
             android:onClick="onClick"/>
+
     </LinearLayout>
+
 </LinearLayout>

@@ -45,6 +45,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.group02.guard.MainActivity" />
         </activity>
+        <activity
+            android:name=".TestDrawerr"
+            android:label="@string/title_activity_test_drawerr"
+            android:theme="@style/GuardBasic"></activity>
     </application>
 
 </manifest>

@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
     private Notification notification;
@@ -29,19 +30,21 @@ public class MainActivity extends AppCompatActivity {
     Button map;
     Button battery;
     ImageButton optionMenu;
-
-    Toolbar topBar;
-    Toolbar bottomBar;
+    static ToggleButton connectNav;
+    static ToggleButton controlNav;
+    static ToggleButton cameraNav;
+    static ToggleButton mapNav;
+    static ToggleButton homeNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        topBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(topBar);
-        bottomBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(bottomBar);
+//        topBar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(topBar);
+//        bottomBar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(bottomBar);
 
         connect = (Button) findViewById(R.id.connectButton);
         control = (Button) findViewById(R.id.controlButton);
@@ -50,7 +53,16 @@ public class MainActivity extends AppCompatActivity {
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
         battery = (Button) findViewById(R.id.batteryButton);
         setBatteryLevel(10);
+
+        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
+        controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
+        cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
+        mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
+        homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+
+
     }
+
     /**
      * @author justinas
      * @purpose initiate new activities when a button is pressed in the MainScreen
@@ -61,24 +73,56 @@ public class MainActivity extends AppCompatActivity {
 
         switch (v.getId()) {
             case R.id.connectButton:
+                //connectNav.setChecked(true);
+                Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.connectNavigation:
+                //connectNav.setChecked(true);
                 Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
                 return true;
 
             case R.id.controlButton:
-                Intent controlCar = new Intent(MainActivity.this, ControllerActivity.class);
-                startActivity(controlCar);
+                controlNav.setChecked(true);
+                Intent controlCar1 = new Intent(MainActivity.this, ControllerActivity.class);
+                startActivity(controlCar1);
+                return true;
+
+            case R.id.controlNavigation:
+                controlNav.setChecked(true);
+                Intent controlCar2 = new Intent(MainActivity.this, ControllerActivity.class);
+                startActivity(controlCar2);
                 return true;
 
             case R.id.cameraButton:
+                //cameraNav.setChecked(true);
+                Toast.makeText(MainActivity.this, "Camera not yet implemented", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.cameraNavigation:
+                //cameraNav.setChecked(true);
                 Toast.makeText(MainActivity.this, "Camera not yet implemented", Toast.LENGTH_LONG).show();
                 return true;
 
             case R.id.mapsButton:
-                Intent openMap = new Intent(MainActivity.this, MapsActivity.class);
-                MainActivity.this.startActivity(openMap);
+                mapNav.setChecked(true);
+                Intent openMap1 = new Intent(MainActivity.this, MapsActivity.class);
+                MainActivity.this.startActivity(openMap1);
                 return true;
 
-            default:
+            case R.id.mapsNavigation:
+                mapNav.setChecked(true);
+                Intent openMap2 = new Intent(MainActivity.this, MapsActivity.class);
+                MainActivity.this.startActivity(openMap2);
+                return true;
+
+            case R.id.homeNavigation:
+                homeNav.setChecked(true);
+                Intent goHome = new Intent(MainActivity.this, MainActivity.class);
+                MainActivity.this.startActivity(goHome);
+                return true;
+
+           default:
                 return false;
         }
     }
