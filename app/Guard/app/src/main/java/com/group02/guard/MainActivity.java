@@ -42,6 +42,13 @@ public class MainActivity extends AppCompatActivity {
 //        appBar.setTitle("G.U.A.R.D.");
 
         connect = (Button) findViewById(R.id.connectButton);
+        connect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, BluetoothActivity.class);
+                startActivity(i);
+            }
+        });
 
         control = (Button) findViewById(R.id.controlButton);
         control.setOnClickListener(new View.OnClickListener() {
