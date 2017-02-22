@@ -1,11 +1,11 @@
 package com.group02.guard;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
-public class ControllerActivity extends AppCompatActivity {
+public class ControllerActivity extends MainActivity {
 
     Control analogue;
     TextView showMoveEvent;
@@ -17,6 +17,8 @@ public class ControllerActivity extends AppCompatActivity {
 
         showMoveEvent = (TextView) findViewById(R.id.coords);
         analogue = (Control) findViewById(R.id.controlView);
+        controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
+        controlNav.setChecked(true);
 
         analogue.setOnMoveListener(new Control.OnMoveListener()
         {

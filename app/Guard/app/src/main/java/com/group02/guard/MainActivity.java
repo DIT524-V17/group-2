@@ -18,7 +18,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
     Button connect;
@@ -27,8 +29,11 @@ public class MainActivity extends AppCompatActivity {
     Button map;
     ImageButton battery;
     ImageButton optionMenu;
-
-    Toolbar appBar;
+    static ToggleButton connectNav;
+    static ToggleButton controlNav;
+    static ToggleButton cameraNav;
+    static ToggleButton mapNav;
+    static ToggleButton homeNav;
 
     private double analogReadValue = 240;
     private double arduinoVoltage;
@@ -38,37 +43,90 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        appBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(appBar);
-//        appBar.setTitle("G.U.A.R.D.");
+//        topBar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(topBar);
+//        bottomBar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(bottomBar);
 
         connect = (Button) findViewById(R.id.connectButton);
-
         control = (Button) findViewById(R.id.controlButton);
-        control.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ControllerActivity.class);
-                startActivity(i);
-            }
-        });
-
         camera = (Button) findViewById(R.id.cameraButton);
-
         map = (Button) findViewById(R.id.mapsButton);
-        map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, MapsActivity.class);
-                MainActivity.this.startActivity(i);
-            }
-        });
-
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
         battery = (ImageButton) findViewById(R.id.batteryButton);
         setBatteryLevel(analogReadValue);
         battery.setRotation(90);
+
+        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
+        controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
+        cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
+        mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
+        homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+    }
+
+    /**
+     * @author justinas
+     * @purpose initiate new activities when a button is pressed in the MainScreen
+     * TODO change from Toast for camera and connect to actual Intent that initiate new activities
+     * @param v
+     */
+    public boolean onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.connectButton:
+                //connectNav.setChecked(true);
+                Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.connectNavigation:
+                //connectNav.setChecked(true);
+                Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.controlButton:
+                controlNav.setChecked(true);
+                Intent controlCar1 = new Intent(MainActivity.this, ControllerActivity.class);
+                startActivity(controlCar1);
+                return true;
+
+            case R.id.controlNavigation:
+                controlNav.setChecked(true);
+                Intent controlCar2 = new Intent(MainActivity.this, ControllerActivity.class);
+                startActivity(controlCar2);
+                return true;
+
+            case R.id.cameraButton:
+                //cameraNav.setChecked(true);
+                Toast.makeText(MainActivity.this, "Camera not yet implemented", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.cameraNavigation:
+                //cameraNav.setChecked(true);
+                Toast.makeText(MainActivity.this, "Camera not yet implemented", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.mapsButton:
+                mapNav.setChecked(true);
+                Intent openMap1 = new Intent(MainActivity.this, MapsActivity.class);
+                MainActivity.this.startActivity(openMap1);
+                return true;
+
+            case R.id.mapsNavigation:
+                mapNav.setChecked(true);
+                Intent openMap2 = new Intent(MainActivity.this, MapsActivity.class);
+                MainActivity.this.startActivity(openMap2);
+                return true;
+
+            case R.id.homeNavigation:
+                homeNav.setChecked(true);
+                Intent goHome = new Intent(MainActivity.this, MainActivity.class);
+                MainActivity.this.startActivity(goHome);
+                return true;
+
+           default:
+                return false;
+        }
     }
 
     /**
