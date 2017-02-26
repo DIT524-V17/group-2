@@ -35,6 +35,8 @@ public class BluetoothConnection {
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
+
+
             // Get the input and output streams; using temp objects because
             // member streams are final.
             try {

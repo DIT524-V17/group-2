@@ -28,12 +28,18 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class BluetoothActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private static final String TAG = "MainActivity";
     BluetoothAdapter mBluetoothAdapter;
     Button btnEnableDisable_Discoverable;
+    BluetoothConnectionService mBluetoothConnection;
+    Button btnStartConnection;
+    private static final UUID MY_UUID_INSECURE =
+            UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+    BluetoothDevice mBTDevice;
     public ArrayList<BluetoothDevice> mBTDevices = new ArrayList<>();
     public DeviceListAdapter mDeviceListAdapter;
     ListView lvNewDevices;
@@ -121,6 +127,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
                 //Bonded already
                 if (mDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
                     Log.d(TAG, "BroadcastReceiver: BOND_BONDED");
+                    mBTDevice = mDevice;
                 }
                 //creating
                 if (mDevice.getBondState() == BluetoothDevice.BOND_BONDING) {
@@ -159,7 +166,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         btnEnableDisable_Discoverable = (Button) findViewById(R.id.btnDiscoverable_on_off);
         lvNewDevices = (ListView) findViewById(R.id.lvNewDevices);
         mBTDevices = new ArrayList<>();
-
+        btnStartConnection = (Button) findViewById(R.id.btnStartConnection);
 
         //broadcasts when bond state changes(ie:pairing)
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
@@ -188,11 +195,23 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
                 enableDisableBT();
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        btnStartConnection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startConnection();
+            }
+        });
+
     }
 
+    public void startConnection(){
+        startBTConnection(mBTDevice,MY_UUID_INSECURE);
+    }
+    public void startBTConnection(BluetoothDevice device, UUID uuid){
+        Log.d(TAG, "startBTConnection: Initializing RFCOM Bluetooth Connection.");
+
+        mBluetoothConnection.startClient(device,uuid);
+    }
 
     public void enableDisableBT() {
         if (mBluetoothAdapter == null) {
@@ -304,6 +323,8 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
             Log.d(TAG, "Tring to pair with " + deviceName);
             mBTDevices.get(i).createBond();
 
+            mBTDevice = mBTDevices.get(i);
+            mBluetoothConnection = new BluetoothConnectionService(BluetoothActivity.this);
         }
 
     }
@@ -324,23 +345,6 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
                 .build();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction0());
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction0());
-        client.disconnect();
-    }
 }
