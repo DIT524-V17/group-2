@@ -175,18 +175,21 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        lvNewDevices.setOnItemClickListener(BluetoothActivity.this);
 
-        lvNewDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("", "clicked " + position + ".");
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    Log.d(TAG, "Tring to pair with " + mBTDevices.get(position).getName());
-                    mBTDevices.get(position).createBond();
-
-                }
-            }
-        });
+//        lvNewDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.d("", "clicked " + position + ".");
+//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//                    Log.d(TAG, "Tring to pair with " + mBTDevices.get(position).getName());
+//                    mBTDevices.get(position).createBond();
+//
+//
+//
+//                }
+//            }
+//        });
 
         btnONOFF.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,12 +208,15 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
     }
 
     public void startConnection(){
-        startBTConnection(mBTDevice,MY_UUID_INSECURE);
+        Log.d(TAG, mBTDevice.getName() + " device name");
+        Log.d(TAG, mBTDevice.getBondState() + " bond state");
+        startBTConnection(mBTDevice, MY_UUID_INSECURE);
     }
-    public void startBTConnection(BluetoothDevice device, UUID uuid){
+    public void startBTConnection(BluetoothDevice device, UUID uuid) {
         Log.d(TAG, "startBTConnection: Initializing RFCOM Bluetooth Connection.");
 
-        mBluetoothConnection.startClient(device,uuid);
+            mBluetoothConnection.startClient(device, uuid);
+
     }
 
     public void enableDisableBT() {

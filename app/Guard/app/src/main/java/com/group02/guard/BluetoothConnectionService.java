@@ -41,7 +41,7 @@ public class BluetoothConnectionService {
 
     public BluetoothConnectionService(Context context) {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        context = context;
+        mContext = context;
         start();
     }
 
@@ -69,21 +69,24 @@ public class BluetoothConnectionService {
             BluetoothSocket socket = null;
 
 
-            try{
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
-                Log.d(TAG, "run: RFCOM server socket start.....");
-                socket = mmServerSocket.accept();
+                try {
+                    // This is a blocking call and will only return on a
+                    // successful connection or an exception
+                    Log.d(TAG, "run: RFCOM server socket start.....");
+                    socket = mmServerSocket.accept();
 
-                Log.d(TAG, "run: RFCOM server socket accepted connection.");
+                    Log.d(TAG, "run: RFCOM server socket accepted connection.");
 
-            }catch(IOException e){
-                Log.e(TAG, "AcceptThread: IOException: " + e.getMessage() );
-            }
-            if(socket != null){
-                connected(socket,mmDevice);
-            }
-            Log.i(TAG, "END mAcceptThread ");
+                } catch (IOException e) {
+                    Log.e(TAG, "AcceptThread: IOException: " + e.getMessage());
+                }
+                if (socket != null) {
+                    connected(socket, mmDevice);
+                }
+                Log.i(TAG, "END mAcceptThread ");
+
+
+
         }
         public void cancel() {
             Log.d(TAG, "cancel: Canceling AcceptThread.");
@@ -171,12 +174,14 @@ public class BluetoothConnectionService {
     public void startClient(BluetoothDevice device,UUID uuid){
         Log.d(TAG, "startClient: Started.");
 
-        //initprogress dialog
-        mProgressDialog = ProgressDialog.show(mContext,"Connecting Bluetooth"
-                ,"Please Wait...",true);
+            //initprogress dialog
+            mProgressDialog = ProgressDialog.show(mContext, "Connecting Bluetooth"
+                    , "Please Wait...", true);
 
-        mConnectThread = new ConnectThread(device, uuid);
-        mConnectThread.start();
+            mConnectThread = new ConnectThread(device, uuid);
+            mConnectThread.start();
+
+
     }
     private class ConnectedThread extends Thread{
         private final BluetoothSocket mmSocket;
