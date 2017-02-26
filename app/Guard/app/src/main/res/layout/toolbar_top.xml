@@ -40,7 +40,8 @@
                 android:layout_height="match_parent"
                 android:id="@+id/batteryButton"
                 android:layout_weight="0.1"
-                android:onClick="displayBatteryStats"/>
+                android:onClick="displayBatteryStats"
+                app:srcCompat="@drawable/empty_battery"/>
 
         </LinearLayout>
 
