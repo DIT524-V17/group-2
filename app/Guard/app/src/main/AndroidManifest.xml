@@ -15,6 +15,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/GuardBasic">
+        <activity
+            android:name=".ControllerActivity"
+            android:label="@string/title_activity_controller"
+            android:theme="@style/GuardBasic" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,10 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ControllerActivity"
-            android:label="@string/title_activity_controller"
-            android:theme="@style/GuardBasic" />
+
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -45,7 +47,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.group02.guard.MainActivity" />
         </activity>
-        <activity android:name=".BatteryActivity"></activity>
+        <activity android:name=".BatteryActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
     </application>
 
 </manifest>

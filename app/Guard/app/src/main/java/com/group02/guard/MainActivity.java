@@ -7,34 +7,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
+    static ToggleButton connectNav;
+    static ToggleButton controlNav;
+    static ToggleButton cameraNav;
+    static ToggleButton mapNav;
+    static ToggleButton homeNav;
     Button connect;
     Button control;
     Button camera;
     Button map;
     ImageButton battery;
     ImageButton optionMenu;
-    static ToggleButton connectNav;
-    static ToggleButton controlNav;
-    static ToggleButton cameraNav;
-    static ToggleButton mapNav;
-    static ToggleButton homeNav;
+    private Button btnLogout;
+    private Session session;
 
     private double analogReadValue = 432;
     private double arduinoVoltage;
@@ -43,6 +41,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        session = new Session(this);
+        if (!session.loggedin()) {
+            logout();
+        }
+        btnLogout = (Button) findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
 
 //        topBar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(topBar);
@@ -63,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
         cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
         mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
         homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+    }
+
+    private void logout() {
+        session.setLoggedin(false);
+        finish();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
     /**
@@ -132,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * @author justinas
      * @purpose creates a popup option menu
-     * @linked in activity_main.xml with the ImageButton id/menuButton
+     * @linked in activity_main.xmll with the ImageButton id/menuButton
      * @param v
      */
     public void showOptionMenu(View v) {
