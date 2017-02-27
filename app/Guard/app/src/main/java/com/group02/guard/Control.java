@@ -25,7 +25,7 @@ public class Control extends View {
     public Control(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        backGround.setColor(Color.parseColor("#AB987A"));
+        backGround.setColor(getResources().getColor(R.color.colorMutedLight));
         smallDotAndOuterBorder.setColor(Color.parseColor("#000000"));
         smallDotBorder.setColor(Color.parseColor("#000000"));
 
@@ -84,7 +84,7 @@ public class Control extends View {
 
     double p2nX(){
 
-        return r * Math.cos(t) + cx;
+        return (r * Math.cos(t) + cx) ;
     }
 
     double p2nY(){
@@ -92,12 +92,20 @@ public class Control extends View {
         return r * Math.sin(t) + cy;
     }
     /*
+    /A method for scaling
+    /@author Joacim Eberlén
+    */
+    public double scale(double oldMax, double oldMin, double newMax, double newMin, double input){
+        double scaled = ((newMax - newMin) / (oldMax - oldMin) * (input - oldMax) + newMax);
+        return scaled ;
+    }
+    /*
     /Speed rescaled to fit into 0 - 100 for the car speed.
     /@author Joacim Eberlen
     */
     public double getSpeed(double scaleMax){
 
-        double speed = (scaleMax / 580.0) * (r - 580.0) + scaleMax;
+        double speed = scale(580.0, 0, scaleMax, 0, r);
         return speed ;
     }
 
