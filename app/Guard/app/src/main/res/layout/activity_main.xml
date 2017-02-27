@@ -1,52 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1.0">
 
-    <android.support.v7.widget.Toolbar
+    <include layout="@layout/toolbar_top"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:visibility="visible"/>
+
+    <include layout="@layout/toolbar_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar"
-        android:weightSum="1">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/menu"
-                android:id="@+id/menuButton"
-                android:layout_weight="0.1"
-                android:onClick="showOptionMenu"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="G.U.A.R.D."
-                android:textAlignment="center"
-                android:id="@+id/toolbarTitle"
-                android:layout_weight=".8"/>
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/batteryButton"
-                android:layout_weight="0.1"
-                android:onClick="displayBatteryStats"
-            />
-
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+        android:visibility="gone" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -55,20 +23,22 @@
         android:layout_width="match_parent">
 
         <Button
-            android:drawableTop="@drawable/connect"
+            android:drawableTop="@drawable/activity_icon_connection_selected"
             android:text="Connect"
             android:id="@+id/connectButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight=".50"/>
+            android:layout_weight=".50"
+            android:onClick="onClick"/>
 
         <Button
-            android:drawableTop="@drawable/control"
+            android:drawableTop="@drawable/activity_icon_controller_selected"
             android:text="Control"
             android:id="@+id/controlButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight=".50"/>
+            android:layout_weight=".50"
+            android:onClick="onClick"/>
     </LinearLayout>
 
     <LinearLayout
@@ -78,19 +48,23 @@
         android:layout_weight="0.45">
 
         <Button
-            android:drawableTop="@drawable/camera"
+            android:drawableTop="@drawable/activity_icon_camera_selected"
             android:text="Camera"
             android:id="@+id/cameraButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight=".50"/>
+            android:layout_weight=".50"
+            android:onClick="onClick"/>
 
         <Button
-            android:drawableTop="@drawable/map"
+            android:drawableTop="@drawable/activity_icon_map_selected"
             android:text="Map"
             android:id="@+id/mapsButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight=".50"/>
+            android:layout_weight=".50"
+            android:onClick="onClick"/>
+
     </LinearLayout>
+
 </LinearLayout>
