@@ -1,11 +1,13 @@
 package com.group02.guard;
 
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.io.IOException;
@@ -33,15 +35,18 @@ public class BluetoothConnectionService {
     private AcceptThread mInsecureAcceptThread;
 
     private ConnectThread mConnectThread;
+
     private BluetoothDevice mmDevice;
     private UUID deviceUUID;
     ProgressDialog mProgressDialog;
 
     private ConnectedThread mConnectedThread;
 
+
     public BluetoothConnectionService(Context context) {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mContext = context;
+
         start();
     }
 
@@ -100,6 +105,7 @@ public class BluetoothConnectionService {
     }
     private class ConnectThread extends Thread{
         private BluetoothSocket mmSocket;
+
 
         public ConnectThread(BluetoothDevice device, UUID uuid) {
             Log.d(TAG, "ConnectThread: started.");
@@ -174,6 +180,7 @@ public class BluetoothConnectionService {
     public void startClient(BluetoothDevice device,UUID uuid){
         Log.d(TAG, "startClient: Started.");
 
+
             //initprogress dialog
             mProgressDialog = ProgressDialog.show(mContext, "Connecting Bluetooth"
                     , "Please Wait...", true);
@@ -187,6 +194,7 @@ public class BluetoothConnectionService {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
+
 
         public ConnectedThread(BluetoothSocket socket){
             Log.d(TAG, "ConnectedThread: Starting.");
@@ -214,11 +222,12 @@ public class BluetoothConnectionService {
 
         public void run(){
             byte[] buffer = new byte[1024];  // buffer store for the stream
-
+            boolean threadOn = true;
             int bytes; // bytes returned from read()
 
             while (true) {
                 // Read from the InputStream
+                Log.d(TAG, "" + threadOn);
                 try {
                     bytes = mmInStream.read(buffer);
                     String incomingMessage = new String(buffer, 0, bytes);

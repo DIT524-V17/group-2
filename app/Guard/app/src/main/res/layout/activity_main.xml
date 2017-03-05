@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1.0">
+    android:weightSum="1.0"
+    android:baselineAligned="false">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -45,26 +46,38 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.45"
-        android:layout_width="match_parent">
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btnFindUnpairedDevices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="btnDiscover"
+                android:text="Discover" />
 
-        <Button
-            android:drawableTop="@drawable/connect"
-            android:text="Connect"
-            android:id="@+id/connectButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".50"/>
+            <Button
+                android:id="@+id/btnStartConnection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Start Connection"
+                android:layout_below="@id/btnFindUnpairedDevices"/>
+        </RelativeLayout>
 
-        <Button
-            android:drawableTop="@drawable/control"
-            android:text="Control"
-            android:id="@+id/controlButton"
-            android:layout_width="0dp"
+
+        <ListView
+            android:id="@+id/lvNewDevices"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".50"/>
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/btnStartConnection" />
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -74,9 +87,9 @@
         android:layout_weight="0.45">
 
         <Button
-            android:drawableTop="@drawable/camera"
-            android:text="Camera"
-            android:id="@+id/cameraButton"
+            android:drawableTop="@drawable/control"
+            android:text="Control"
+            android:id="@+id/controlButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".50"/>

@@ -50,15 +50,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.group02.guard.MainActivity" />
         </activity>
-        <activity
-            android:name=".BluetoothActivity"
-            android:label="@string/title_activity_bluetooth"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/GuardBasic">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.group02.guard.MainActivity" />
-        </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"
