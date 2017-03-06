@@ -23,6 +23,8 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ToggleButton;
 
+import junit.framework.Test;
+
 public class MainActivity extends AppCompatActivity {
     Button connect;
     Button control;
@@ -44,11 +46,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        topBar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(topBar);
-//        bottomBar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(bottomBar);
-
         connect = (Button) findViewById(R.id.connectButton);
         control = (Button) findViewById(R.id.controlButton);
         camera = (Button) findViewById(R.id.cameraButton);
@@ -63,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
         mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
         homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+
     }
 
     /**
@@ -75,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
         switch (v.getId()) {
             case R.id.connectButton:
-                //connectNav.setChecked(true);
-                Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(MainActivity.this, WifiActivity.class);
+                startActivity(i);
+                //Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
                 return true;
 
             case R.id.connectNavigation:
