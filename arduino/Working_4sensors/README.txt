@@ -1,0 +1,2 @@
+This sketch is not compatable to SMARTCARMOCK since it utilizes another library New Ping. We will make a mock for New Ping later to try it out.
+We have not been able to get the Sensor library to perform remotley as good as New Ping. Although both sketches work, this works signficicantly more consistant.
