@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -13,7 +14,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,8 +31,9 @@ public class WifiActivity extends MainActivity {
     private IntentFilter wifiIntentFilter;
     private WifiP2pDevice targetDevice;
     boolean wifiDirectEnabled;
-    ToggleButton onOff;
+    static ToggleButton onOff;
     static boolean isOn;
+    TextView connectedDeviceName;
 
 
     @Override
@@ -57,20 +58,16 @@ public class WifiActivity extends MainActivity {
                 if(onOff.isEnabled()){
                     isOn = true;
                     findPeers(v);
+                    onOff.setChecked(true);
                 }
                 else{
                     isOn = false;
+                    onOff.setChecked(false);
                 }
             }
         });
 
-        ImageButton refresh = (ImageButton) findViewById(R.id.refreshPeers);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findPeers(v);
-            }
-        });
+        connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
     }
 
 
@@ -126,6 +123,7 @@ public class WifiActivity extends MainActivity {
 
                 if(device != null) {
                     connectToPeer(device);
+                    connectedDeviceName.setText("Currently connected to " + device.deviceName);
                 }
 
                 else {
@@ -144,7 +142,7 @@ public class WifiActivity extends MainActivity {
 
         wifiManager.connect(wifiChannel, config, new WifiP2pManager.ActionListener()  {
             public void onSuccess() {
-                Toast.makeText(WifiActivity.this, "Connect to" + targetDevice.deviceName + "successful", Toast.LENGTH_LONG).show();
+//                Toast.makeText(WifiActivity.this, "Connect to" + targetDevice.deviceName + "successful", Toast.LENGTH_LONG).show();
             }
 
             public void onFailure(int reason) {

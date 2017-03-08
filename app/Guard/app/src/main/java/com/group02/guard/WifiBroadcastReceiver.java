@@ -52,15 +52,15 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
                 });
             }
 
-
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
             // Respond to new connection or disconnections
-            if (wifiManager == null) {
-            return;
+            NetworkInfo networkState = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+            if(networkState.isConnected()) {
+                networkState.getExtraInfo();
             }
-            NetworkInfo networkInfo = (NetworkInfo) intent
-                .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-
+            else {
+                wifiManager.cancelConnect(wifiChannel, null);
+            }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             // Respond to this device's wifi state changing
