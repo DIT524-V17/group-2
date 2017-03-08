@@ -8,13 +8,15 @@
     android:background="@color/colorMutedBlack"
     tools:context="com.group02.guard.ControllerActivity">
 
-    <TextView
-        android:id="@+id/coords"
-        android:textColor="#FFFFFF"
+    <include layout="@layout/toolbar_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+        android:layout_height="wrap_content"/>
+
+    <include layout="@layout/toolbar_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
 
     <com.group02.guard.Control
         android:id="@+id/controlView"
@@ -22,8 +24,14 @@
         android:layout_height="300dp"
         android:layout_centerInParent="true"/>
 
-
-
+    <TextView
+        android:id="@+id/coords"
+        android:textColor="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:layout_above="@id/controlView"/>
 
 
 </RelativeLayout>

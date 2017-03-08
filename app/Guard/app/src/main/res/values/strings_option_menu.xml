@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name="stings_option_menu_items">
+        <item
+            >My Profile</item>
+        <item
+            >Settings</item>
+        <item
+            >Themes</item>
+        <item
+            >Feedback</item>
+        <item
+            >Help</item>
+
+    </string-array>
+</resources>

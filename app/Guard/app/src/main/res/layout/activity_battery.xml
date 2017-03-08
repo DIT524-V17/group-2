@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_battery"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.group02.guard.BatteryActivity"
+    android:orientation="vertical"
+    android:weightSum="10">
+
+
+    <include layout="@layout/toolbar_top"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:visibility="visible"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/analogValue"
+        android:layout_weight="0.2"
+        android:paddingTop="10dp"
+        android:paddingStart="3dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorMutedLight"
+        android:layout_marginBottom="7dp"
+        />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/arduinoVoltage"
+        android:layout_weight="0.2"
+        android:paddingStart="3dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorMutedLight"
+        android:layout_marginBottom="7dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/actualVoltage"
+        android:layout_weight="0.2"
+        android:paddingStart="3dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorMutedLight"
+        android:layout_marginBottom="7dp" />
+
+</LinearLayout>

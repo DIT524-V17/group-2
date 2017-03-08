@@ -184,6 +184,7 @@ public class BluetoothThread extends Thread {
             Log.i(TAG, "[SENT] " + s);
 
         } catch (Exception e) {
+
             Log.e(TAG, "Write failed!", e);
 
         }

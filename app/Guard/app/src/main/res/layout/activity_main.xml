@@ -1,84 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1.0"
     android:baselineAligned="false">
 
-    <android.support.v7.widget.Toolbar
+    <include layout="@layout/toolbar_top"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:visibility="visible"/>
+
+    <include layout="@layout/toolbar_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/menu"
-                android:id="@+id/menuButton"
-                android:layout_weight=".10"
-                android:onClick="showOptionMenu"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="G.U.A.R.D."
-                android:textAlignment="center"
-                android:id="@+id/toolbarTitle"
-                android:layout_weight=".90"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@mipmap/guard"
-                android:id="@+id/batteryButton"/>
-
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.45"
-        android:orientation="horizontal">
-        <RelativeLayout
-            android:layout_width="150dp"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btnFindUnpairedDevices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="btnDiscover"
-                android:text="Discover" />
-
-            <Button
-                android:id="@+id/btnStartConnection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Start Connection"
-                android:layout_below="@id/btnFindUnpairedDevices"/>
-        </RelativeLayout>
-
-
-        <ListView
-            android:id="@+id/lvNewDevices"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/btnStartConnection" />
-
-
-    </LinearLayout>
+        android:visibility="gone" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -87,19 +24,23 @@
         android:layout_weight="0.45">
 
         <Button
-            android:drawableTop="@drawable/control"
+            android:drawableTop="@drawable/activity_icon_controller_selected"
             android:text="Control"
             android:id="@+id/controlButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight=".50"/>
+            android:layout_weight=".50"
+            android:onClick="onClick"/>
 
         <Button
-            android:drawableTop="@drawable/map"
+            android:drawableTop="@drawable/activity_icon_map_selected"
             android:text="Map"
             android:id="@+id/mapsButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight=".50"/>
+            android:layout_weight=".50"
+            android:onClick="onClick"/>
+
     </LinearLayout>
+
 </LinearLayout>
