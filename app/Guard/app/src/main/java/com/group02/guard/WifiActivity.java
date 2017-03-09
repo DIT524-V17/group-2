@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
+import android.content.SharedPreferences;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -30,16 +30,17 @@ public class WifiActivity extends MainActivity {
     private BroadcastReceiver wifiReceiver;
     private IntentFilter wifiIntentFilter;
     private WifiP2pDevice targetDevice;
+    ListView peerView;
     boolean wifiDirectEnabled;
     static ToggleButton onOff;
-    static boolean isOn;
     TextView connectedDeviceName;
-
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi);
+
         wifiManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         wifiChannel = wifiManager.initialize(this, getMainLooper(), null);
 
@@ -52,33 +53,42 @@ public class WifiActivity extends MainActivity {
         registerReceiver(wifiReceiver, wifiIntentFilter);
 
         onOff = (ToggleButton) findViewById(R.id.buttonOnOff);
+        connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
+        peerView = (ListView) findViewById(R.id.peerList);
+
+        preferences = getPreferences(MODE_PRIVATE);
+        boolean wifiOnOff = preferences.getBoolean("wifiOnOff", false);
+        onOff.setChecked(wifiOnOff);
+
         onOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onOff.isEnabled()){
-                    isOn = true;
+                if(onOff.isChecked()){
                     findPeers(v);
                     onOff.setChecked(true);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("wifiOnOff", true);
+                    editor.commit();
                 }
                 else{
-                    isOn = false;
                     onOff.setChecked(false);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("wifiOnOff", false);
+                    editor.commit();
                 }
             }
         });
-
-        connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
     }
 
 
-    /* register the broadcast receiver with the intent values to be matched */
+    // register the broadcast receiver with the intent values to be matched
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver(wifiReceiver, wifiIntentFilter);
     }
 
-    /* unregister the broadcast receiver */
+    // unregister the broadcast receiver
     @Override
     protected void onPause() {
         super.onPause();
@@ -93,12 +103,15 @@ public class WifiActivity extends MainActivity {
         wifiManager.discoverPeers(wifiChannel, null);
     }
 
+    public void clearPeers(){
+        peerView.removeAllViews();
+    }
+
     public void displayPeers(final WifiP2pDeviceList peers) {
         //Dialog to show errors/status
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("WiFi Direct File Transfer");
 
-        ListView peerView = (ListView) findViewById(R.id.peerList);
         ArrayList<String> peerDevices = new ArrayList<>();
 
         //Fill array list with strings of peer names
@@ -115,7 +128,6 @@ public class WifiActivity extends MainActivity {
                 TextView tv = (TextView) view;
                 WifiP2pDevice device = null;
 
-                //Search all known peers for matching name
                 for(WifiP2pDevice wd : peers.getDeviceList()) {
                     if(wd.deviceName.equals(tv.getText()))
                         device = wd;
@@ -123,7 +135,7 @@ public class WifiActivity extends MainActivity {
 
                 if(device != null) {
                     connectToPeer(device);
-                    connectedDeviceName.setText("Currently connected to " + device.deviceName);
+                    connectedDeviceName.setText("Currently connected to: " + device.deviceName);
                 }
 
                 else {
@@ -149,6 +161,5 @@ public class WifiActivity extends MainActivity {
                 Toast.makeText(WifiActivity.this, "Connect to" + targetDevice.deviceName + "failed", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 }

@@ -3,12 +3,10 @@ package com.group02.guard;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
-
-import static com.group02.guard.WifiActivity.isOn;
+import static com.group02.guard.WifiActivity.onOff;
 
 /**
  * Created by justinas on 04/03/2017.
@@ -44,7 +42,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
             }
 
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-            if(isOn == true) {
+            if(onOff.isChecked()) {
                 wifiManager.requestPeers(wifiChannel, new WifiP2pManager.PeerListListener() {
                     public void onPeersAvailable(WifiP2pDeviceList peers) {
                         wifiActivity.displayPeers(peers);
