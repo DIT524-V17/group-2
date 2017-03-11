@@ -36,10 +36,10 @@ public class ControllerActivity extends AppCompatActivity {
     Handler writeHandler;
 
     // Following variables is used by the battery function
-    Intent batteryStats;
-    Bundle batteryBundle;
-    Handler batteryHandler;
-    ImageButton battery;
+    private Intent batteryStats;
+    private Bundle batteryBundle;
+    private Handler batteryHandler;
+    private ImageButton battery;
     private double analogReadValue;
     private double arduinoVoltage;
     private Boolean criticalLevel = false;
@@ -123,7 +123,7 @@ public class ControllerActivity extends AppCompatActivity {
      * @author Erik Laurin
      * @purpose sets battery icon depending on remaining battery level
      */
-    public void setBatteryLevel() {
+    private void setBatteryLevel() {
         double voltage = getVoltage(analogReadValue);   //Converts from an analog value to voltage
         voltage /= 8; //To get average voltage for each battery
 
@@ -147,7 +147,7 @@ public class ControllerActivity extends AppCompatActivity {
         if (voltage < 1.05) {
             battery.setImageResource(R.drawable.empty_battery);
             battery.setColorFilter(Color.RED);  //For effect
-            if (!criticalLevel) {
+            if (!criticalLevel) {   //Makes the toast and notification only appear ones
                 setCriticalBatteryLevelToast(); //Calls for toast
                 setCriticalBatteryLevelNotification();  //Calls for notification
             }
@@ -185,10 +185,10 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose calculates the SmartCar's battery voltage
      * @param analogReadValue analogRead value from Arduino between 0-1024
      * @return returns the SmartCar's battery voltage
+     * @author Erik Laurin
+     * @purpose calculates the SmartCar's battery voltage
      */
     private double getVoltage(double analogReadValue) {
         arduinoVoltage = analogReadValue * (5.0 / 1024.0); // Converts the analog reading to voltage
@@ -210,9 +210,9 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
+     * @param BTString String received via Bluetooth
      * @author Erik Laurin
      * @purpose executes actions based on BT input
-     * @param BTString String received via Bluetooth
      */
     private void readInput(String BTString) {
         if (BTString.startsWith("B")) { //refreshes the battery value and level indicator
@@ -223,12 +223,8 @@ public class ControllerActivity extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse " + "'" + BTString.substring(1) + "'");
             }
-        }else if(BTString.startsWith("SENSORMID")){
+        } else if (BTString.startsWith("SENSORMID")) {
             //placeholder
         }
     }
 }
-
-
-
-
