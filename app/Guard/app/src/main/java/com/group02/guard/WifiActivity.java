@@ -9,6 +9,7 @@ import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.view.View;
@@ -80,7 +81,6 @@ public class WifiActivity extends MainActivity {
         });
     }
 
-
     // register the broadcast receiver with the intent values to be matched
     @Override
     protected void onResume() {
@@ -104,7 +104,7 @@ public class WifiActivity extends MainActivity {
     }
 
     public void clearPeers(){
-        peerView.removeAllViews();
+        peerView.setAdapter(null);
     }
 
     public void displayPeers(final WifiP2pDeviceList peers) {
@@ -133,8 +133,8 @@ public class WifiActivity extends MainActivity {
                         device = wd;
                 }
 
-                if(device != null) {
-                    connectToPeer(device);
+                if(device != null && onOff.isChecked()) {
+                    connect(device);
                     connectedDeviceName.setText("Currently connected to: " + device.deviceName);
                 }
 
@@ -146,20 +146,25 @@ public class WifiActivity extends MainActivity {
         });
     }
 
-    public void connectToPeer(final WifiP2pDevice wifiPeer) {
+    public void connect(final WifiP2pDevice wifiPeer) {
         this.targetDevice = wifiPeer;
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = wifiPeer.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
 
-        wifiManager.connect(wifiChannel, config, new WifiP2pManager.ActionListener()  {
-            public void onSuccess() {
+        if(onOff.isChecked()){
+            wifiManager.connect(wifiChannel, config, new WifiP2pManager.ActionListener()  {
+                public void onSuccess() {
 //                Toast.makeText(WifiActivity.this, "Connect to" + targetDevice.deviceName + "successful", Toast.LENGTH_LONG).show();
-            }
+                }
 
-            public void onFailure(int reason) {
-                Toast.makeText(WifiActivity.this, "Connect to" + targetDevice.deviceName + "failed", Toast.LENGTH_LONG).show();
-            }
-        });
+                public void onFailure(int reason) {
+                    Toast.makeText(WifiActivity.this, "Connect to" + targetDevice.deviceName + "failed", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        else{
+            Toast.makeText(WifiActivity.this, "Can't connect while WiFi Direct is off", Toast.LENGTH_LONG).show();
+        }
     }
 }

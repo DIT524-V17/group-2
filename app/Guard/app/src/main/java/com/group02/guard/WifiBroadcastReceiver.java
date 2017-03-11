@@ -39,6 +39,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
                 wifiActivity.setWifiDirectEnabled(true);
             } else {
                 wifiActivity.setWifiDirectEnabled(false);
+                wifiActivity.clearPeers();
             }
 
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
@@ -49,15 +50,20 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
                     }
                 });
             }
+            else{
+                wifiActivity.clearPeers();
+            }
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
             // Respond to new connection or disconnections
             NetworkInfo networkState = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
             if(networkState.isConnected()) {
                 networkState.getExtraInfo();
+//                wifiManager.requestConnectionInfo(wifiChannel, wifiActivity);
             }
             else {
                 wifiManager.cancelConnect(wifiChannel, null);
+               // wifiActivity.clearPeers();
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
