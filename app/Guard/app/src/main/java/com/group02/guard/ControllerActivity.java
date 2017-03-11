@@ -24,20 +24,8 @@ import static com.group02.guard.MainActivity.controlNav;
 
 public class ControllerActivity extends AppCompatActivity {
 
-    Intent batteryStats;
-    Bundle batteryBundle;
-    Handler batteryHandler;
-    int interval = 500;
-
-    ImageButton battery;
     Control analogue;
     TextView showMoveEvent;
-    TextView connectionStatus;
-
-    private double analogReadValue = 432;
-    private double arduinoVoltage;
-
-    String TAG = "Controller Activity";
 
     String address = "20:15:10:20:11:37";
 
@@ -46,6 +34,14 @@ public class ControllerActivity extends AppCompatActivity {
 
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
+
+    Intent batteryStats;
+    Bundle batteryBundle;
+    Handler batteryHandler;
+    ImageButton battery;
+    private double analogReadValue;
+    private double arduinoVoltage;
+    private Boolean criticalLevel = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +63,7 @@ public class ControllerActivity extends AppCompatActivity {
             public void handleMessage(Message message) {
 
                 String s = (String) message.obj;
-
+                readInput(s);
             }
         });
 
@@ -104,7 +100,6 @@ public class ControllerActivity extends AppCompatActivity {
         batteryHandler = new Handler();
         batteryStats = new Intent();
         battery.setVisibility(View.VISIBLE);
-        startRefreshingBatteryTask();
     }
 
     public void write(double polarAngle, double speed){
@@ -138,24 +133,31 @@ public class ControllerActivity extends AppCompatActivity {
         if(voltage >= 1.40) {   //Sets image depending on battery voltage = approx level based on alkaline AA discharge curve
             battery.clearColorFilter();
             battery.setImageResource(R.drawable.full_battery);
+            criticalLevel = false;
         }
         else if(voltage >= 1.30 && voltage < 1.40) {
             battery.clearColorFilter();
             battery.setImageResource(R.drawable.charged_battery);
+            criticalLevel = false;
         }
         else if(voltage >= 1.20 && voltage < 1.30) {
             battery.clearColorFilter();
             battery.setImageResource(R.drawable.half_charged_battery);
+            criticalLevel = false;
         }
         else if(voltage >= 1.05 && voltage < 1.20) {
             battery.clearColorFilter();
             battery.setImageResource(R.drawable.low_battery);
+            criticalLevel = false;
         }
         if(voltage < 1.05){
             battery.setImageResource(R.drawable.empty_battery);
             battery.setColorFilter(Color.RED);  //For effect
-            setCriticalBatteryLevelToast(); //Calls for toast
-            //setCriticalBatteryLevelNotification();  //Calls for notification
+            if(!criticalLevel) {
+                setCriticalBatteryLevelToast(); //Calls for toast
+                setCriticalBatteryLevelNotification();  //Calls for notification
+            }
+            criticalLevel = true;
         }
     }
 
@@ -217,23 +219,17 @@ public class ControllerActivity extends AppCompatActivity {
      * @author Erik Laurin
      * @purpose refreshes the battery level indicator and values for the Battery activity
      */
-    Runnable mBatteryRefresher = new Runnable() {
-        @Override
-        public void run() {
+
+    private void readInput(String s){
+        if(s.startsWith("B")){
             try {
-                analogReadValue = (new Random().nextInt(250)) + 250;
+                analogReadValue = Integer.parseInt(s.substring(1).trim());
                 setBatteryLevel();
-                batteryBundle.putDouble("EXTRA_ANALOG", analogReadValue);
-                batteryBundle.putDouble("EXTRA_ARDUINO_VOLTAGE", arduinoVoltage);
-                batteryStats.putExtras(batteryBundle);
-            } finally {
-                batteryHandler.postDelayed(mBatteryRefresher, interval);
+
+            } catch(NumberFormatException e) {
+                System.out.println("Could not parse " + "'" + s.substring(1) +"'");
             }
         }
-    };
-
-    void startRefreshingBatteryTask() {
-        mBatteryRefresher.run();
     }
 }
 

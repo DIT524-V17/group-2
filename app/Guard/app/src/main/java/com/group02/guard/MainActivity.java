@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         control = (Button) findViewById(R.id.controlButton);
-
         map = (Button) findViewById(R.id.mapsButton);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 

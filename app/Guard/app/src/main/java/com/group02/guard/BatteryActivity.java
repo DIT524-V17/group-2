@@ -1,5 +1,6 @@
 package com.group02.guard;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,9 +9,9 @@ import android.widget.TextView;
 
 public class BatteryActivity extends MainActivity {
 
-    TextView analogValue;
-    TextView arduinoVoltage;
-    TextView actualVoltage;
+    public TextView analogValue;
+    public TextView arduinoVoltage;
+    public TextView actualVoltage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
