@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
         mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
         homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+
     }
 
     /**
