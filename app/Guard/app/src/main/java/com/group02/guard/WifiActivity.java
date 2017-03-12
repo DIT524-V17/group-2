@@ -42,6 +42,9 @@ public class WifiActivity extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi);
 
+        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
+        connectNav.setChecked(true);
+
         wifiManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         wifiChannel = wifiManager.initialize(this, getMainLooper(), null);
 

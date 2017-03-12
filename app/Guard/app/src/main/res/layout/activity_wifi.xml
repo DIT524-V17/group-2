@@ -3,6 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <include layout="@layout/toolbar_top"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:visibility="visible"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,5 +43,12 @@
             android:layout_below="@+id/buttonOnOff"
             android:layout_marginTop="15dp"/>
 
+        <include
+            layout="@layout/toolbar_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible" />
+
     </RelativeLayout>
+
 </LinearLayout>

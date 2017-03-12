@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button control;
     Button map;
+    Button wifi;
     ImageButton optionMenu;
     static ToggleButton connectNav;
     static ToggleButton controlNav;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
+        wifi = (Button) findViewById(R.id.wifiDirectButton);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
         connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
@@ -49,9 +51,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.wifiDirectButton:
+                connectNav.setChecked(true);
+                Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
+                startActivity(wifi);
+                return true;
+
             case R.id.connectNavigation:
-                //connectNav.setChecked(true);
-                Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
+                connectNav.setChecked(true);
+                Intent wifi1 = new Intent(MainActivity.this, WifiActivity.class);
+                startActivity(wifi1);
                 return true;
 
             case R.id.controlButton:
