@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -17,12 +16,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import java.nio.ByteBuffer;
 
-import static com.group02.guard.MainActivity.controlNav;
-
-public class ControllerActivity extends AppCompatActivity {
+public class ControllerActivity extends MainActivity {
 
     Control analogue;
     TextView showMoveEvent;
