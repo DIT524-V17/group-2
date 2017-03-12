@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Button login, register;
     private EditText etEmail, etPass;
@@ -51,8 +53,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void login() {
         String email = etEmail.getText().toString();
         String pass = etPass.getText().toString();
+        String salt = "";
 
-        if (db.getUser(email, pass)) {
+        String hashedPass = null;
+        try {
+            hashedPass = HashInformation.Hash(pass, salt);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String hashedEmail = null;
+        try {
+            hashedEmail = HashInformation.Hash(email, salt);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        if (db.getUser(hashedEmail, hashedPass)) {
             session.setLoggedin(true);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
