@@ -20,6 +20,8 @@ public class Control extends View {
     Paint smallDotAndOuterBorder = new Paint();
     Paint smallDotBorder = new Paint();
 
+
+
     private int toDo;
 
     public Control(Context context, AttributeSet attrs) {
@@ -64,6 +66,7 @@ public class Control extends View {
         canvas.drawCircle(cx, cy, w / 2 - 10, backGround);
         canvas.drawCircle(x, y, RADIUS + 2, smallDotBorder);
         canvas.drawCircle(x, y, RADIUS, smallDotAndOuterBorder);
+
     }
 
     /*
@@ -91,26 +94,96 @@ public class Control extends View {
 
         return r * Math.sin(t) + cy;
     }
+
+    double nAngle(){
+
+        double angle = Math.toDegrees(t);
+
+        angle += 90;
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        return angle;
+
+    }
+
     /*
     /A method for scaling
     /@author Joacim Eberlén
     */
     public double scale(double oldMax, double oldMin, double newMax, double newMin, double input){
         double scaled = ((newMax - newMin) / (oldMax - oldMin) * (input - oldMax) + newMax);
-        return scaled ;
+        return scaled;
     }
     /*
     /Speed rescaled to fit into 0 - 100 for the car speed.
     /@author Joacim Eberlen
     */
-    public double getSpeed(double scaleMax){
+    public double getSpeed(double newMax){
 
-        double speed = scale(580.0, 0, scaleMax, 0, r);
-        return speed ;
+        double speed = scale(w/2-RADIUS, 0, newMax, 0, r);
+        return speed;
     }
 
     static double distance(double x1 , double y1, double x2, double y2 ){
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    public double getR(){
+        return r;
+    }
+
+    public int[] motorSpeed(double speed, double angle){
+
+        int[] motors = new int[2];
+        double leftMotor, rightMotor;
+            if (angle >= 0 && angle < 90) {
+                leftMotor = speed;
+                rightMotor = (leftMotor * angle/90) - leftMotor;
+
+                motors[0] = (int)leftMotor;
+                motors[1] = Math.abs((int)rightMotor);
+
+                return motors;
+
+            } else if (angle >= 90 && angle < 180) {
+
+                leftMotor = speed;
+                rightMotor = (leftMotor * angle/90) - leftMotor;
+
+                motors[0] = (int)leftMotor * -1;
+                motors[1] = (int)rightMotor * -1;
+
+                return motors;
+
+            } else if (angle >= 180 && angle < 270) {
+
+                rightMotor = speed;
+                leftMotor = (rightMotor * angle/90) - rightMotor - 200;
+
+                motors[0] = (int)leftMotor;
+                motors[1] = (int)rightMotor * -1;
+
+                return motors;
+
+            } else if (angle >= 270 && angle <= 360) {
+
+                rightMotor = speed;
+                leftMotor = (rightMotor * angle/90) - rightMotor - 200;
+
+                motors[0] = Math.abs((int)leftMotor);
+                motors[1] = (int)rightMotor;
+
+                return motors;
+
+            }
+
+
+
+        return motors;
+
     }
 
     @Override
@@ -128,6 +201,7 @@ public class Control extends View {
             case MotionEvent.ACTION_UP :
                 toDo = 1;
                 center();
+                moveListener.onMoveStopped();
                 break;
             default :break;
 
@@ -143,6 +217,7 @@ public class Control extends View {
             toDo = 0;
             r = 0;
         }
+
         x = (float) p2nX();
         y = (float) p2nY();
         invalidate();
@@ -153,7 +228,6 @@ public class Control extends View {
         t = n2pT(e.getX(),e.getY());
         x = (float) p2nX();
         y =(float) p2nY();
-
 
         if(moveListener != null) {
             moveListener.onMoveInDirection(t);
@@ -167,5 +241,6 @@ public class Control extends View {
 
     public interface OnMoveListener{
         void onMoveInDirection(double polarAngle);
+        void onMoveStopped();
     }
 }

@@ -1,15 +1,19 @@
 package com.group02.guard;
 
+import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import java.nio.ByteBuffer;
 
 import static com.group02.guard.MainActivity.controlNav;
+import static java.security.AccessController.getContext;
 
 public class ControllerActivity extends AppCompatActivity {
 
@@ -44,9 +48,7 @@ public class ControllerActivity extends AppCompatActivity {
 
             @Override
             public void handleMessage(Message message) {
-
-                String s = (String) message.obj;
-
+            String s = (String) message.obj;
             }
         });
 
@@ -59,49 +61,34 @@ public class ControllerActivity extends AppCompatActivity {
         analogue.setOnMoveListener(new Control.OnMoveListener()
         {
             public void onMoveInDirection(final double polarAngle) {
+                double speed = analogue.getSpeed(100);
+                Log.e("", "" + speed);
+                // [0] is left, [1] is right
+                int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
 
-                if (polarAngle <= 0) {
-                    double speed = analogue.getSpeed(100.0);
-                    Log.e("", "" + speed);
-                    showMoveEvent.setText("Max move in " + polarAngle + " direction. " + "\nSpeed: " + speed);
+                showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "." + "\nSpeed: " + speed);
+                write(motors[0], motors[1]);
+            }
 
-                    write(polarAngle, speed);
+            @Override
+            public void onMoveStopped() {
+                showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "." + "\nSpeed: " + 0);
 
-                } else if (polarAngle > 0) {
-
-                    double speed = analogue.getSpeed(-100.0);
-                    Log.e("", "" + speed);
-                    showMoveEvent.setText("Max move in " + polarAngle + " direction. " + "\nSpeed: " + speed);
-
-
-                    write(polarAngle, speed);
-                }
-
+                write(0, 0);
             }
         });
-
-
     }
 
-    public void write(double polarAngle, double speed){
-        Message msg = Message.obtain();
-        msg.obj = "A" + polarAngle;
-        writeHandler.sendMessage(msg);
+    public void write(int left, int right){
+        Message l = Message.obtain();
+        l.obj = "L" + left;
+        writeHandler.sendMessage(l);
 
-        Message msgSpeed = Message.obtain();
-        msgSpeed.obj = "S" + speed;
-        writeHandler.sendMessage(msgSpeed);
+        Message r = Message.obtain();
+        r.obj = "R" + right;
+        writeHandler.sendMessage(r);
     }
 
-    public static byte[] toByteArray(double value) {
-        byte[] bytes = new byte[8];
-        ByteBuffer.wrap(bytes).putDouble(value);
-        return bytes;
-    }
-
-    public static double toDouble(byte[] bytes) {
-        return ByteBuffer.wrap(bytes).getDouble();
-    }
 }
 
 
