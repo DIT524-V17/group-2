@@ -17,6 +17,13 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <Button
+        android:id="@+id/wifiDirectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WiFi Direct"
+        android:onClick="onClick"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

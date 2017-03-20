@@ -2,7 +2,6 @@ package com.group02.guard;
 
 import android.os.Bundle;
 import android.widget.ToggleButton;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,7 +42,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(57.7704215, 12.0345796);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(57.7704215, 12.0345796), 13.0f));
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker at Justinas house"));
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker at Justinas' house"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }

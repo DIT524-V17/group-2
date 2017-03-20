@@ -41,7 +41,8 @@
                 android:id="@+id/batteryButton"
                 android:layout_weight="0.1"
                 android:onClick="displayBatteryStats"
-                app:srcCompat="@drawable/empty_battery"/>
+                android:visibility="invisible"
+                android:src="@drawable/empty_battery"/>
 
         </LinearLayout>
 
