@@ -1,41 +1,39 @@
 package com.group02.guard;
 
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
-    Button connect;
-    Button control;
-    Button camera;
-    Button map;
-    ImageButton battery;
-    ImageButton optionMenu;
+
     static ToggleButton connectNav;
     static ToggleButton controlNav;
     static ToggleButton cameraNav;
     static ToggleButton mapNav;
     static ToggleButton homeNav;
-
+    Button control;
+    Button map;
+    Button wifi;
+    ImageButton optionMenu;
+    Button connect;
+    Button camera;
+    ImageButton battery;
+    private Button btnLogout;
+    private Session session;
     private double analogReadValue = 432;
     private double arduinoVoltage;
 
@@ -44,25 +42,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        topBar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(topBar);
-//        bottomBar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(bottomBar);
+        session = new Session(this);
+        if (!session.loggedin()) {
+            logout();
+        }
+        btnLogout = (Button) findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
 
-        connect = (Button) findViewById(R.id.connectButton);
         control = (Button) findViewById(R.id.controlButton);
-        camera = (Button) findViewById(R.id.cameraButton);
         map = (Button) findViewById(R.id.mapsButton);
+        wifi = (Button) findViewById(R.id.wifiDirectButton);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
-
-        battery = (ImageButton) findViewById(R.id.batteryButton);
-        setBatteryLevel(analogReadValue);
 
         connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
         controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
         cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
         mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
         homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+    }
+
+    private void logout() {
+        session.setLoggedin(false);
+        finish();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
     /**
@@ -74,14 +81,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.connectButton:
-                //connectNav.setChecked(true);
-                Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
+            case R.id.wifiDirectButton:
+                connectNav.setChecked(true);
+                Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
+                startActivity(wifi);
                 return true;
 
             case R.id.connectNavigation:
-                //connectNav.setChecked(true);
-                Toast.makeText(MainActivity.this, "Connect not yet implemented", Toast.LENGTH_LONG).show();
+                connectNav.setChecked(true);
+                Intent wifi1 = new Intent(MainActivity.this, WifiActivity.class);
+                startActivity(wifi1);
                 return true;
 
             case R.id.controlButton:
@@ -96,11 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(controlCar2);
                 return true;
 
-            case R.id.cameraButton:
-                //cameraNav.setChecked(true);
-                Toast.makeText(MainActivity.this, "Camera not yet implemented", Toast.LENGTH_LONG).show();
-                return true;
-
             case R.id.cameraNavigation:
                 //cameraNav.setChecked(true);
                 Toast.makeText(MainActivity.this, "Camera not yet implemented", Toast.LENGTH_LONG).show();
@@ -109,19 +113,19 @@ public class MainActivity extends AppCompatActivity {
             case R.id.mapsButton:
                 mapNav.setChecked(true);
                 Intent openMap1 = new Intent(MainActivity.this, MapsActivity.class);
-                MainActivity.this.startActivity(openMap1);
+                startActivity(openMap1);
                 return true;
 
             case R.id.mapsNavigation:
                 mapNav.setChecked(true);
                 Intent openMap2 = new Intent(MainActivity.this, MapsActivity.class);
-                MainActivity.this.startActivity(openMap2);
+                startActivity(openMap2);
                 return true;
 
             case R.id.homeNavigation:
                 homeNav.setChecked(true);
                 Intent goHome = new Intent(MainActivity.this, MainActivity.class);
-                MainActivity.this.startActivity(goHome);
+                startActivity(goHome);
                 return true;
 
            default:
@@ -176,12 +180,6 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    /**
-     * @author Erik Laurin
-     * @purpose is to set battery icon depending on remaining battery level
-     * @param analogReadValue analogRead value from Arduino between 0-1024
-     */
     private void setBatteryLevel(double analogReadValue) {
         double voltage = getVoltage(analogReadValue);   //Converts from an analog value to voltage
         voltage /=8; //To get average voltage for each battery
@@ -224,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder mBuilder= new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-                mBuilder.setSmallIcon(R.drawable.notification_battery)
+        mBuilder.setSmallIcon(R.drawable.notification_battery)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.guard))
                 .setContentTitle("SmartCar Critical Battery Level")
                 .setAutoCancel(true)
