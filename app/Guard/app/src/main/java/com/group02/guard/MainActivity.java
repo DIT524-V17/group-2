@@ -1,5 +1,7 @@
 package com.group02.guard;
 
+import android.content.Context;
+import android.view.MotionEvent;
 import android.widget.ToggleButton;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,11 +20,13 @@ public class MainActivity extends AppCompatActivity {
     Button map;
     Button wifi;
     ImageButton optionMenu;
+    ImageButton batteryButton;
     static ToggleButton connectNav;
     static ToggleButton controlNav;
     static ToggleButton cameraNav;
     static ToggleButton mapNav;
     static ToggleButton homeNav;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -39,6 +43,24 @@ public class MainActivity extends AppCompatActivity {
         cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
         mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
         homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+
+        /*
+        * @author Joacim Eberlen
+        * @purpose Initialize the battery button.
+        * ToDO: Needs to be put into some where were it can be accessed.
+        */
+        batteryButton = (ImageButton) findViewById(R.id.batteryButton);
+        final BatterySingleton battery = BatterySingleton.getInstance();
+        final Context context = this;
+        battery.initBattery(context);
+        battery.showBattery(batteryButton);
+        batteryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                battery.displayBatteryStats();
+            }
+        });
+
 
     }
 

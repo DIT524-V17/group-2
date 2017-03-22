@@ -20,6 +20,7 @@ import android.widget.Toast;
 class BatterySingleton extends MainActivity{
 
     // Following variables is used by the battery function
+    private Context context;
     private Intent batteryStats;
     private Bundle batteryBundle;
     private Handler batteryHandler;
@@ -42,10 +43,11 @@ class BatterySingleton extends MainActivity{
      * @author jeberlen
      * @purpose Makes the image button visible and initializes the view.
      */
-    protected void initBattery(){
+    protected void initBattery(Context context){
         batteryStats = new Intent();
         batteryBundle = new Bundle();
         batteryHandler = new Handler();
+        this.context = context;
     }
 
     protected void showBattery(ImageButton newBattery){
@@ -134,13 +136,13 @@ class BatterySingleton extends MainActivity{
      * @author Erik Laurin
      * @purpose opens BatteryActivity when pressing the battery level indicator
      */
-    protected void displayBatteryStats(View view) {
-        batteryStats = new Intent(this, BatteryActivity.class);
+    protected void displayBatteryStats() {
+        batteryStats = new Intent(context, BatteryActivity.class);
         batteryBundle = new Bundle();    //Sends intent extras in bundle
         batteryBundle.putDouble("EXTRA_ANALOG", analogReadValue);
         batteryBundle.putDouble("EXTRA_ARDUINO_VOLTAGE", arduinoVoltage);
         batteryStats.putExtras(batteryBundle);
-        startActivity(batteryStats);
+        context.startActivity(batteryStats);
     }
 
     /**

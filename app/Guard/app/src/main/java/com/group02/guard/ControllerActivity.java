@@ -1,5 +1,7 @@
 package com.group02.guard;
 
+import android.content.Context;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.os.Bundle;
@@ -35,10 +37,6 @@ public class ControllerActivity extends AppCompatActivity {
         return bytes;
     }
 
-    public static double toDouble(byte[] bytes) {
-        return ByteBuffer.wrap(bytes).getDouble();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +48,22 @@ public class ControllerActivity extends AppCompatActivity {
         controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
         controlNav.setChecked(true);
 
+        /*
+        * @author Joacim Eberlen
+        * @purpose Initialize the battery button.
+        * ToDo: Needs to be put into some where were it can be accessed.
+        */
         batteryButton = (ImageButton) findViewById(R.id.batteryButton);
-        BatterySingleton battery = BatterySingleton.getInstance();
-        battery.initBattery();
+        final BatterySingleton battery = BatterySingleton.getInstance();
+        final Context context = this;
+        battery.initBattery(context);
         battery.showBattery(batteryButton);
+        batteryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                battery.displayBatteryStats();
+            }
+        });
 
         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages
@@ -62,8 +72,8 @@ public class ControllerActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message message) {
 
-                String s = (String) message.obj;
-                //battery.readInput(s);
+            String s = (String) message.obj;
+            battery.readInput(s);
 
             }
         });
