@@ -47,6 +47,7 @@ public class ControllerActivity extends AppCompatActivity {
     //Set MAX_SPEED for motors
     final int MAX_SPEED = 70;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +113,11 @@ public class ControllerActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+    *   @author Joacim Eberlen
+    *   Writing to the arduino for motor control.
+    */
 
     public void write(int left, int right){
             Message l = Message.obtain();
