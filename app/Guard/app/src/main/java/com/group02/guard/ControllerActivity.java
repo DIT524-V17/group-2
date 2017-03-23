@@ -44,6 +44,9 @@ public class ControllerActivity extends AppCompatActivity {
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
 
+    //Set MAX_SPEED for motors
+    final int MAX_SPEED = 70;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,17 +88,12 @@ public class ControllerActivity extends AppCompatActivity {
 
         analogue.setOnMoveListener(new Control.OnMoveListener() {
             public void onMoveInDirection(final double polarAngle) {
-                double speed = analogue.getSpeed(100);
+                double speed = analogue.getSpeed(MAX_SPEED);
                 Log.e("", "" + speed);
                 // [0] is left, [1] is right
                 int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
                 showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "." + "\nSpeed: " + speed);
 
-                if(motors[0] < 20){
-                    motors[0] += 20;
-                }else if(motors[1] < 20){
-                    motors[1] += 20;
-                }
 
                 write(motors[0], motors[1]);
             }
