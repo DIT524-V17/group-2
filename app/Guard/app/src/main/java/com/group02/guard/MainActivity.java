@@ -44,24 +44,6 @@ public class MainActivity extends AppCompatActivity {
         mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
         homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
 
-        /*
-        * @author Joacim Eberlen
-        * @purpose Initialize the battery button.
-        * ToDO: Needs to be put into some where were it can be accessed.
-        */
-        batteryButton = (ImageButton) findViewById(R.id.batteryButton);
-        final BatterySingleton battery = BatterySingleton.getInstance();
-        final Context context = this;
-        battery.initBattery(context);
-        battery.showBattery(batteryButton);
-        batteryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                battery.displayBatteryStats();
-            }
-        });
-
-
     }
 
     /**
