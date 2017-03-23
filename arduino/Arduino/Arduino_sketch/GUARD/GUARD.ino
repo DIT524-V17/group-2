@@ -1,12 +1,14 @@
+#include <SimpleTimer.h>
 #include <Smartcar.h>
 #include <NewPing.h>
 #include <SoftwareSerial.h>
 
-#define TRIGGER_PIN_RIGHT_FRONT  51  // Arduino pin tied to trigger pin on the right ultrasonic sensor
+
+#define TRIGGER_PIN_RIGHT_FRONT  51  // Arduino pin tied to trigger pin on the ultrasonic sensor
 #define ECHO_PIN_RIGHT_FRONT     50  // Arduino pin tied to echo pin on the right ultrasonic sensor
 
-#define TRIGGER_PIN_LEFT_FRONT  43  // Arduino pin tied to trigger pin on the left ultrasonic sensor
-#define ECHO_PIN_LEFT_FRONT     42  // Arduino pin tied to echo pin on the left ultrasonic sensor
+#define TRIGGER_PIN_LEFT_FRONT  43 
+#define ECHO_PIN_LEFT_FRONT     42  
 
 #define TRIGGER_PIN_MID_FRONT  49 
 #define ECHO_PIN_MID_FRONT     48
@@ -30,7 +32,9 @@ NewPing sonarSideRight(TRIGGER_PIN_SIDE_RIGHT, ECHO_PIN_SIDE_RIGHT, MAX_DISTANCE
 NewPing sonarBack(TRIGGER_PIN_BACK, ECHO_PIN_BACK, MAX_DISTANCE);
 
 Car car;
+SimpleTimer timer;
 ShieldMotors motors;
+
 int motorSpeedRight;
 int motorSpeedLeft;
 String input;
@@ -45,16 +49,17 @@ int i = 0;
 void setup() {
   Serial3.begin(9600);
   car.begin();
+  timer.setInterval(5000, sendVoltage); //Sets the interval to send the voltage every 5 second
 }
 
 void loop() {
-  sendVoltage();
+  timer.run();
   handleInput();
-  if(motorSpeedLeft > 0 && motorSpeedRight > 0){
-    if(!obstacleDetectionFront()){
-      motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);
+  if(motorSpeedLeft > 0 && motorSpeedRight > 0){  //If the car gets input to go forward
+    if(!obstacleDetectionFront()){  //If there is no obstacles in front of the car
+      motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight); //Sets input speed
     }else{
-    motors.setMotorSpeed(0, 0);
+    motors.setMotorSpeed(0, 0); //Sets speed to 0 since obstacle in front detected
     }
   }
 
@@ -66,15 +71,15 @@ void loop() {
     }
   }
   else{
-    motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);
+    motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);  //When input is neither forwards nor backwards
   }
 }
 
-void handleInput() { //handle serial input if there is any
-  if (Serial3.available()) {
+void handleInput() { 
+  if (Serial3.available()) { //handle serial input if there is any
     input = Serial3.readStringUntil('\n');
     if (input.startsWith("R")){
-      motorSpeedRight = input.substring(1).toInt();
+      motorSpeedRight = input.substring(1).toInt(); //Sets the motorspeed value for the right engines
     }else if (input.startsWith("L")){
       motorSpeedLeft = input.substring(1).toInt();
     }
@@ -84,10 +89,10 @@ void handleInput() { //handle serial input if there is any
 
 void sendVoltage() {
   String b = "B";
-  Serial3.println(b + analogRead(A0)); // prints out the voltage measured with 5 decimals (corresponds to resolution (0.00489V (5V/1023));
+  Serial3.println(b + analogRead(A0)); //Sends the voltage value to the phone  
 }
 
-boolean obstacleDetectionFront(){
+boolean obstacleDetectionFront(){ //Loops through the sensors in front of the car, returns true if obstacle detected
   if(i == 0){
     distanceMidFront = sonarMidFront.ping_in();
     if(distanceMidFront < 18 && distanceMidFront > 0){                                                                                                                                    
