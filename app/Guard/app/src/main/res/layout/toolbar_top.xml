@@ -39,6 +39,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.1"
                 android:visibility="invisible"
+                android:onClick="displayBatteryStats"
                 android:src="@drawable/empty_battery"/>
 
         </LinearLayout>
