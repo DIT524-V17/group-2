@@ -51,7 +51,8 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
