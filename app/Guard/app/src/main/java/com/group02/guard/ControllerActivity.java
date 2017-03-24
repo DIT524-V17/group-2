@@ -14,8 +14,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.content.pm.ActivityInfo;
+
+import org.w3c.dom.Text;
+
 import java.nio.ByteBuffer;
 
 public class ControllerActivity extends MainActivity {
@@ -40,6 +45,30 @@ public class ControllerActivity extends MainActivity {
     private double arduinoVoltage;
     private Boolean criticalLevel = false;
 
+    private int sfmReadValue;
+    private TextView sfm;
+    private ImageView sfmImage;
+
+    private int sflReadValue = 20;
+    private TextView sfl;
+    private ImageView sflImage;
+
+    private int sfrReadValue = 20;
+    private TextView sfr;
+    private ImageView sfrImage;
+
+    private int srReadValue = 30;
+    private TextView sr;
+    private ImageView srImage;
+
+    private int slReadValue = 50;
+    private TextView sl;
+    private ImageView slImage;
+
+    private int sbReadValue = 9;
+    private TextView sb;
+    private ImageView sbImage;
+
     public static byte[] toByteArray(double value) {
         byte[] bytes = new byte[8];
         ByteBuffer.wrap(bytes).putDouble(value);
@@ -52,12 +81,30 @@ public class ControllerActivity extends MainActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
 
         battery = (ImageButton) findViewById(R.id.batteryButton);
-        showMoveEvent = (TextView) findViewById(R.id.coords);
         analogue = (Control) findViewById(R.id.controlView);
+
+        sfm = (TextView) findViewById(R.id.sfm_value);
+        sfmImage = (ImageView) findViewById(R.id.sfm_image);
+
+        sfr = (TextView) findViewById(R.id.sfr_value);
+        sfrImage = (ImageView) findViewById(R.id.sfr_image);
+
+        sfl = (TextView) findViewById(R.id.sfl_value);
+        sflImage = (ImageView) findViewById(R.id.sfl_image);
+
+        sl = (TextView) findViewById(R.id.sl_value);
+        slImage = (ImageView) findViewById(R.id.sl_image);
+
+        sr = (TextView) findViewById(R.id.sr_value);
+        srImage = (ImageView) findViewById(R.id.sr_image);
+        
+        sb = (TextView) findViewById(R.id.sb_value);
+        sbImage = (ImageView) findViewById(R.id.sb_image);
 
         controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
         controlNav.setChecked(true);
@@ -86,14 +133,12 @@ public class ControllerActivity extends MainActivity {
                 if (polarAngle <= 0) {
                     double speed = analogue.getSpeed(100.0);
                     Log.e("", "" + speed);
-                    showMoveEvent.setText("Max move in " + polarAngle + " direction. " + "\nSpeed: " + speed);
                     write(polarAngle, speed);
 
                 } else if (polarAngle > 0) {
 
                     double speed = analogue.getSpeed(-100.0);
                     Log.e("", "" + speed);
-                    showMoveEvent.setText("Max move in " + polarAngle + " direction. " + "\nSpeed: " + speed);
                     write(polarAngle, speed);
                 }
             }
@@ -103,6 +148,8 @@ public class ControllerActivity extends MainActivity {
         batteryHandler = new Handler();
         batteryStats = new Intent();
         battery.setVisibility(View.VISIBLE);
+
+        setSensorValues();
     }
 
     public void write(double polarAngle, double speed) {
@@ -214,13 +261,147 @@ public class ControllerActivity extends MainActivity {
         if (BTString.startsWith("B")) { //refreshes the battery value and level indicator
             try {
                 analogReadValue = Integer.parseInt(BTString.substring(1).trim());
+                Log.e("", "" + analogReadValue);
                 setBatteryLevel();
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse " + "'" + BTString.substring(1) + "'");
             }
-        } else if (BTString.startsWith("SENSORMID")) {
-            //placeholder
+        } else if (BTString.startsWith("fr")) {
+            try {
+                sfrReadValue = Integer.parseInt(BTString.substring(2).trim());
+                setSensorValues();
+
+            } catch (NumberFormatException e) {
+                System.out.println("Could not parse");
+            }
+        } else if (BTString.startsWith("FM")) {
+            try {
+                sfmReadValue = Integer.parseInt(BTString.substring(2).trim());
+                Log.e("", "" + sfmReadValue);
+                setSensorValues();
+
+            } catch (NumberFormatException e) {
+                System.out.println("Could not parse");
+            }
+        } else if (BTString.startsWith("fl")) {
+            try {
+                sflReadValue = Integer.parseInt(BTString.substring(2).trim());
+                setSensorValues();
+
+            } catch (NumberFormatException e) {
+                System.out.println("Could not parse");
+            }
+        } else if (BTString.startsWith("r")) {
+            try {
+                srReadValue = Integer.parseInt(BTString.substring(1).trim());
+                setSensorValues();
+
+            } catch (NumberFormatException e) {
+                System.out.println("Could not parse");
+            }
+        } else if (BTString.startsWith("l")) {
+            try {
+                slReadValue = Integer.parseInt(BTString.substring(1).trim());
+                setSensorValues();
+
+            } catch (NumberFormatException e) {
+                System.out.println("Could not parse");
+            }
+        } else if (BTString.startsWith("sb")) {
+            try {
+                sbReadValue = Integer.parseInt(BTString.substring(2).trim());
+                setSensorValues();
+
+            } catch (NumberFormatException e) {
+                System.out.println("Could not parse");
+            }
+        }
+    }
+    private void setSensorValues() {
+        sfm.setText(String.valueOf(sfmReadValue));
+        sfl.setText(String.valueOf(sflReadValue));
+        sfr.setText(String.valueOf(sfrReadValue));
+        sr.setText(String.valueOf(srReadValue));
+        sl.setText(String.valueOf(slReadValue));
+        sb.setText(String.valueOf(sbReadValue));
+
+        if(sfmReadValue < 10){
+            sfmImage.setImageAlpha(255);
+        }
+        else if (sfmReadValue <= 20 && sfmReadValue > 10){
+            sfmImage.setImageAlpha(170);
+        }
+        else if (sfmReadValue <= 40 && sfmReadValue > 20){
+            sfmImage.setImageAlpha(85);
+        }
+        else if (sfmReadValue > 40){
+            sfmImage.setImageAlpha(7);
+        }
+
+        if(sflReadValue < 10){
+            sflImage.setImageAlpha(255);
+        }
+        else if (sflReadValue <= 20 && sflReadValue > 10){
+            sflImage.setImageAlpha(170);
+        }
+        else if (sflReadValue <= 40 && sflReadValue > 20){
+            sflImage.setImageAlpha(85);
+        }
+        else if (sflReadValue > 40){
+            sflImage.setImageAlpha(7);
+        }
+
+        if(sfrReadValue < 10){
+            sfrImage.setImageAlpha(255);
+        }
+        else if (sfrReadValue <= 20 && sfrReadValue > 10){
+            sfrImage.setImageAlpha(170);
+        }
+        else if (sfrReadValue <= 40 && sfrReadValue > 20){
+            sfrImage.setImageAlpha(85);
+        }
+        else if (sfrReadValue > 40){
+            sfrImage.setImageAlpha(7);
+        }
+
+        if(slReadValue < 10){
+            slImage.setImageAlpha(255);
+        }
+        else if (slReadValue <= 20 && slReadValue > 10){
+            slImage.setImageAlpha(170);
+        }
+        else if (slReadValue <= 40 && slReadValue > 20){
+            slImage.setImageAlpha(85);
+        }
+        else if (slReadValue > 40){
+            slImage.setImageAlpha(7);
+        }
+
+        if(srReadValue < 10){
+            srImage.setImageAlpha(255);
+        }
+        else if (srReadValue <= 20 && srReadValue > 10){
+            srImage.setImageAlpha(170);
+        }
+        else if (srReadValue <= 40 && srReadValue > 20){
+            srImage.setImageAlpha(85);
+        }
+        else if (srReadValue > 40){
+            srImage.setImageAlpha(7);
+        }
+
+        if(sbReadValue < 10){
+            sbImage.setImageAlpha(255);
+        }
+        else if (sbReadValue <= 20 && sbReadValue > 10){
+            sbImage.setImageAlpha(170);
+        }
+        else if (sbReadValue <= 40 && sbReadValue > 20){
+            sbImage.setImageAlpha(85);
+        }
+        else if (sbReadValue > 40){
+            sbImage.setImageAlpha(7);
         }
     }
 }
