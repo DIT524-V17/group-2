@@ -46,7 +46,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="0.0" />
 
-
     <com.group02.guard.Control
         android:id="@+id/controlView"
         android:layout_width="100dp"
@@ -213,5 +212,17 @@
         android:layout_marginRight="0dp"
         app:layout_constraintRight_toRightOf="@+id/include2" />
 
+    <TextView
+        android:id="@+id/coords"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/include2"
+        app:layout_constraintRight_toRightOf="@+id/include2"
+        app:layout_constraintBottom_toBottomOf="@+id/include2"
+        android:layout_marginBottom="175dp" />
+
 
 </android.support.constraint.ConstraintLayout>
+

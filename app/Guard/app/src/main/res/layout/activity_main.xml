@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1.0"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:weightSum="1.0">
 
     <include layout="@layout/toolbar_top"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible"/>
 
     <include layout="@layout/toolbar_bottom"
@@ -21,33 +21,40 @@
         android:id="@+id/wifiDirectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WiFi Direct"
-        android:onClick="onClick"/>
+        android:onClick="onClick"
+        android:text="WiFi Direct" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.45">
+        android:layout_weight="0.45"
+        android:orientation="horizontal">
 
         <Button
-            android:drawableTop="@drawable/activity_icon_controller_selected"
-            android:text="Control"
             android:id="@+id/controlButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight=".50"
-            android:onClick="onClick"/>
+            android:drawableTop="@drawable/activity_icon_controller_selected"
+            android:onClick="onClick"
+            android:text="Control" />
 
         <Button
-            android:drawableTop="@drawable/activity_icon_map_selected"
-            android:text="Map"
             android:id="@+id/mapsButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight=".50"
-            android:onClick="onClick"/>
+            android:drawableTop="@drawable/activity_icon_map_selected"
+            android:onClick="onClick"
+            android:text="Map" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Logout" />
 
 </LinearLayout>

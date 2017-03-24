@@ -7,63 +7,63 @@
         android:id="@+id/bottom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <ToggleButton
                 android:id="@+id/homeNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/select_home"
-                android:textOn=""
-                android:textOff=""
                 android:layout_weight="0.20"
-                android:onClick="onClick"/>
+                android:background="@drawable/select_home"
+                android:onClick="onClick"
+                android:textOff=""
+                android:textOn="" />
 
             <ToggleButton
                 android:id="@+id/connectNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/select_connect"
-                android:textOn=""
-                android:textOff=""
                 android:layout_weight="0.20"
-                android:onClick="onClick"/>
+                android:background="@drawable/select_connect"
+                android:onClick="onClick"
+                android:textOff=""
+                android:textOn="" />
 
             <ToggleButton
                 android:id="@+id/controlNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/select_control"
-                android:textOn=""
-                android:textOff=""
                 android:layout_weight="0.20"
-                android:onClick="onClick"/>
+                android:background="@drawable/select_control"
+                android:onClick="onClick"
+                android:textOff=""
+                android:textOn="" />
 
             <ToggleButton
                 android:id="@+id/cameraNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/select_camera"
-                android:textOn=""
-                android:textOff=""
                 android:layout_weight="0.20"
-                android:onClick="onClick"/>
+                android:background="@drawable/select_camera"
+                android:onClick="onClick"
+                android:textOff=""
+                android:textOn="" />
 
             <ToggleButton
                 android:id="@+id/mapsNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/select_map"
-                android:textOn=""
-                android:textOff=""
                 android:layout_weight="0.20"
-                android:onClick="onClick"/>
+                android:background="@drawable/select_map"
+                android:onClick="onClick"
+                android:textOff=""
+                android:textOn="" />
 
         </LinearLayout>
 

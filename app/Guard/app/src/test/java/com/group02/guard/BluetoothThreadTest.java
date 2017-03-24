@@ -11,10 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
-import static org.mockito.Mockito.*;
 
 /**
  * Created by jeberlen on 2017-03-06.
@@ -217,5 +214,3 @@ public class BluetoothThreadTest {
     }
 
 }
-
-//Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme

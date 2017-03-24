@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.util.UUID;
 
 /**
+ * @author Boyan Dai, Joacim Eberlen
  * A thread that connects to a remote device over Bluetooth, and reads/writes data
  * using message Handlers. A delimiter character is used to parse messages from a stream,
  * and must be implemented on the other side of the connection as well. If the connection
@@ -37,6 +38,8 @@ import java.util.UUID;
  *
  *     Handler writeHandler = t.getWriteHandler();
  *     t.start();
+ *
+ *     @version 1.0.0 BD
  */
 public class BluetoothThread extends Thread {
 
@@ -67,6 +70,7 @@ public class BluetoothThread extends Thread {
     private String rx_buffer = "";
 
     /**
+     *
      * Constructor, takes in the MAC address of the remote Bluetooth device
      * and a Handler for received messages.
      *
@@ -85,6 +89,7 @@ public class BluetoothThread extends Thread {
     }
 
     /**
+     *
      * Return the write handler for this connection. Messages received by this
      * handler will be written to the Bluetooth socket.
      */
@@ -93,6 +98,7 @@ public class BluetoothThread extends Thread {
     }
 
     /**
+     *
      * Connect to a remote Bluetooth socket, or throw an exception if it fails.
      */
     private void connect() throws Exception {
@@ -126,6 +132,7 @@ public class BluetoothThread extends Thread {
     }
 
     /**
+     *
      * Disconnect the streams and socket.
      */
     private void disconnect() {
@@ -144,6 +151,7 @@ public class BluetoothThread extends Thread {
     }
 
     /**
+     *
      * Return data read from the socket, or a blank string.
      */
     private String read() {
@@ -171,6 +179,7 @@ public class BluetoothThread extends Thread {
     }
 
     /**
+     *
      * Write data to the socket.
      */
     private void write(String s) {
@@ -191,6 +200,7 @@ public class BluetoothThread extends Thread {
     }
 
     /**
+     *
      * Pass a message to the read handler.
      */
     private void sendToReadHandler(String s) {
@@ -202,6 +212,7 @@ public class BluetoothThread extends Thread {
     }
 
     /**
+     *
      * Send complete messages from the rx_buffer to the read handler.
      */
     private void parseMessages() {
@@ -227,6 +238,7 @@ public class BluetoothThread extends Thread {
     }
 
     /**
+     *
      * Entry point when thread.start() is called.
      */
     public void run() {

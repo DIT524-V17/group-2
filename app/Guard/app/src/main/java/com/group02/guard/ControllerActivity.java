@@ -6,11 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,8 +18,33 @@ import android.content.pm.ActivityInfo;
 import org.w3c.dom.Text;
 
 import java.nio.ByteBuffer;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
-public class ControllerActivity extends MainActivity {
+import static com.group02.guard.MainActivity.controlNav;
+
+/**
+ * @author Joacim Eberlen
+ * An activity that includes the video stream, the controller, the battery levels of the car.
+ *
+ * @version 1.0.1 JE
+ */
+public class ControllerActivity extends AppCompatActivity {
+
+    //Battery
+    // Following variables is used by the battery function
+    private Intent batteryStats;
+    private Bundle batteryBundle;
+    private Handler batteryHandler;
+    private ImageButton battery;
+    private double analogReadValue;
+    private double arduinoVoltage;
+    private boolean criticalLevel = false;
 
     Control analogue;
     TextView showMoveEvent;
@@ -35,15 +56,6 @@ public class ControllerActivity extends MainActivity {
 
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
-
-    // Following variables is used by the battery function
-    private Intent batteryStats;
-    private Bundle batteryBundle;
-    private Handler batteryHandler;
-    private ImageButton battery;
-    private double analogReadValue;
-    private double arduinoVoltage;
-    private Boolean criticalLevel = false;
 
     private int sfmReadValue;
     private TextView sfm;
@@ -78,7 +90,13 @@ public class ControllerActivity extends MainActivity {
     public static double toDouble(byte[] bytes) {
         return ByteBuffer.wrap(bytes).getDouble();
     }
+    //Set MAX_SPEED for motors
+    final int MAX_SPEED = 70;
 
+    /**
+     * Creates UI elements and initializes the BluetoothThread.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -86,6 +104,9 @@ public class ControllerActivity extends MainActivity {
         setContentView(R.layout.activity_controller);
 
         battery = (ImageButton) findViewById(R.id.batteryButton);
+
+        showMoveEvent = (TextView) findViewById(R.id.coords);
+
         analogue = (Control) findViewById(R.id.controlView);
 
         sfm = (TextView) findViewById(R.id.sfm_value);
@@ -108,16 +129,24 @@ public class ControllerActivity extends MainActivity {
 
         controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
         controlNav.setChecked(true);
+        /*
+        * Initialize the battery button.
+        * ToDo: Needs to be put into some where were it can be globally accessed.
+        */
+        battery = (ImageButton) findViewById(R.id.batteryButton);
+        battery.setVisibility(View.VISIBLE);
 
         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages
+
         btt = new BluetoothThread(address, new Handler() {
 
             @Override
             public void handleMessage(Message message) {
 
-                String s = (String) message.obj;
-                readInput(s);
+            String s = (String) message.obj;
+            readInput(s);
+
             }
         });
 
@@ -129,18 +158,19 @@ public class ControllerActivity extends MainActivity {
 
         analogue.setOnMoveListener(new Control.OnMoveListener() {
             public void onMoveInDirection(final double polarAngle) {
+                double speed = analogue.getSpeed(MAX_SPEED);
+                Log.e("", "" + speed);
+                // [0] is left, [1] is right
+                int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
+                showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "." + "\nSpeed: " + speed);
 
-                if (polarAngle <= 0) {
-                    double speed = analogue.getSpeed(100.0);
-                    Log.e("", "" + speed);
-                    write(polarAngle, speed);
+                write(motors[0], motors[1]);
+            }
 
-                } else if (polarAngle > 0) {
-
-                    double speed = analogue.getSpeed(-100.0);
-                    Log.e("", "" + speed);
-                    write(polarAngle, speed);
-                }
+            @Override
+            public void onMoveStopped() {
+                showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "." + "\nSpeed: " + 0);
+                write(0, 0);
             }
         });
 
@@ -149,48 +179,58 @@ public class ControllerActivity extends MainActivity {
         batteryStats = new Intent();
         battery.setVisibility(View.VISIBLE);
 
+
         setSensorValues();
     }
 
-    public void write(double polarAngle, double speed) {
-        Message msg = Message.obtain();
-        msg.obj = "A" + polarAngle;
-        writeHandler.sendMessage(msg);
+    /**
+    *   Writing to the Arduino for motor control.
+     *  @param right: Right motor. left: Left motor,
+    */
 
-        Message msgSpeed = Message.obtain();
-        msgSpeed.obj = "S" + speed;
-        writeHandler.sendMessage(msgSpeed);
+    public void write(int left, int right){
+            Message l = Message.obtain();
+            l.obj = "L" + left;
+            writeHandler.sendMessage(l);
+
+            Message r = Message.obtain();
+            r.obj = "R" + right;
+            writeHandler.sendMessage(r);
+
+
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose sets battery icon depending on remaining battery level
+     * purpose is to set battery icon depending on remaining battery level
      */
-    private void setBatteryLevel() {
+    public void setBatteryLevel() {
         double voltage = getVoltage(analogReadValue);   //Converts from an analog value to voltage
-        voltage /= 8; //To get average voltage for each battery
+        voltage /=8; //To get average voltage for each battery
 
-        if (voltage >= 1.40) {   //Sets image depending on battery voltage = approx level based on alkaline AA discharge curve
+        if(voltage >= 1.40) {   //Sets image depending on battery voltage = approx level based on alkaline AA discharge curve
             battery.clearColorFilter();
             battery.setImageResource(R.drawable.full_battery);
             criticalLevel = false;
-        } else if (voltage >= 1.30 && voltage < 1.40) {
+        }
+        else if(voltage >= 1.30 && voltage < 1.40) {
             battery.clearColorFilter();
             battery.setImageResource(R.drawable.charged_battery);
             criticalLevel = false;
-        } else if (voltage >= 1.20 && voltage < 1.30) {
+        }
+        else if(voltage >= 1.20 && voltage < 1.30) {
             battery.clearColorFilter();
             battery.setImageResource(R.drawable.half_charged_battery);
             criticalLevel = false;
-        } else if (voltage >= 1.05 && voltage < 1.20) {
+        }
+        else if(voltage >= 1.05 && voltage < 1.20) {
             battery.clearColorFilter();
             battery.setImageResource(R.drawable.low_battery);
             criticalLevel = false;
         }
-        if (voltage < 1.05) {
+        if(voltage < 1.05){
             battery.setImageResource(R.drawable.empty_battery);
             battery.setColorFilter(Color.RED);  //For effect
-            if (!criticalLevel) {   //Makes the toast and notification only appear ones
+            if(!criticalLevel) {
                 setCriticalBatteryLevelToast(); //Calls for toast
                 setCriticalBatteryLevelNotification();  //Calls for notification
             }
@@ -199,10 +239,9 @@ public class ControllerActivity extends MainActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose is to create a toast to notify the user of the SmartCar's critical battery level
+     * Purpose is to create a toast to notify the user of the SmartCar's critical battery level
      */
-    private void setCriticalBatteryLevelToast() {
+    private void setCriticalBatteryLevelToast(){
         CharSequence text = "Critical battery level!";
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(this, text, duration);
@@ -210,38 +249,35 @@ public class ControllerActivity extends MainActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose Creates a notification notifying critical battery level
+     * Purpose is to create a notification to notify the user of the SmartCar's critical battery level
      */
-    private void setCriticalBatteryLevelNotification() {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+    private void setCriticalBatteryLevelNotification(){
+        NotificationCompat.Builder mBuilder= new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         mBuilder.setSmallIcon(R.drawable.notification_battery)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.guard))
-                .setContentTitle("SmartCar")
+                .setContentTitle("SmartCar Critical Battery Level")
                 .setAutoCancel(true)
-                .setContentText("Critical battery level")
-                .setContentIntent(pendingIntent); //Sets BatteryActivity on press on notificaton
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                .setContentText("content")
+                .setContentIntent(pendingIntent); //Sets the app to open MainActivity on press on notificaton
+        NotificationManager notificationManager= (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, mBuilder.build());
     }
 
     /**
+     * Purpose is to calculate the SmartCar's battery voltage
      * @param analogReadValue analogRead value from Arduino between 0-1024
      * @return returns the SmartCar's battery voltage
-     * @author Erik Laurin
-     * @purpose calculates the SmartCar's battery voltage
      */
-    private double getVoltage(double analogReadValue) {
-        arduinoVoltage = analogReadValue * (5.0 / 1024.0); // Converts the analog reading to voltage
+    private double getVoltage(double analogReadValue){
+        arduinoVoltage = analogReadValue* (5.0 / 1023.0); // Converts the analog reading to voltage
         double voltage = arduinoVoltage * 5.0; //Restores the actual voltage measured (divided by 5 from the voltage divider before entiring the Arduino
         return voltage;
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose opens BatteryActivity when pressing the battery level indicator
+     * Purpose is to open a new View with battery stats when pressing the battery level indicator
      */
     public void displayBatteryStats(View view) {
         batteryStats = new Intent(this, BatteryActivity.class);
@@ -253,64 +289,62 @@ public class ControllerActivity extends MainActivity {
     }
 
     /**
-     * @param BTString String received via Bluetooth
-     * @author Erik Laurin
-     * @purpose executes actions based on BT input
+     * Purpose refreshes the battery level indicator and values for the Battery activity
      */
-    private void readInput(String BTString) {
-        if (BTString.startsWith("B")) { //refreshes the battery value and level indicator
+
+    private void readInput(String s){
+        if(s.startsWith("B")){
             try {
-                analogReadValue = Integer.parseInt(BTString.substring(1).trim());
-                Log.e("", "" + analogReadValue);
+                analogReadValue = Integer.parseInt(s.substring(1).trim());
                 setBatteryLevel();
 
-            } catch (NumberFormatException e) {
-                System.out.println("Could not parse " + "'" + BTString.substring(1) + "'");
+            } catch(NumberFormatException e) {
+                System.out.println("Could not parse " + "'" + s.substring(1) +"'");
             }
-        } else if (BTString.startsWith("fr")) {
+        } else if (s.startsWith("fr")) {
             try {
-                sfrReadValue = Integer.parseInt(BTString.substring(2).trim());
+                sfrReadValue = Integer.parseInt(s.substring(2).trim());
                 setSensorValues();
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (BTString.startsWith("FM")) {
+        } else if (s.startsWith("FM")) {
             try {
-                sfmReadValue = Integer.parseInt(BTString.substring(2).trim());
+                sfmReadValue = Integer.parseInt(s.substring(2).trim());
                 Log.e("", "" + sfmReadValue);
                 setSensorValues();
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (BTString.startsWith("fl")) {
+        } else if (s.startsWith("fl")) {
             try {
-                sflReadValue = Integer.parseInt(BTString.substring(2).trim());
+                sflReadValue = Integer.parseInt(s.substring(2).trim());
                 setSensorValues();
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (BTString.startsWith("r")) {
+        } else if (s.startsWith("r")) {
             try {
-                srReadValue = Integer.parseInt(BTString.substring(1).trim());
+                srReadValue = Integer.parseInt(s.substring(1).trim());
                 setSensorValues();
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (BTString.startsWith("l")) {
+        } else if (s.startsWith("l")) {
             try {
-                slReadValue = Integer.parseInt(BTString.substring(1).trim());
+                slReadValue = Integer.parseInt(s.substring(1).trim());
                 setSensorValues();
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (BTString.startsWith("sb")) {
+        } else if (s.startsWith("sb")) {
             try {
-                sbReadValue = Integer.parseInt(BTString.substring(2).trim());
+                sbReadValue = Integer.parseInt(s.substring(2).trim());
                 setSensorValues();
 
             } catch (NumberFormatException e) {
