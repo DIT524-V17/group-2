@@ -17,10 +17,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import java.nio.ByteBuffer;
 
 import static com.group02.guard.MainActivity.controlNav;
 
+/**
+ * @author Joacim Eberlen
+ * An activity that includes the video stream, the controller, the battery levels of the car.
+ *
+ * @version 1.0.1 JE
+ */
 public class ControllerActivity extends AppCompatActivity {
 
     //Battery
@@ -47,7 +52,10 @@ public class ControllerActivity extends AppCompatActivity {
     //Set MAX_SPEED for motors
     final int MAX_SPEED = 70;
 
-
+    /**
+     * Creates UI elements and initializes the BluetoothThread.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +66,9 @@ public class ControllerActivity extends AppCompatActivity {
 
         controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
         controlNav.setChecked(true);
-
         /*
-        * @author Joacim Eberlen
-        * @purpose Initialize the battery button.
-        * ToDo: Needs to be put into some where were it can be accessed.
+        * Initialize the battery button.
+        * ToDo: Needs to be put into some where were it can be globally accessed.
         */
         battery = (ImageButton) findViewById(R.id.batteryButton);
         battery.setVisibility(View.VISIBLE);
@@ -115,8 +121,8 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
-    *   @author Joacim Eberlen
-    *   Writing to the arduino for motor control.
+    *   Writing to the Arduino for motor control.
+     *  @param right: Right motor. left: Left motor,
     */
 
     public void write(int left, int right){
@@ -132,8 +138,7 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose is to set battery icon depending on remaining battery level
+     * purpose is to set battery icon depending on remaining battery level
      */
     public void setBatteryLevel() {
         double voltage = getVoltage(analogReadValue);   //Converts from an analog value to voltage
@@ -171,8 +176,7 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose is to create a toast to notify the user of the SmartCar's critical battery level
+     * Purpose is to create a toast to notify the user of the SmartCar's critical battery level
      */
     private void setCriticalBatteryLevelToast(){
         CharSequence text = "Critical battery level!";
@@ -182,8 +186,7 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose is to create a notification to notify the user of the SmartCar's critical battery level
+     * Purpose is to create a notification to notify the user of the SmartCar's critical battery level
      */
     private void setCriticalBatteryLevelNotification(){
         NotificationCompat.Builder mBuilder= new NotificationCompat.Builder(this);
@@ -200,8 +203,7 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose is to calculate the SmartCar's battery voltage
+     * Purpose is to calculate the SmartCar's battery voltage
      * @param analogReadValue analogRead value from Arduino between 0-1024
      * @return returns the SmartCar's battery voltage
      */
@@ -212,8 +214,7 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose is to open a new View with battery stats when pressing the battery level indicator
+     * Purpose is to open a new View with battery stats when pressing the battery level indicator
      */
     public void displayBatteryStats(View view) {
         batteryStats = new Intent(this, BatteryActivity.class);
@@ -225,8 +226,7 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     /**
-     * @author Erik Laurin
-     * @purpose refreshes the battery level indicator and values for the Battery activity
+     * Purpose refreshes the battery level indicator and values for the Battery activity
      */
 
     private void readInput(String s){
