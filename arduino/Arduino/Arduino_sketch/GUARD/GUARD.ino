@@ -45,6 +45,14 @@ int distanceSideLeft = 0;
 int distanceSideRight = 0;
 int distanceBack = 0;
 int i = 0;
+int j = 0;
+String b = "B";
+String sfm = "FM";
+String sfr = "FR";
+String sfl = "FL";
+String sr = "R";
+String sl = "L";
+String sb = "SB";
 
 void setup() {
   Serial3.begin(9600);
@@ -55,6 +63,7 @@ void setup() {
 void loop() {
   timer.run();
   handleInput();
+  sendSensorValues();
   if(motorSpeedLeft > 0 && motorSpeedRight > 0){  //If the car gets input to go forward
     if(!obstacleDetectionFront()){  //If there is no obstacles in front of the car
       motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight); //Sets input speed
@@ -88,8 +97,36 @@ void handleInput() {
 
 
 void sendVoltage() {
-  String b = "B";
   Serial3.println(b + analogRead(A0)); //Sends the voltage value to the phone  
+}
+
+void sendSensorValues() {
+  if(j == 0){
+    distanceMidFront = sonarMidFront.ping_in();
+    Serial3.println(sfm + distanceMidFront);
+    j++;
+  }else if (j == 1){
+    distanceLeftFront = sonarLeftFront.ping_in();
+    Serial3.println(sfl + distanceLeftFront);
+    j++;
+  }else if (j == 2){
+    distanceRightFront = sonarRightFront.ping_in();
+    Serial3.println(sfr + distanceRightFront);
+    j++;
+  }else if (j == 3){
+    distanceSideLeft = sonarSideLeft.ping_in();
+    Serial3.println(sl + distanceSideLeft);
+    j++;
+  }else if (j == 4){
+    distanceSideRight = sonarSideRight.ping_in();
+    Serial3.println(sr + distanceSideRight);
+    j++;
+  }else if (j == 5){
+    distanceBack = sonarBack.ping_in();
+    Serial3.println(sb + distanceBack);
+    j = 0;
+  }
+
 }
 
 boolean obstacleDetectionFront(){ //Loops through the sensors in front of the car, returns true if obstacle detected
