@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,24 +19,27 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+/**
+ * @author Justinas Stirbys (JS), Erik Laurin (EL), Gabriel Bulai(GB)
+ * Creates the "MainScreen" of the G.U.A.R.D. app. Layout used is activity_main.xml
+ */
 public class MainActivity extends AppCompatActivity {
 
-    static ToggleButton connectNav;
-    static ToggleButton controlNav;
-    static ToggleButton cameraNav;
-    static ToggleButton mapNav;
-    static ToggleButton homeNav;
+    ToggleButton connectNav;
+    ToggleButton controlNav;
+    ToggleButton cameraNav;
+    ToggleButton mapNav;
+    ToggleButton homeNav;
     Button control;
     Button map;
     Button wifi;
     ImageButton optionMenu;
-    Button connect;
-    Button camera;
     ImageButton battery;
     private Button btnLogout;
     private Session session;
     private double analogReadValue = 432;
     private double arduinoVoltage;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -64,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
         mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
         homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+
+        preferences = getPreferences(MODE_PRIVATE);
     }
 
     private void logout() {
@@ -73,71 +79,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @author justinas
-     * @purpose initiate new activities when a button is pressed in the MainScreen
-     * TODO change from Toast for camera and connect to actual Intent that initiate new activities
-     * @param v
+     * Starts new activities and saves booleans when buttons in the MainScreen are clicked.
+     * The booleans are retrieved in other activities and are used to set the state of ToggleButton
+     * Version 1.0.0 by JS
+     * @param v, the current View
+     * @return true if a new activity is initiated, false by default
      */
     public boolean onClick(View v) {
+        SharedPreferences.Editor editor = preferences.edit();
+        Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
+        Intent controlCar = new Intent(MainActivity.this, ControllerActivity.class);
+        Intent openMap = new Intent(MainActivity.this, MapsActivity.class);
+        Intent goHome = new Intent(MainActivity.this, MainActivity.class);
 
         switch (v.getId()) {
             case R.id.wifiDirectButton:
-                connectNav.setChecked(true);
-                Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
+                editor.putBoolean("connectSelected", true);
+                editor.apply();
                 startActivity(wifi);
                 return true;
-
             case R.id.connectNavigation:
-                connectNav.setChecked(true);
-                Intent wifi1 = new Intent(MainActivity.this, WifiActivity.class);
-                startActivity(wifi1);
+                editor.putBoolean("connectSelected", true);
+                editor.commit();
+                startActivity(wifi);
                 return true;
-
             case R.id.controlButton:
-                controlNav.setChecked(true);
-                Intent controlCar1 = new Intent(MainActivity.this, ControllerActivity.class);
-                startActivity(controlCar1);
+                editor.putBoolean("controlSelected", true);
+                editor.commit();
+                startActivity(controlCar);
                 return true;
-
             case R.id.controlNavigation:
-                controlNav.setChecked(true);
-                Intent controlCar2 = new Intent(MainActivity.this, ControllerActivity.class);
-                startActivity(controlCar2);
+                editor.putBoolean("controlSelected", true);
+                editor.commit();
+                startActivity(controlCar);
                 return true;
-
-            case R.id.cameraNavigation:
-                //cameraNav.setChecked(true);
-                Toast.makeText(MainActivity.this, "Camera not yet implemented", Toast.LENGTH_LONG).show();
-                return true;
-
             case R.id.mapsButton:
-                mapNav.setChecked(true);
-                Intent openMap1 = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(openMap1);
+                editor.putBoolean("mapsSelected", true);
+                editor.commit();
+                startActivity(openMap);
                 return true;
-
             case R.id.mapsNavigation:
-                mapNav.setChecked(true);
-                Intent openMap2 = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(openMap2);
+                editor.putBoolean("mapsSelected", true);
+                editor.commit();
+                startActivity(openMap);
                 return true;
-
             case R.id.homeNavigation:
-                homeNav.setChecked(true);
-                Intent goHome = new Intent(MainActivity.this, MainActivity.class);
                 startActivity(goHome);
                 return true;
-
            default:
                 return false;
         }
     }
 
     /**
-     * @author justinas
-     * @purpose creates a popup option menu
-     * @linked in activity_main.xml with the ImageButton id/menuButton
-     * @param v
+     * Creates a popup option menu
+     * Version 1.0.0 by JS
+     * @param v, current View
      */
     public void showOptionMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -147,35 +144,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @author justinas
-     * @purpose is to identify selected option from menu ny comparing their ids
-     * TODO change from Toast to actual Intent that initiate new activities
-     * @param item >>> one of the options in the menu
+     * Identifies selected option from the option menu by comparing their ids
+     * Version 1.0.0 by JS
+     * @param item, the clicked option in the pop up menu
+     * @return true, for the selected option
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.menu_profile:
-                Toast.makeText(MainActivity.this, "Profile Selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Profile Selected", Toast.LENGTH_SHORT)
+                        .show();
                 return true;
-
             case R.id.menu_security:
-                Toast.makeText(MainActivity.this, "Security Selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Security Selected", Toast.LENGTH_SHORT)
+                        .show();
                 return true;
-
             case R.id.menu_settings:
-                Toast.makeText(MainActivity.this, "Settings Selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Settings Selected", Toast.LENGTH_SHORT)
+                        .show();
                 return true;
-
             case R.id.menu_themes:
-                Toast.makeText(MainActivity.this, "App Themes Selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "App Themes Selected", Toast.LENGTH_SHORT)
+                        .show();
                 return true;
-
             case R.id.menu_feedback:
-                Toast.makeText(MainActivity.this, "Help & Feedback Selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Help & Feedback Selected", Toast.LENGTH_SHORT)
+                        .show();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }

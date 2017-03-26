@@ -1,15 +1,13 @@
 package com.group02.guard;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pGroup;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.view.View;
@@ -22,9 +20,10 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 
 /**
- * Created by justinas on 05/03/2017.
+ * @author Justinas Stirbys (JS)
+ * Creates a the possibility to connect to other devices via WiFi-Direct (Peer2Peer).
+ * Layout used for the class is actiivity_wifi.xml
  */
-
 public class WifiActivity extends MainActivity {
     private WifiP2pManager wifiManager;
     private WifiP2pManager.Channel wifiChannel;
@@ -33,17 +32,16 @@ public class WifiActivity extends MainActivity {
     private WifiP2pDevice targetDevice;
     ListView peerView;
     boolean wifiDirectEnabled;
-    static ToggleButton onOff;
+    ToggleButton onOff;
+    ToggleButton connectNav;
     TextView connectedDeviceName;
     SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi);
-
-        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
-        connectNav.setChecked(true);
 
         wifiManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         wifiChannel = wifiManager.initialize(this, getMainLooper(), null);
@@ -56,27 +54,28 @@ public class WifiActivity extends MainActivity {
         wifiReceiver = new WifiBroadcastReceiver(wifiManager, wifiChannel, this);
         registerReceiver(wifiReceiver, wifiIntentFilter);
 
+        preferences = getPreferences(MODE_PRIVATE);
         onOff = (ToggleButton) findViewById(R.id.buttonOnOff);
+        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
         connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
         peerView = (ListView) findViewById(R.id.peerList);
 
-        preferences = getPreferences(MODE_PRIVATE);
+        boolean connectorSelected = preferences.getBoolean("connectSelected", false);
         boolean wifiOnOff = preferences.getBoolean("wifiOnOff", false);
+        connectNav.setChecked(connectorSelected);
         onOff.setChecked(wifiOnOff);
-
+        editor = preferences.edit();
         onOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(onOff.isChecked()){
                     findPeers(v);
                     onOff.setChecked(true);
-                    SharedPreferences.Editor editor = preferences.edit();
                     editor.putBoolean("wifiOnOff", true);
                     editor.commit();
                 }
                 else{
                     onOff.setChecked(false);
-                    SharedPreferences.Editor editor = preferences.edit();
                     editor.putBoolean("wifiOnOff", false);
                     editor.commit();
                 }
@@ -84,90 +83,109 @@ public class WifiActivity extends MainActivity {
         });
     }
 
-    // register the broadcast receiver with the intent values to be matched
+    /**
+     * Registers the broadcast receiver with the intent values
+     * Version 1.0.0 by JS
+     */
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver(wifiReceiver, wifiIntentFilter);
     }
 
-    // unregister the broadcast receiver
+    /**
+     * Unregister the broadcast receiver
+     */
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(wifiReceiver);
     }
 
-    public void setWifiDirectEnabled(boolean wifiDirectEnabled) {
-        this.wifiDirectEnabled = wifiDirectEnabled;
-    }
-
-    public void findPeers(View view) {
+    /**
+     * Locates possible WiFi direct peers
+     * @param v, current view
+     */
+    public void findPeers(View v) {
         wifiManager.discoverPeers(wifiChannel, null);
     }
 
+    /**
+     * Removes currently displayed peers when called
+     */
     public void clearPeers(){
         peerView.setAdapter(null);
     }
 
-    public void displayPeers(final WifiP2pDeviceList peers) {
-        //Dialog to show errors/status
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("WiFi Direct File Transfer");
-
+    /**
+     * Displays found peers in a ListView on the app
+     * Version 1.0.0 by JS
+     * @param peerList, a final list where all found WiFi direct peers are stored
+     */
+    public void displayPeers(final WifiP2pDeviceList peerList) {
         ArrayList<String> peerDevices = new ArrayList<>();
-
-        //Fill array list with strings of peer names
-        for(WifiP2pDevice wd : peers.getDeviceList()) {
+        for(WifiP2pDevice wd : peerList.getDeviceList()) {
             peerDevices.add(wd.deviceName);
         }
-
         peerView.setClickable(true);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, peerDevices.toArray());
-        peerView.setAdapter(arrayAdapter);
+        ArrayAdapter wifiAdapter = new ArrayAdapter(WifiActivity.this,
+                android.R.layout.simple_list_item_1, peerDevices.toArray());
+        peerView.setAdapter(wifiAdapter);
 
         peerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View view, int arg2,long arg3) {
-                TextView tv = (TextView) view;
+            public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+                TextView tv = (TextView) v;
                 WifiP2pDevice device = null;
 
-                for(WifiP2pDevice wd : peers.getDeviceList()) {
+                for(WifiP2pDevice wd : peerList.getDeviceList()) {
                     if(wd.deviceName.equals(tv.getText()))
                         device = wd;
                 }
-
                 if(device != null && onOff.isChecked()) {
                     connect(device);
                     connectedDeviceName.setText("Currently connected to: " + device.deviceName);
-                }
-
-                else {
-                    dialog.setMessage("Failed");
-                    dialog.show();
                 }
             }
         });
     }
 
+    /**
+     * Connects to the selected device from the ListView
+     * Version 1.0.0 by JS
+     * @param wifiPeer, target device for connection
+     */
     public void connect(final WifiP2pDevice wifiPeer) {
         this.targetDevice = wifiPeer;
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = wifiPeer.deviceAddress;
-        config.wps.setup = WpsInfo.PBC;
-
-        if(onOff.isChecked()){
-            wifiManager.connect(wifiChannel, config, new WifiP2pManager.ActionListener()  {
+        if(wifiDirectEnabled){
+            wifiManager.connect(wifiChannel, config, new WifiP2pManager.ActionListener() {
                 public void onSuccess() {
-//                Toast.makeText(WifiActivity.this, "Connect to" + targetDevice.deviceName + "successful", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(WifiActivity.this,
+//                            "Connect to" + targetDevice.deviceName + "successful",
+//                            Toast.LENGTH_LONG).show();
                 }
-
                 public void onFailure(int reason) {
-                    Toast.makeText(WifiActivity.this, "Connect to" + targetDevice.deviceName + "failed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(WifiActivity.this,
+                            "Connect to" + targetDevice.deviceName + "failed",
+                            Toast.LENGTH_LONG).show();
                 }
             });
         }
-        else{
-            Toast.makeText(WifiActivity.this, "Can't connect while WiFi Direct is off", Toast.LENGTH_LONG).show();
-        }
+    }
+
+    /**
+     * @return onOff, ToggleButton responsible for enabling/disabling WiFi Direct via GUI
+     */
+    public ToggleButton getOnOffButton() {
+        return onOff;
+    }
+
+    /**
+     * Setter method for boolean wifiDirectEnabled, responsible for the state of WiFi Direct
+     * @param wifiDirectEnabled, a boolean used to keep track of WifiDirect state
+     */
+    public void setWifiDirectEnabled(boolean wifiDirectEnabled) {
+        this.wifiDirectEnabled = wifiDirectEnabled;
     }
 }

@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public class ControllerActivity extends MainActivity {
     private double analogReadValue;
     private double arduinoVoltage;
     private Boolean criticalLevel = false;
+    ToggleButton controlNav;
+    SharedPreferences preferences;
 
     public static byte[] toByteArray(double value) {
         byte[] bytes = new byte[8];
@@ -59,8 +62,10 @@ public class ControllerActivity extends MainActivity {
         showMoveEvent = (TextView) findViewById(R.id.coords);
         analogue = (Control) findViewById(R.id.controlView);
 
+        preferences = getPreferences(MODE_PRIVATE);
         controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
-        controlNav.setChecked(true);
+        boolean controllerSelected = preferences.getBoolean("controlSelected", false);
+        controlNav.setChecked(controllerSelected);
 
         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages

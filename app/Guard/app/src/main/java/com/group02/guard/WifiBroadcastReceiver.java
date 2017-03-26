@@ -6,19 +6,22 @@ import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
-import static com.group02.guard.WifiActivity.onOff;
 
 /**
- * Created by justinas on 04/03/2017.
- * A BroadcastReceiver that notifies of important Wi-Fi p2p (direct) events.
+ * @author Justinas Stirbys (JS)
+ * A BroadcastReceiver that notifies of important WiFi Direct (Peer2Peer) events.
  */
 public class WifiBroadcastReceiver extends BroadcastReceiver {
-
     private WifiP2pManager wifiManager;
     private WifiP2pManager.Channel wifiChannel;
     private WifiActivity wifiActivity;
 
-
+    /**
+     * Creates a WiFi Broadcaster object that is responsible for changes in WiFi Direct activity
+     * @param manager, manages WiFi Direct connectivity, like discovering peers etc.
+     * @param channel, manages the connection to WiFi Direct framework
+     * @param activity, instance of our WiFi activity
+     */
     public WifiBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel,
                                  WifiActivity activity) {
         super();
@@ -30,42 +33,34 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-            // Check to see if Wi-Fi is enabled and notify appropriate activity
+            // Check to see if WiFi is enabled
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                // Wifi Direct mode is enabled
                 wifiActivity.setWifiDirectEnabled(true);
             } else {
                 wifiActivity.setWifiDirectEnabled(false);
                 wifiActivity.clearPeers();
             }
-
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-            if(onOff.isChecked()) {
+            if(wifiActivity.getOnOffButton().isChecked()) {
                 wifiManager.requestPeers(wifiChannel, new WifiP2pManager.PeerListListener() {
                     public void onPeersAvailable(WifiP2pDeviceList peers) {
                         wifiActivity.displayPeers(peers);
                     }
                 });
-            }
-            else{
+            } else{
                 wifiActivity.clearPeers();
             }
-
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
             // Respond to new connection or disconnections
             NetworkInfo networkState = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
             if(networkState.isConnected()) {
                 networkState.getExtraInfo();
 //                wifiManager.requestConnectionInfo(wifiChannel, wifiActivity);
-            }
-            else {
+            } else {
                 wifiManager.cancelConnect(wifiChannel, null);
-               // wifiActivity.clearPeers();
             }
-
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             // Respond to this device's wifi state changing
         }
