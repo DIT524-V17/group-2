@@ -1,37 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/colorMutedBlack"
-    tools:context="com.group02.guard.ControllerActivity">
+    tools:context="com.group02.guard.ControllerActivity"
+    tools:layout_editor_absoluteY="25dp"
+    tools:layout_editor_absoluteX="0dp">
 
-    <include layout="@layout/toolbar_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <include
+        layout="@layout/toolbar_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_conversion_absoluteHeight="56dp"
+        tools:layout_conversion_absoluteWidth="384dp"
+        tools:layout_conversion_absoluteX="0dp"
+        tools:layout_conversion_absoluteY="0dp"
+        android:id="@+id/include"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-    <include layout="@layout/toolbar_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
+    <include
+        layout="@layout/toolbar_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_conversion_absoluteHeight="567dp"
+        tools:layout_conversion_absoluteWidth="384dp"
+        tools:layout_conversion_absoluteX="0dp"
+        tools:layout_conversion_absoluteY="0dp"
+        android:id="@+id/include2"
+        app:layout_constraintTop_toTopOf="@+id/include"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.group02.guard.Control
         android:id="@+id/controlView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_centerInParent="true"/>
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        tools:layout_conversion_absoluteHeight="300dp"
+        tools:layout_conversion_absoluteWidth="300dp"
+        tools:layout_conversion_absoluteX="42dp"
+        tools:layout_conversion_absoluteY="133dp"
+        app:layout_constraintBottom_toBottomOf="@+id/include2"
+        android:layout_marginBottom="60dp"
+        android:layout_marginRight="60dp"
+        app:layout_constraintRight_toRightOf="@+id/include2" />
+
+    <ImageView
+        android:id="@+id/sfl_image"
+        android:rotation="135"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/sensor_triangle"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/sfl_value"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintLeft_toLeftOf="@+id/sfl_value"
+        android:layout_marginTop="47dp"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <ImageView
+        android:id="@+id/sfr_image"
+        android:rotation="225"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/sensor_triangle"
+        android:layout_marginRight="20dp"
+        app:layout_constraintRight_toRightOf="@+id/sfr_value"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/sfr_value"
+        android:layout_marginTop="47dp"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <ImageView
+        android:id="@+id/sfm_image"
+        android:rotation="180"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/sensor_triangle"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/sfm_value"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/sfm_value"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <ImageView
+        android:id="@+id/sl_image"
+        android:rotation="90"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/sensor_triangle"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/sl_value"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintLeft_toLeftOf="@+id/sl_value"
+        android:layout_marginTop="92dp"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <ImageView
+        android:id="@+id/sb_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/sensor_triangle"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/sb_value"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/sb_value"
+        app:layout_constraintBottom_toBottomOf="@+id/include2"
+        android:layout_marginBottom="55dp" />
+
+    <ImageView
+        android:id="@+id/sr_image"
+        android:rotation="270"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/sensor_triangle"
+        android:layout_marginTop="92dp"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        android:layout_marginRight="20dp"
+        app:layout_constraintRight_toRightOf="@+id/sr_value"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/sr_value" />
+
+    <TextView
+        android:id="@+id/sfl_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="20sp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        android:layout_marginLeft="135dp"
+        app:layout_constraintLeft_toLeftOf="@+id/include2" />
+
+    <TextView
+        android:id="@+id/sfr_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="20sp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        android:layout_marginRight="135dp"
+        app:layout_constraintRight_toRightOf="@+id/include2" />
+
+    <TextView
+        android:id="@+id/sl_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="20sp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintLeft_toLeftOf="@+id/include2"
+        android:layout_marginTop="115dp"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <TextView
+        android:id="@+id/sr_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="20sp"
+        android:layout_marginRight="24dp"
+        app:layout_constraintRight_toRightOf="@+id/include2"
+        android:layout_marginTop="115dp"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <TextView
+        android:id="@+id/sb_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/include2"
+        android:layout_marginBottom="68dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/include2"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/include2" />
+
+    <TextView
+        android:id="@+id/sfm_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="20sp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/include2"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/include2" />
 
     <TextView
         android:id="@+id/coords"
-        android:textColor="#FFFFFF"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center"
-        android:layout_above="@id/controlView"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/include2"
+        app:layout_constraintRight_toRightOf="@+id/include2"
+        app:layout_constraintBottom_toBottomOf="@+id/include2"
+        android:layout_marginBottom="175dp" />
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
+
