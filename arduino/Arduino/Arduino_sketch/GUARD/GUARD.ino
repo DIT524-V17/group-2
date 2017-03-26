@@ -95,9 +95,9 @@ void handleInput() {
   }
 }
 
-
 void sendVoltage() {
-  Serial3.println(b + analogRead(A0)); //Sends the voltage value to the phone  
+  if(motorSpeedLeft == 0 && motorSpeedLeft == 0) //Sends the voltage only when the engines are not working (the voltage drops significantly while engines are running)
+    Serial3.println(b + analogRead(A0)); //Sends the voltage value to the phone  
 }
 
 void sendSensorValues() {
@@ -129,11 +129,11 @@ void sendSensorValues() {
 
 }
 
-boolean obstacleDetectionFront(){ //Loops through the sensors in front of the car, returns true if obstacle detected
+boolean obstacleDetectionFront(){ //Loops through the sensors in front of the car, returns true if obstacle is detected
   if(i == 0){
-    distanceMidFront = sonarMidFront.ping_in();
-    if(distanceMidFront < 18 && distanceMidFront > 0){                                                                                                                                    
-      return true;
+    distanceMidFront = sonarMidFront.ping_in(); //Receives distance to potential obstacle in front of sensor
+    if(distanceMidFront < 18 && distanceMidFront > 0){                                                                                                         
+      return true;  //Obstacle detected within 18 inches
     }
     i++;
   }
