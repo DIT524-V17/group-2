@@ -23,8 +23,6 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import static com.group02.guard.MainActivity.controlNav;
-
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
  * @author Joacim Eberlen, Erik Laurin
