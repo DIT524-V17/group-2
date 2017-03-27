@@ -2,6 +2,7 @@ package com.group02.guard;
 
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 
 import org.junit.Before;
@@ -15,12 +16,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 
 /**
  * Created by jeberlen on 2017-03-23.
  */
-@RunWith(JUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ControlTest {
 
     @Mock
@@ -29,6 +31,8 @@ public class ControlTest {
     AttributeSet attr;
     @Mock
     Control control;
+    @Mock
+    Canvas canvas;
 
     @Before
     public void setUp(){
@@ -37,9 +41,17 @@ public class ControlTest {
     }
 
     @Test
-    public void getSpeedTest_negativeInt(){
-        int newMinTest = 70;
-        assertEquals(70, control.getSpeed(newMinTest));
+    public void getScale_negativeInt(){
+
+        int newMax = 70;
+        int oldMax = 200;
+        int newMin = 0;
+        int oldMin = 0;
+        int input = 90;
+
+        verify(control).scale(oldMax, oldMin, newMax, newMin, input);
+
+        //assertEquals(70, control.getSpeed(newMinTest));
     }
     @Test
     public void scaleTest_divisionByZero(){

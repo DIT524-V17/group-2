@@ -24,6 +24,10 @@ android {
 repositories {
     jcenter()
 }
+task clearData(type: Exec) {
+    def clearDataCommand = ['adb', 'shell', 'pm', 'clear', 'com.group02.guard']
+    commandLine clearDataCommand
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -37,10 +41,10 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.1'
     compile 'com.google.android.gms:play-services-location:10.2.0'
     compile 'com.google.android.gms:play-services-maps:10.2.0'
-    compile 'com.jayway.android.robotium:robotium-solo:5.2.1'
     testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:+"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'org.mockito:mockito-android:2.7.19'
+    androidTestCompile 'org.mockito:mockito-android:2.7.19'
     compile 'com.github.hotchemi:permissionsdispatcher:2.3.2'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.2'
 }

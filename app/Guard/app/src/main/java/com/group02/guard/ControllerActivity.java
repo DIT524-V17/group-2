@@ -15,18 +15,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.pm.ActivityInfo;
-
-import java.nio.ByteBuffer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import static com.group02.guard.MainActivity.controlNav;
-
 /**
- * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
+ * Activity that includes video stream, the controller, the batteryImageButton levels of the car.
  * @author Joacim Eberlen, Erik Laurin
  * @version 1.0.2 EL
  */
@@ -78,21 +74,11 @@ public class ControllerActivity extends AppCompatActivity {
     ToggleButton controlNav;
     SharedPreferences preferences;
 
-    public static byte[] toByteArray(double value) {
-        byte[] bytes = new byte[8];
-        ByteBuffer.wrap(bytes).putDouble(value);
-        return bytes;
-    }
-
-    public static double toDouble(byte[] bytes) {
-        return ByteBuffer.wrap(bytes).getDouble();
-    }
-    //Set MAX_SPEED for motors
-    final int MAX_SPEED = 70;
+    static final int MAX_SPEED = 70;
 
     /**
      * Creates UI elements and initializes the BluetoothThread.
-     * @param savedInstanceState
+     * @param savedInstanceState Saved Instance State
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,14 +137,18 @@ public class ControllerActivity extends AppCompatActivity {
                 Log.e("", "" + speed);
                 // [0] is left, [1] is right
                 int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
-                showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "." + "\nSpeed: " + speed);
+                showMoveEvent.setText("Angle: " + analogue.nAngle()
+                        + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
+                        + "\nSpeed: " + speed);
 
                 write(motors[0], motors[1]);
             }
 
             @Override
             public void onMoveStopped() {
-                showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "." + "\nSpeed: " + 0);
+                showMoveEvent.setText("Angle: " + analogue.nAngle()
+                        + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
+                        + "\nSpeed: " + 0);
                 write(0, 0);
             }
         });
