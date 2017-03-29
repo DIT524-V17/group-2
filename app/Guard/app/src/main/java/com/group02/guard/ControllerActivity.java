@@ -15,15 +15,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.pm.ActivityInfo;
-
 import java.nio.ByteBuffer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
-import static com.group02.guard.MainActivity.controlNav;
 
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
@@ -77,6 +74,7 @@ public class ControllerActivity extends AppCompatActivity {
 
     ToggleButton controlNav;
     SharedPreferences preferences;
+    ImageButton optionMenu;
 
     public static byte[] toByteArray(double value) {
         byte[] bytes = new byte[8];
@@ -103,6 +101,7 @@ public class ControllerActivity extends AppCompatActivity {
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
         analogue = (Control) findViewById(R.id.controlView);
+        optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
         sfm = (TextView) findViewById(R.id.sfm_value);
         sfmImage = (ImageView) findViewById(R.id.sfm_image);

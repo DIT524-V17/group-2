@@ -7,12 +7,12 @@ import android.content.SharedPreferences;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
  * @author Justinas Stirbys (JS)
  * Creates a the possibility to connect to other devices via WiFi-Direct (Peer2Peer).
  * Layout used for the class is actiivity_wifi.xml
+ * @version 1.0.0
  */
 public class WifiActivity extends MainActivity {
     private WifiP2pManager wifiManager;
@@ -37,6 +38,8 @@ public class WifiActivity extends MainActivity {
     TextView connectedDeviceName;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
+    ImageButton optionMenu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class WifiActivity extends MainActivity {
         connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
         peerView = (ListView) findViewById(R.id.peerList);
 
+        optionMenu = (ImageButton) findViewById(R.id.menuButton);
         boolean connectorSelected = preferences.getBoolean("connectSelected", false);
         boolean wifiOnOff = preferences.getBoolean("wifiOnOff", false);
         connectNav.setChecked(connectorSelected);
@@ -85,7 +89,6 @@ public class WifiActivity extends MainActivity {
 
     /**
      * Registers the broadcast receiver with the intent values
-     * Version 1.0.0 by JS
      */
     @Override
     protected void onResume() {
@@ -104,7 +107,7 @@ public class WifiActivity extends MainActivity {
 
     /**
      * Locates possible WiFi direct peers
-     * @param v, current view
+     * @param v Current view
      */
     public void findPeers(View v) {
         wifiManager.discoverPeers(wifiChannel, null);
@@ -119,8 +122,7 @@ public class WifiActivity extends MainActivity {
 
     /**
      * Displays found peers in a ListView on the app
-     * Version 1.0.0 by JS
-     * @param peerList, a final list where all found WiFi direct peers are stored
+     * @param peerList A final list where all found WiFi direct peers are stored
      */
     public void displayPeers(final WifiP2pDeviceList peerList) {
         ArrayList<String> peerDevices = new ArrayList<>();
@@ -151,8 +153,7 @@ public class WifiActivity extends MainActivity {
 
     /**
      * Connects to the selected device from the ListView
-     * Version 1.0.0 by JS
-     * @param wifiPeer, target device for connection
+     * @param wifiPeer Target device for connection
      */
     public void connect(final WifiP2pDevice wifiPeer) {
         this.targetDevice = wifiPeer;
@@ -175,7 +176,7 @@ public class WifiActivity extends MainActivity {
     }
 
     /**
-     * @return onOff, ToggleButton responsible for enabling/disabling WiFi Direct via GUI
+     * @return onOff ToggleButton responsible for enabling/disabling WiFi Direct via GUI
      */
     public ToggleButton getOnOffButton() {
         return onOff;
@@ -183,7 +184,7 @@ public class WifiActivity extends MainActivity {
 
     /**
      * Setter method for boolean wifiDirectEnabled, responsible for the state of WiFi Direct
-     * @param wifiDirectEnabled, a boolean used to keep track of WifiDirect state
+     * @param wifiDirectEnabled Boolean used to keep track of WifiDirect state
      */
     public void setWifiDirectEnabled(boolean wifiDirectEnabled) {
         this.wifiDirectEnabled = wifiDirectEnabled;
