@@ -44,7 +44,7 @@
         android:layout_marginLeft="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.group02.guard.Control
         android:id="@+id/controlView"
@@ -56,160 +56,7 @@
         tools:layout_conversion_absoluteY="133dp"
         app:layout_constraintBottom_toBottomOf="@+id/include2"
         android:layout_marginBottom="60dp"
-        android:layout_marginRight="60dp"
-        app:layout_constraintRight_toRightOf="@+id/include2" />
-
-    <ImageView
-        android:id="@+id/sfl_image"
-        android:rotation="135"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        app:srcCompat="@drawable/sensor_triangle"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="@+id/sfl_value"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintLeft_toLeftOf="@+id/sfl_value"
-        android:layout_marginTop="47dp"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
-
-    <ImageView
-        android:id="@+id/sfr_image"
-        android:rotation="225"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        app:srcCompat="@drawable/sensor_triangle"
-        android:layout_marginRight="20dp"
-        app:layout_constraintRight_toRightOf="@+id/sfr_value"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/sfr_value"
-        android:layout_marginTop="47dp"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
-
-    <ImageView
-        android:id="@+id/sfm_image"
-        android:rotation="180"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        app:srcCompat="@drawable/sensor_triangle"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="@+id/sfm_value"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/sfm_value"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
-
-    <ImageView
-        android:id="@+id/sl_image"
-        android:rotation="90"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        app:srcCompat="@drawable/sensor_triangle"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="@+id/sl_value"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintLeft_toLeftOf="@+id/sl_value"
-        android:layout_marginTop="92dp"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
-
-    <ImageView
-        android:id="@+id/sb_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        app:srcCompat="@drawable/sensor_triangle"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/sb_value"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="@+id/sb_value"
-        app:layout_constraintBottom_toBottomOf="@+id/include2"
-        android:layout_marginBottom="55dp" />
-
-    <ImageView
-        android:id="@+id/sr_image"
-        android:rotation="270"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        app:srcCompat="@drawable/sensor_triangle"
-        android:layout_marginTop="92dp"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        android:layout_marginRight="20dp"
-        app:layout_constraintRight_toRightOf="@+id/sr_value"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/sr_value" />
-
-    <TextView
-        android:id="@+id/sfl_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="20sp"
-        android:layout_marginTop="60dp"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        android:layout_marginLeft="135dp"
-        app:layout_constraintLeft_toLeftOf="@+id/include2" />
-
-    <TextView
-        android:id="@+id/sfr_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="20sp"
-        android:layout_marginTop="60dp"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        android:layout_marginRight="135dp"
-        app:layout_constraintRight_toRightOf="@+id/include2" />
-
-    <TextView
-        android:id="@+id/sl_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="20sp"
-        android:layout_marginLeft="24dp"
-        app:layout_constraintLeft_toLeftOf="@+id/include2"
-        android:layout_marginTop="115dp"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
-
-    <TextView
-        android:id="@+id/sr_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="20sp"
-        android:layout_marginRight="24dp"
-        app:layout_constraintRight_toRightOf="@+id/include2"
-        android:layout_marginTop="115dp"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
-
-    <TextView
-        android:id="@+id/sb_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/include2"
-        android:layout_marginBottom="68dp"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="@+id/include2"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/include2" />
-
-    <TextView
-        android:id="@+id/sfm_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="20sp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/include2"
-        android:layout_marginRight="0dp"
+        android:layout_marginRight="65dp"
         app:layout_constraintRight_toRightOf="@+id/include2" />
 
     <TextView
@@ -222,6 +69,74 @@
         app:layout_constraintRight_toRightOf="@+id/include2"
         app:layout_constraintBottom_toBottomOf="@+id/include2"
         android:layout_marginBottom="175dp" />
+
+    <ImageView
+        android:id="@+id/sfm_image"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="@+id/include2"
+        app:layout_constraintRight_toRightOf="@+id/include2"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:srcCompat="@drawable/rectangle" />
+
+    <ImageView
+        android:id="@+id/sfl_image"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="76dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintLeft_toLeftOf="@+id/include2"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        android:rotation="340"
+        app:srcCompat="@drawable/rectangle" />
+
+    <ImageView
+        android:id="@+id/sfr_image"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="76dp"
+        android:layout_marginTop="36dp"
+        android:rotation="20"
+        app:layout_constraintRight_toRightOf="@+id/include2"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:srcCompat="@drawable/rectangle" />
+
+    <ImageView
+        android:id="@+id/sl_image"
+        android:layout_width="75dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="147dp"
+        android:rotation="90"
+        app:layout_constraintLeft_toLeftOf="@+id/include2"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:srcCompat="@drawable/rectangle" />
+
+    <ImageView
+        android:id="@+id/sr_image"
+        android:layout_width="75dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="147dp"
+        android:rotation="90"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:srcCompat="@drawable/rectangle" />
+
+    <ImageView
+        android:id="@+id/sb_image"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="45dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/include2"
+        app:layout_constraintLeft_toLeftOf="@+id/include2"
+        app:layout_constraintRight_toRightOf="@+id/include2"
+        app:srcCompat="@drawable/rectangle" />
 
 
 </android.support.constraint.ConstraintLayout>
