@@ -10,6 +10,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 /**
  * @author Justinas Stirbys (JS)
  * A BroadcastReceiver that notifies of important WiFi Direct (Peer2Peer) events.
+ * @version  1.0.0
  */
 public class WifiBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager wifiManager;
@@ -18,9 +19,9 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
 
     /**
      * Creates a WiFi Broadcaster object that is responsible for changes in WiFi Direct activity
-     * @param manager, manages WiFi Direct connectivity, like discovering peers etc.
-     * @param channel, manages the connection to WiFi Direct framework
-     * @param activity, instance of our WiFi activity
+     * @param manager Manages WiFi Direct connectivity, like discovering peers etc.
+     * @param channel Manages the connection to WiFi Direct framework
+     * @param activity Instance of our WiFi activity
      */
     public WifiBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel,
                                  WifiActivity activity) {

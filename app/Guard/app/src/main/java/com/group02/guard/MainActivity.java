@@ -1,16 +1,10 @@
 package com.group02.guard;
 
 import android.support.v7.app.AppCompatActivity;
-import android.content.Context;
 import android.widget.ToggleButton;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -79,9 +73,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Starts new activities and saves booleans when buttons in the MainScreen are clicked.
      * The booleans are retrieved in other activities and are used to set the state of ToggleButton
-     * Version 1.0.0 by JS
-     * @param v, the current View
-     * @return true if a new activity is initiated, false by default
+     * @param v The current View
+     * @return true If a new activity is initiated, false by default
      */
     public boolean onClick(View v) {
         SharedPreferences.Editor editor = preferences.edit();
@@ -131,8 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Creates a popup option menu
-     * Version 1.0.0 by JS
-     * @param v, current View
+     * @param v Current View
      */
     public void showOptionMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -143,9 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Identifies selected option from the option menu by comparing their ids
-     * Version 1.0.0 by JS
-     * @param item, the clicked option in the pop up menu
-     * @return true, for the selected option
+     * @param item The clicked option in the pop up menu
+     * @return true For the selected option
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

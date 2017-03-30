@@ -58,6 +58,7 @@ public class ControllerActivity extends AppCompatActivity {
 
     ToggleButton controlNav;
     SharedPreferences preferences;
+    ImageButton optionMenu;
 
     static final int MAX_SPEED = 70;
 
@@ -74,6 +75,7 @@ public class ControllerActivity extends AppCompatActivity {
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
         analogue = (Control) findViewById(R.id.controlView);
+        optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
         sfmImage = (ImageView) findViewById(R.id.sfm_image);
         sfrImage = (ImageView) findViewById(R.id.sfr_image);
