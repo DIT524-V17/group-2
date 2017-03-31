@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorMutedBlack"
     android:orientation="vertical"
+    android:weightSum="1"
     tools:context="com.group02.guard.LoginActivity">
 
     <TextView
@@ -62,6 +63,14 @@
         android:layout_marginRight="10dp"
         android:onClick="register"
         android:text="Register" />
+
+    <Button
+        android:id="@+id/btnDev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="enterDeveloper"
+        android:text="developer"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
 
 </LinearLayout>
