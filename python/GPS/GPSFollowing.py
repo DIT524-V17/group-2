@@ -11,9 +11,9 @@ import random
 
 a = 'A'
 s = 'S'
-delay = 1
+updateFrequency = 1
 
-#ser = serial.Serial('/dev/ttyACM0', 9600)  # '/dev/ttyUSB0'
+ser = serial.Serial('COM5', 9600)  # '/dev/ttyACM0' , '/dev/ttyUSB0'
 
 class ThreadingGPSFollow():
     """ Threading class
@@ -21,15 +21,13 @@ class ThreadingGPSFollow():
     """
 
     def drive(self, angle, speed):
-
         print(a + str(angle))
-        time.sleep(2)
+        ser.write(str.encode(a + str(angle) + '\n'))
+        time.sleep(1)
         print(s + str(speed))
+        ser.write(str.encode(s + str(speed) + '\n'))
 
-        # ser.write(a + str(angle))
-        # ser.write(s + str(speed))
-
-        time.sleep(delay)
+        time.sleep(updateFrequency)
 
     def __init__(self):
         """ Constructor """
@@ -44,11 +42,17 @@ class ThreadingGPSFollow():
         while True:
             distance = random.randrange(41)
             angle = random.randrange(360)
-            if angle != oldAngle and distance > 20:
+            if angle != oldAngle and distance > 15:
                 oldAngle = angle
-                self.drive(angle,70 , oldAngle)
-            elif angle != oldAngle and distance < 20:
+                self.drive(angle, 70)
+            elif angle != oldAngle and distance < 15 and distance > 3:
                 oldAngle = angle
-                self.drive(angle,40, oldAngle)
+                self.drive(angle, 40)
+            elif distance < 3:
+                oldAngle = angle
+                self.drive(angle, 0)
+            else:
+                oldAngle = angle
+                self.drive(angle, 0)
 
 ThreadingGPSFollow()
