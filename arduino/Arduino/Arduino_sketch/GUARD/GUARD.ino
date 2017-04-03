@@ -53,6 +53,7 @@ String sfl = "FL";
 String sr = "R";
 String sl = "L";
 String sb = "SB";
+int mode;
 
 void setup() {
   Serial3.begin(9600);
@@ -64,34 +65,56 @@ void loop() {
   timer.run();
   handleInput();
   sendSensorValues();
-  if(motorSpeedLeft > 0 && motorSpeedRight > 0){  //If the car gets input to go forward
-    if(!obstacleDetectionFront()){  //If there is no obstacles in front of the car
-      motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight); //Sets input speed
+  ///in the future, add "else if" statements in case there are more then 2 modes
+  if(mode == 0) {
+    moveManual();
+  }else{
+    moveGPS();
+  }
+}
+
+void moveManual() {
+  if(motorSpeedLeft > 0 && motorSpeedRight > 0){              //If the car gets input to go forward
+    if(!obstacleDetectionFront()){                            //If there is no obstacles in front of the car
+      motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);  //Sets input speed
     }else{
-    motors.setMotorSpeed(0, 0); //Sets speed to 0 since obstacle in front detected
+      motors.setMotorSpeed(0, 0);                             //Sets speed to 0 since obstacle in front detected
     }
   }
-
   else if(motorSpeedLeft < 0 && motorSpeedRight < 0){
     if(!obstacleDetectionRear()){
       motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);
     }else{
-    motors.setMotorSpeed(0, 0);
+      motors.setMotorSpeed(0, 0);
     }
+  }else{
+    motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);    //When input is neither forwards nor backwards
   }
-  else{
-    motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);  //When input is neither forwards nor backwards
+}
+
+void moveGPS() {
+    motors.setAngle("Eriks Values);
+    motors.setSpeed("Eriks Values");
   }
 }
 
 void handleInput() { 
-  if (Serial3.available()) { //handle serial input if there is any
+  if (Serial3.available()) {                        //Handle serial input if there is any
     input = Serial3.readStringUntil('\n');
-    if (input.startsWith("R")){
+    if(input.startsWith("R")){
       motorSpeedRight = input.substring(1).toInt(); //Sets the motorspeed value for the right engines
-    }else if (input.startsWith("L")){
+    }else if(input.startsWith("L")){
       motorSpeedLeft = input.substring(1).toInt();
+    }else if(input.startsWith("G")){                //Set int mode, based on the selected mode in the app
+      mode = 1;
+    }else if(input.startsWith("A")){
+
+    }else if(input.startsWith("S")){
+      motorSpeedLeft = 1 //value from RPi
+      motorSpeedRight = 1 //value from RPi
     }
+    
+    mode = 0;
   }
 }
 

@@ -27,7 +27,7 @@ import android.util.Log;
  * @author Joacim Eberlen, Erik Laurin
  * @version 1.0.2 EL
  */
-public class ControllerActivity extends AppCompatActivity {
+public class ControllerActivity extends MainActivity {
 
     // Following variables is used by the batteryImageButton function
     private Intent batteryStats;

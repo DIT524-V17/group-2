@@ -1,6 +1,7 @@
 package com.group02.guard;
 
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.ToggleButton;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,11 +21,11 @@ import android.widget.Toast;
  */
 public class MainActivity extends AppCompatActivity {
 
-    ToggleButton connectNav;
-    ToggleButton controlNav;
-    ToggleButton cameraNav;
-    ToggleButton mapNav;
-    ToggleButton homeNav;
+    ImageButton connectNav;
+    ImageButton controlNav;
+    ImageButton cameraNav;
+    ImageButton mapNav;
+    ImageButton homeNav;
     Button control;
     Button map;
     Button wifi;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnLogout;
     private Session session;
     SharedPreferences preferences;
+    Toolbar top;
+    Toolbar bottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -55,13 +58,15 @@ public class MainActivity extends AppCompatActivity {
         wifi = (Button) findViewById(R.id.wifiDirectButton);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
-        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
-        controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
-        cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
-        mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
-        homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+        connectNav = (ImageButton) findViewById(R.id.connectNavigation);
+        controlNav = (ImageButton) findViewById(R.id.controlNavigation);
+        cameraNav = (ImageButton) findViewById(R.id.cameraNavigation);
+        mapNav = (ImageButton) findViewById(R.id.mapsNavigation);
+        homeNav = (ImageButton) findViewById(R.id.homeNavigation);
 
         preferences = getPreferences(MODE_PRIVATE);
+        top = (Toolbar) findViewById(R.id.top_toolbar);
+        bottom = (Toolbar) findViewById(R.id.bottom_toolbar);
     }
 
     private void logout() {

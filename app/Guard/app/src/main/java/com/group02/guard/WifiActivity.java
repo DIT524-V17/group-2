@@ -38,7 +38,7 @@ public class WifiActivity extends MainActivity {
     TextView connectedDeviceName;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
-    ImageButton optionMenu;
+//    ImageButton optionMenu;
 
 
     @Override
@@ -63,7 +63,7 @@ public class WifiActivity extends MainActivity {
         connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
         peerView = (ListView) findViewById(R.id.peerList);
 
-        optionMenu = (ImageButton) findViewById(R.id.menuButton);
+//        optionMenu = (ImageButton) findViewById(R.id.menuButton);
         boolean connectorSelected = preferences.getBoolean("connectSelected", false);
         boolean wifiOnOff = preferences.getBoolean("wifiOnOff", false);
         connectNav.setChecked(connectorSelected);
@@ -77,8 +77,7 @@ public class WifiActivity extends MainActivity {
                     onOff.setChecked(true);
                     editor.putBoolean("wifiOnOff", true);
                     editor.commit();
-                }
-                else{
+                } else{
                     onOff.setChecked(false);
                     editor.putBoolean("wifiOnOff", false);
                     editor.commit();

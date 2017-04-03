@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.Toolbar
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/colorPrimary">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <ImageButton
                 android:id="@+id/menuButton"
                 android:layout_width="wrap_content"
@@ -24,7 +18,6 @@
                 android:layout_weight=".1"
                 android:onClick="showOptionMenu"
                 app:srcCompat="@drawable/menu" />
-
             <TextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
@@ -32,7 +25,6 @@
                 android:layout_weight=".8"
                 android:text="G.U.A.R.D."
                 android:textAlignment="center" />
-
             <ImageButton
                 android:id="@+id/batteryButton"
                 android:layout_width="wrap_content"
@@ -41,9 +33,5 @@
                 android:visibility="invisible"
                 android:onClick="displayBatteryStats"
                 android:src="@drawable/empty_battery"/>
-
         </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-</RelativeLayout>
+</android.support.v7.widget.Toolbar>
