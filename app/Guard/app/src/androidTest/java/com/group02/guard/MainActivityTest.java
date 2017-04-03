@@ -1,6 +1,7 @@
 package com.group02.guard;
 
 
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -23,22 +24,31 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
-@LargeTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class, true, true);
 
+    // This test will fail if there is no need to login. If there is it will pass.
+    // ToDo: Look into BeforeClass and make this work properly.
     @Test
-    public void mainActivityTest() {
+    public void a_logInIfNeeded(){
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btnReg), withText("Register"), isDisplayed()));
         appCompatButton.perform(click());
@@ -86,6 +96,10 @@ public class MainActivityTest {
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.btnLogin), withText("Login"), isDisplayed()));
         appCompatButton3.perform(click());
+    }
+
+    @Test
+    public void mainActivityTest_menuButton() {
 
         ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.menuButton), isDisplayed()));
@@ -118,7 +132,9 @@ public class MainActivityTest {
         ViewInteraction appCompatTextView4 = onView(
                 allOf(withId(R.id.title), withText("Help & Feedback"), isDisplayed()));
         appCompatTextView4.perform(click());
-
+    }
+    @Test
+    public void mainActivityTest_btnLogout() {
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.btnLogout), withText("Logout"), isDisplayed()));
         appCompatButton4.perform(click());
@@ -138,40 +154,30 @@ public class MainActivityTest {
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.btnLogin), withText("Login"), isDisplayed()));
         appCompatButton5.perform(click());
-
+    }
+    @Test
+    public void mainActivityTest_controlButton() {
         ViewInteraction appCompatButton6 = onView(
                 allOf(withId(R.id.controlButton), withText("Control"), isDisplayed()));
         appCompatButton6.perform(click());
 
         pressBack();
-
+    }
+    @Test
+    public void mainActivityTest_wifiDirectButton(){
         ViewInteraction appCompatButton7 = onView(
                 allOf(withId(R.id.wifiDirectButton), withText("WiFi Direct"), isDisplayed()));
         appCompatButton7.perform(click());
 
         pressBack();
-
-        ViewInteraction appCompatButton8 = onView(
-                allOf(withId(R.id.mapsButton), withText("Map"), isDisplayed()));
-        appCompatButton8.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+    }
+    @Test
+    public void mainActivityTest_mapsButton(){
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.mapsButton), isDisplayed()));
+        appCompatButton.perform(click());
 
         pressBack();
-
-        ViewInteraction appCompatButton9 = onView(
-                allOf(withId(R.id.btnLogout), withText("Logout"), isDisplayed()));
-        appCompatButton4.perform(click());
-
     }
 
 }

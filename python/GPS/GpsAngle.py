@@ -3,7 +3,7 @@ from math import *
 
 def calculateAngle(smartCarLo, externalControllerLo, smartCarLa, externalControllerLa):
 
-    angle = math.tan(math.abs(externalControllerLa-smartCarLa)/ math.abs(externalControllerLo-smartCarLo))
+    angle = tan(abs(externalControllerLa-smartCarLa)/ abs(externalControllerLo-smartCarLo))
 
     return(angle)
 

@@ -1,11 +1,14 @@
 package com.group02.guard;
-
+/**
+ * The class creates a "session" held in shared preferences of the app.
+ * There all user information will be stored
+ *
+ * @author Gabriel Bulai
+ * @version 1.0
+ */
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
- * Created by doctorgaby on 5/5/2017.
- */
 public class Session {
     SharedPreferences prefs;
     SharedPreferences.Editor editor;

@@ -1,5 +1,10 @@
 package com.group02.guard;
-
+/**
+ * The class creates an activity that handles database and session and allows the user to log in
+ *
+ * @author Gabriel Bulai
+ * @version 1.0
+ */
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +16,7 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button login, register;
+    private Button login, register, enterDeveloper;
     private EditText etEmail, etPass;
     private DbHelper db;
     private Session session;
@@ -25,8 +30,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         session = new Session(this);
         login = (Button) findViewById(R.id.btnLogin);
         register = (Button) findViewById(R.id.btnReg);
+        enterDeveloper = (Button) findViewById(R.id.btnDev);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
+        enterDeveloper.setOnClickListener(this);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
 
@@ -45,6 +52,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnReg:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
+//            case R.id.btnDev:
+//                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                break;
             default:
 
         }

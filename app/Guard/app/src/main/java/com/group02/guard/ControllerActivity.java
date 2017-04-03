@@ -21,18 +21,15 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
-<<<<<<< HEAD
- * Activity that includes video stream, the controller, the batteryImageButton levels of the car.
- * @author Joacim Eberlen, Erik Laurin
- * @version 1.0.2 EL
-=======
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
  * @author Joacim Eberlen, Erik Laurin, Axel Granli
  * @version 1.0.3 AG
->>>>>>> ca5908ed5a5ab2f9a94c18b5bd4b75c40d314381
  */
-public class ControllerActivity extends AppCompatActivity {
+public class ControllerActivity extends MainActivity {
 
     // Following variables is used by the batteryImageButton function
     private Intent batteryStats;
@@ -41,6 +38,9 @@ public class ControllerActivity extends AppCompatActivity {
     private double analogReadValue;
     private double arduinoVoltage;
     private boolean criticalLevel = false;
+
+    //Our own implemented HashMap that has a default value of 0 for all keys.
+    private Map<String, Integer> sensorValues = new SensorMap<>(0);
 
     Control analogue;
     TextView showMoveEvent;
@@ -139,8 +139,8 @@ public class ControllerActivity extends AppCompatActivity {
 
     /**
      *   Writing to the Arduino for motor control.
-     *   @param right Right motor.
-     *   @param left Left motor,
+     *   @param right Right motor
+     *   @param left Left motor
      */
     public void write(int left, int right){
             Message l = Message.obtain();
@@ -250,16 +250,33 @@ public class ControllerActivity extends AppCompatActivity {
      * @param inputString String received from the SmartCar containing data
      */
     private void readInput(String inputString){
-        if(inputString.startsWith("B")){ //Updates the battery level
-            try {
+
+        try {
+            if(inputString.startsWith("B")) { //Updates the battery level
                 analogReadValue = Integer.parseInt(inputString.substring(1).trim());
                 setBatteryLevel();
-
-            } catch(NumberFormatException e) {
-                System.out.println("Could not parse " + "'" + inputString.substring(1) +"'");
+            } else {
+                sensorValues.put(inputString.substring(0, 2), Integer.getInteger(inputString.substring(2).trim()));
+                while(!sensorValues.isEmpty()) {
+                    sfmImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FM")));
+                    sfrImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FR")));
+                    sflImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FL")));
+                    //Todo: Change R & L to SR & SL in sketch.
+                    srImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SR")));
+                    slImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SL")));
+                    sbImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SB")));
+                    sensorValues.clear();
+                }
             }
-        } else if (inputString.startsWith("FR")) { //Updates the sensor images depending on the value
+        } catch(NumberFormatException e) {
+            System.out.println("Could not parse " + "'" + inputString.substring(1) +"'");
+        }
+
+
+        /* ToDo: Remove after test.
+        else if (inputString.startsWith("FR")) { //Updates the sensor images depending on the value
             try {
+
                 sfrReadValue = Integer.parseInt(inputString.substring(2).trim());
                 setSensorValues();
 
@@ -307,12 +324,13 @@ public class ControllerActivity extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        }
+        }*/
     }
 
     /**
      * This method sets the image for each sensor to a preferred transparency
      * dependant on the distance(@author Axel Granli)
+     * Todo: Remove after testing.
      */
     private void setSensorValues() {
 
