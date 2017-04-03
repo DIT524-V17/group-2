@@ -51,8 +51,8 @@ String b = "B";
 String sfm = "FM";
 String sfr = "FR";
 String sfl = "FL";
-String sr = "R";
-String sl = "L";
+String sr = "SR";
+String sl = "SL";
 String sb = "SB";
 
 void setup() {
