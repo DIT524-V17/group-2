@@ -72,7 +72,7 @@ public class ControllerActivity extends MainActivity {
     private TextView sb;
     private ImageView sbImage;
 
-    ToggleButton controlNav;
+    ImageButton controlNav;
     SharedPreferences preferences;
     ImageButton optionMenu;
 
@@ -122,9 +122,9 @@ public class ControllerActivity extends MainActivity {
         sbImage = (ImageView) findViewById(R.id.sb_image);
 
         preferences = getPreferences(MODE_PRIVATE);
-        controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
-        boolean controllerSelected = preferences.getBoolean("controlSelected", false);
-        controlNav.setChecked(controllerSelected);
+//        controlNav = (ImageButton) findViewById(R.id.controlNavigation);
+//        boolean controllerSelected = preferences.getBoolean("controlSelected", false);
+//        controlNav.setChecked(controllerSelected);
 
         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages

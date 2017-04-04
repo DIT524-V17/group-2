@@ -6,30 +6,37 @@
     android:baselineAligned="false"
     android:orientation="vertical"
     android:weightSum="1.0">
-
     <include layout="@layout/toolbar_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"/>
-
-    <include layout="@layout/toolbar_bottom"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/wifiDirectButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClick"
-        android:text="WiFi Direct" />
+        <Button
+            android:id="@+id/wifiDirectButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:onClick="onClick"
+            android:text="WiFi Direct" />
+
+        <Button
+            android:id="@+id/gpsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:onClick="onClick"
+            android:text="GPS" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.45"
         android:orientation="horizontal">
-
         <Button
             android:id="@+id/controlButton"
             android:layout_width="wrap_content"
@@ -38,7 +45,6 @@
             android:drawableTop="@drawable/activity_icon_controller_selected"
             android:onClick="onClick"
             android:text="Control" />
-
         <Button
             android:id="@+id/mapsButton"
             android:layout_width="wrap_content"
@@ -47,7 +53,6 @@
             android:drawableTop="@drawable/activity_icon_map_selected"
             android:onClick="onClick"
             android:text="Map" />
-
     </LinearLayout>
 
     <Button
@@ -57,4 +62,10 @@
         android:layout_alignParentBottom="true"
         android:text="Logout" />
 
+    <include
+        layout="@layout/toolbar_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="visible" />
 </LinearLayout>

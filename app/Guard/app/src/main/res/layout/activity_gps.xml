@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/toolbar_top"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:id="@+id/toolbar"/>
+    <include
+        layout="@layout/toolbar_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+    <TextView
+        android:text="G.U.A.R.D. GPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gpsText"
+        android:layout_below="@id/toolbar"
+        android:gravity="center_horizontal"/>
+
+    <ToggleButton
+        android:id="@+id/startGps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="Get Away Creep"
+        android:textOff="Follow Me"
+        android:layout_below="@+id/gpsText"/>
+
+    <TextView
+        android:id="@+id/phoneCoordinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Coordinates:"
+        android:layout_below="@+id/startGps"
+        android:layout_marginTop="15dp"/>
+    <TextView
+        android:id="@+id/phoneLat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  Lat"
+        android:layout_below="@+id/phoneCoordinates"/>
+    <TextView
+        android:id="@+id/phoneLong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  Long"
+        android:layout_below="@+id/phoneLat"/>
+    <TextView
+        android:id="@+id/guardCoordinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="G.U.A.R.D. Coordinates:"
+        android:layout_below="@+id/phoneLong"
+        android:layout_marginTop="15dp"/>
+    <TextView
+        android:id="@+id/guardLat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  Lat"
+        android:layout_below="@+id/guardCoordinates"/>
+    <TextView
+        android:id="@+id/guardLong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  Long"
+        android:layout_below="@+id/guardLat"/>
+    <TextView
+        android:id="@+id/gpsDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance: "
+        android:layout_below="@+id/guardLong"
+        android:layout_marginTop="15dp"/>
+
+
+</RelativeLayout>

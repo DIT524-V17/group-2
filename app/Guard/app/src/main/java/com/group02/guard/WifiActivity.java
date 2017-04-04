@@ -59,7 +59,7 @@ public class WifiActivity extends MainActivity {
 
         preferences = getPreferences(MODE_PRIVATE);
         onOff = (ToggleButton) findViewById(R.id.buttonOnOff);
-        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
+//        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
         connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
         peerView = (ListView) findViewById(R.id.peerList);
 

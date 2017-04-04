@@ -48,6 +48,7 @@
 
         <activity android:name=".BatteryActivity" />
         <activity android:name=".WifiActivity" />
+        <activity android:name=".GpsActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity

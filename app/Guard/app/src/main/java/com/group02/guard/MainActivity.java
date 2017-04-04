@@ -2,7 +2,6 @@ package com.group02.guard;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.ToggleButton;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button control;
     Button map;
     Button wifi;
+    Button gps;
     ImageButton optionMenu;
     private Button btnLogout;
     private Session session;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
         wifi = (Button) findViewById(R.id.wifiDirectButton);
+        gps = (Button) findViewById(R.id.gpsButton);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
         connectNav = (ImageButton) findViewById(R.id.connectNavigation);
@@ -83,44 +84,48 @@ public class MainActivity extends AppCompatActivity {
      */
     public boolean onClick(View v) {
         SharedPreferences.Editor editor = preferences.edit();
-        Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
-        Intent controlCar = new Intent(MainActivity.this, ControllerActivity.class);
-        Intent openMap = new Intent(MainActivity.this, MapsActivity.class);
-        Intent goHome = new Intent(MainActivity.this, MainActivity.class);
+        Intent wifiIntent = new Intent(MainActivity.this, WifiActivity.class);
+        Intent controlIntent = new Intent(MainActivity.this, ControllerActivity.class);
+        Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
+        Intent homeIntent = new Intent(MainActivity.this, MainActivity.class);
+        Intent gpsIntent= new Intent(MainActivity.this, GpsActivity.class);
 
         switch (v.getId()) {
             case R.id.wifiDirectButton:
                 editor.putBoolean("connectSelected", true);
                 editor.apply();
-                startActivity(wifi);
+                startActivity(wifiIntent);
                 return true;
             case R.id.connectNavigation:
                 editor.putBoolean("connectSelected", true);
                 editor.commit();
-                startActivity(wifi);
+                startActivity(wifiIntent);
                 return true;
             case R.id.controlButton:
                 editor.putBoolean("controlSelected", true);
                 editor.commit();
-                startActivity(controlCar);
+                startActivity(controlIntent);
                 return true;
             case R.id.controlNavigation:
                 editor.putBoolean("controlSelected", true);
                 editor.commit();
-                startActivity(controlCar);
+                startActivity(controlIntent);
                 return true;
             case R.id.mapsButton:
                 editor.putBoolean("mapsSelected", true);
                 editor.commit();
-                startActivity(openMap);
+                startActivity(mapIntent);
                 return true;
             case R.id.mapsNavigation:
                 editor.putBoolean("mapsSelected", true);
                 editor.commit();
-                startActivity(openMap);
+                startActivity(mapIntent);
+                return true;
+            case R.id.gpsButton:
+                startActivity(gpsIntent);
                 return true;
             case R.id.homeNavigation:
-                startActivity(goHome);
+                startActivity(homeIntent);
                 return true;
            default:
                 return false;
