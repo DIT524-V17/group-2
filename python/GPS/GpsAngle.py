@@ -16,3 +16,6 @@ def filterGPS(smartCarGPS, externalControllerGPS):
     externalControllerLa=externalControllerGPS.fix.latitude
 
     return(smartCarLo, smartCarLa, externalControllerLo,externalControllerLa )
+
+if __name__ == '__main__':
+    calculateAngle()

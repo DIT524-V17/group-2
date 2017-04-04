@@ -1,19 +1,20 @@
 import threading
 import time
 import serial
-import random
+from random import randrange, uniform
+from GpsAngle import calculateAngle
 
 # from Boyan: angle and the distance to the mobile device
 # script that continuously send commands to the Arduino to follow the phone (setAngle, setSpeed)
 
 # check the connection by type "ls /dev/tty*" in Raspberry Pi terminal,
-# the result should be content "/dev/ttyACM0" and you are good to go.
 
 a = 'A'
 s = 'S'
-updateFrequency = 1
+newLine = '\n'
+updateFrequency = 2
 
-ser = serial.Serial('COM5', 9600)  # '/dev/ttyACM0' , '/dev/ttyUSB0'
+ser = serial.Serial('/dev/ttyACM0', 9600)  # '/dev/ttyACM0'
 
 class ThreadingGPSFollow():
     """ Threading class
@@ -22,10 +23,14 @@ class ThreadingGPSFollow():
 
     def drive(self, angle, speed):
         print(a + str(angle))
-        ser.write(str.encode(a + str(angle) + '\n'))
+        byteAngle = str.encode(a + str(angle) + newLine)
+        ser.write(byteAngle)
+
         time.sleep(1)
+
         print(s + str(speed))
-        ser.write(str.encode(s + str(speed) + '\n'))
+        byteSpeed = str.encode(s + str(speed) + newLine)
+        ser.write(byteSpeed)
 
         time.sleep(updateFrequency)
 
@@ -40,8 +45,8 @@ class ThreadingGPSFollow():
         """ Method that runs forever """
         oldAngle = 0
         while True:
-            distance = random.randrange(41)
-            angle = random.randrange(360)
+            distance = randrange(41)
+            angle = calculateAngle(uniform(-180, 180), uniform(-180, 180), uniform(-90, 90), uniform(-90, 90))
             if angle != oldAngle and distance > 15:
                 oldAngle = angle
                 self.drive(angle, 70)
