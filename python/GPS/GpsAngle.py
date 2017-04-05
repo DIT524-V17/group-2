@@ -19,7 +19,7 @@ def filterGPS(smartCarGPS, externalControllerGPS):
 
     return(smartCarLo, smartCarLa, externalControllerLo,externalControllerLa )
 
-def distance(smartCarLa, externalControllerLa, smartCarLo, externalControllerLo):
+def calculateDistance(smartCarLa, externalControllerLa, smartCarLo, externalControllerLo):
 
     radius = 6371 # km
 
@@ -35,3 +35,4 @@ def distance(smartCarLa, externalControllerLa, smartCarLo, externalControllerLo)
 
 if __name__ == '__main__':
     calculateAngle()
+    calculateDistance()
