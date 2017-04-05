@@ -1,12 +1,18 @@
 from math import *
 
 
-def calculateAngle(smartCarLo, externalControllerLo, smartCarLa, externalControllerLa):
+##def calculateAngle(smartCarLo, externalControllerLo, smartCarLa, externalControllerLa):
 
-    angle = tan(abs(externalControllerLa-smartCarLa)/ abs(externalControllerLo-smartCarLo))
+##    angle = tan(abs(externalControllerLa-smartCarLa)/ abs(externalControllerLo-smartCarLo))
 
-    return(angle)
+##    return(angle)
 
+def calculateBearing(smartCarLa, smartCarLo, externalControllerLa, externalControllerLo) :
+
+    longDiff= externalControllerLo-smartCarLo
+    y = sin(longDiff)*cos(externalControllerLa)
+    x = cos(smartCarLa)*sin(externalControllerLa)-sin(smartCarLa)*cos(externalControllerLa)*cos(longDiff)
+    return degrees((atan2(y, x))+360)%360
 
 def filterGPS(smartCarGPS, externalControllerGPS):
 
