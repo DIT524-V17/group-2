@@ -261,7 +261,6 @@ public class ControllerActivity extends MainActivity {
                     sfmImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FM")));
                     sfrImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FR")));
                     sflImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FL")));
-                    //Todo: Change R & L to SR & SL in sketch.
                     srImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SR")));
                     slImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SL")));
                     sbImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SB")));
