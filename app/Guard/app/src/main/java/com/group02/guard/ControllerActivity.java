@@ -40,6 +40,7 @@ public class ControllerActivity extends MainActivity {
     private boolean criticalLevel = false;
 
     //Our own implemented HashMap that has a default value of 0 for all keys.
+    //Todo: Use for sensor.
     private Map<String, Integer> sensorValues = new SensorMap<>(0);
 
     Control analogue;
@@ -251,29 +252,10 @@ public class ControllerActivity extends MainActivity {
      */
     private void readInput(String inputString){
 
-        try {
-            if(inputString.startsWith("B")) { //Updates the battery level
-                analogReadValue = Integer.parseInt(inputString.substring(1).trim());
-                setBatteryLevel();
-            } else {
-                sensorValues.put(inputString.substring(0, 2), Integer.getInteger(inputString.substring(2).trim()));
-                while(!sensorValues.isEmpty()) {
-                    sfmImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FM")));
-                    sfrImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FR")));
-                    sflImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("FL")));
-                    srImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SR")));
-                    slImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SL")));
-                    sbImage.setImageAlpha((int) analogue.scale(200, 0, 255, 0, sensorValues.get("SB")));
-                    sensorValues.clear();
-                }
-            }
-        } catch(NumberFormatException e) {
-            System.out.println("Could not parse " + "'" + inputString.substring(1) +"'");
-        }
-
-
-        /* ToDo: Remove after test.
-        else if (inputString.startsWith("FR")) { //Updates the sensor images depending on the value
+        if(inputString.startsWith("B")) { //Updates the battery level
+            analogReadValue = Integer.parseInt(inputString.substring(1).trim());
+            setBatteryLevel();
+        } else if (inputString.startsWith("FR")) { //Updates the sensor images depending on the value
             try {
 
                 sfrReadValue = Integer.parseInt(inputString.substring(2).trim());
@@ -299,7 +281,7 @@ public class ControllerActivity extends MainActivity {
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (inputString.startsWith("R")) {//Updates the sensor images depending on the value
+        } else if (inputString.startsWith("SR")) {//Updates the sensor images depending on the value
             try {
                 srReadValue = Integer.parseInt(inputString.substring(1).trim());
                 setSensorValues();
@@ -307,7 +289,7 @@ public class ControllerActivity extends MainActivity {
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (inputString.startsWith("L")) {//Updates the sensor images depending on the value
+        } else if (inputString.startsWith("SL")) {//Updates the sensor images depending on the value
             try {
                 slReadValue = Integer.parseInt(inputString.substring(1).trim());
                 setSensorValues();
@@ -323,7 +305,7 @@ public class ControllerActivity extends MainActivity {
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        }*/
+        }
     }
 
     /**
