@@ -17,23 +17,25 @@ pip install pynmea2 --user
 cgps -s
 """
 
-ser = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
+serialGPS = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
 
 while 1:
-    line = ser.readline()
-    if line.startswith('$GPGGA'):
+    GPSdata = serialGPS.readline()
+    if GPSdata.startswith('$GPGGA'):
         try:
-            nmeaData = pynmea2.parse(line, check=False)
+            nmeaData = pynmea2.parse(GPSdata, check=False)
             fix = nmeaData.gps_qual
             if fix != 0:
-                latitude = nmeaData.latitude
-                longitude = nmeaData.longitude
-                fixQuality = nmeaData.gps_qual
-                print'Lat: ', latitude
-                print'Long: ', longitude
-                print'Fix quality: ', fixQuality
-                print'\n'
+                GUARDlatitude = nmeaData.latitude
+                GUARDlongitude = nmeaData.longitude
+                hdop = nmeaData.horizontal_dil
+                print'Lat: ', GUARDlatitude
+                print'Long: ', GUARDlongitude
+                print'Fix quality: ', fix
+                print'HDOP: ', hdop, '\n'
             else:
-                print 'waiting for fix..'
+                print'waiting for fix..'
         except Exception as e:
             print("", e)
+    else:
+        print'No data from GPS device'
