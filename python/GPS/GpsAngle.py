@@ -34,5 +34,5 @@ def calculateDistance(smartCarLa, externalControllerLa, smartCarLo, externalCont
 
 
 if __name__ == '__main__':
-    calculateAngle()
+    calculateBearing()
     calculateDistance()

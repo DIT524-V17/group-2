@@ -2,7 +2,7 @@ import threading
 import time
 import serial
 from random import randrange, uniform
-from GpsAngle import calculateAngle, calculateDistance
+from GpsAngle import calculateBearing, calculateDistance
 
 # from Boyan: angle and the distance to the mobile device
 # script that continuously send commands to the Arduino to follow the phone (setAngle, setSpeed)
@@ -46,7 +46,7 @@ class ThreadingGPSFollow():
         oldAngle = 0
         while True:
             distance = calculateDistance(uniform(-180, 180), uniform(-180, 180), uniform(-90, 90), uniform(-90, 90))
-            angle = calculateAngle(uniform(-180, 180), uniform(-180, 180), uniform(-90, 90), uniform(-90, 90))
+            angle = calculateBearing(uniform(-180, 180), uniform(-180, 180), uniform(-90, 90), uniform(-90, 90))
             if angle != oldAngle and distance > 15:
                 oldAngle = angle
                 self.drive(angle, 70)
