@@ -96,7 +96,7 @@ class ThreadingGPSFollow():
                         print'Waiting for fix..'
                 except Exception as e:
                     print("Error caught: ", e)
-                else:
-                    print'No data from GPS device'
+            elif GPSdata.startswith(' ') or GPSdata.startswith(None):
+                print'No data from GPS device'
 
 ThreadingGPSFollow()

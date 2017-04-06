@@ -37,5 +37,5 @@ while 1:
                 print'waiting for fix..'
         except Exception as e:
             print("", e)
-    else:
+    elif GPSdata.startswith(' ') or GPSdata.startswith(None):
         print'No data from GPS device'
