@@ -26,8 +26,8 @@ while 1:
             nmeaData = pynmea2.parse(line, check=False)
             fix = nmeaData.gps_qual
             if fix != 0:
-                latitude = nmeaData.lat
-                longitude = nmeaData.lon
+                latitude = nmeaData.latitude
+                longitude = nmeaData.longitude
                 fixQuality = nmeaData.gps_qual
                 print'Lat: ', latitude
                 print'Long: ', longitude
