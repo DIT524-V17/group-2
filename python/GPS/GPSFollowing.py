@@ -14,7 +14,7 @@ s = 'S'
 newLine = '\n'
 updateFrequency = 2
 
-#ser = serial.Serial('/dev/ttyACM0', 9600)  # '/dev/ttyACM0'
+#ser = serial.Serial('/dev/ttyACM0', 9600)
 
 class ThreadingGPSFollow():
     """ Threading class
@@ -24,13 +24,13 @@ class ThreadingGPSFollow():
     def drive(self, angle, speed):
         print(a + str(angle))
         byteAngle = str.encode(a + str(angle) + newLine)
-        #ser.write(byteAngle)
+#        ser.write(byteAngle)
 
         time.sleep(1)
 
         print(s + str(speed))
         byteSpeed = str.encode(s + str(speed) + newLine)
-        #ser.write(byteSpeed)
+#        ser.write(byteSpeed)
 
         time.sleep(updateFrequency)
 
@@ -45,21 +45,17 @@ class ThreadingGPSFollow():
         """ Method that runs forever """
         oldAngle = 0
         while True:
-
-            """ Uses calculations from the GpsAngle script """
             distance = calculateDistance(uniform(-180, 180), uniform(-180, 180), uniform(-90, 90), uniform(-90, 90))
             angle = calculateAngle(uniform(-180, 180), uniform(-180, 180), uniform(-90, 90), uniform(-90, 90))
-
-            """ If statement that filters out small changes angle changes """
-            if abs(angle-oldAngle) < 5:
-                continue
-
-            if distance > 15:
+            if angle != oldAngle and distance > 15:
                 oldAngle = angle
                 self.drive(angle, 70)
-            elif distance < 15 and distance > 3:
+            elif angle != oldAngle and distance < 15 and distance > 3:
                 oldAngle = angle
                 self.drive(angle, 40)
+            elif distance < 3:
+                oldAngle = angle
+                self.drive(angle, 0)
             else:
                 oldAngle = angle
                 self.drive(angle, 0)
