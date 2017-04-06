@@ -1,11 +1,7 @@
 from math import *
 
 
-##def calculateAngle(smartCarLo, externalControllerLo, smartCarLa, externalControllerLa):
 
-##    angle = tan(abs(externalControllerLa-smartCarLa)/ abs(externalControllerLo-smartCarLo))
-
-##    return(angle)
 
 def calculateBearing(smartCarLa, smartCarLo, externalControllerLa, externalControllerLo) :
 
