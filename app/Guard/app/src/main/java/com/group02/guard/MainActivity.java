@@ -1,10 +1,9 @@
 package com.group02.guard;
 
-import android.support.v7.app.AppCompatActivity;
-import android.widget.ToggleButton;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 /**
  * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
@@ -27,11 +27,12 @@ public class MainActivity extends AppCompatActivity {
     ToggleButton homeNav;
     Button control;
     Button map;
+    Button coords;
     Button wifi;
     ImageButton optionMenu;
+    SharedPreferences preferences;
     private Button btnLogout;
     private Session session;
-    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
+        coords = (Button) findViewById(R.id.coordsButton);
         wifi = (Button) findViewById(R.id.wifiDirectButton);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onClick(View v) {
         SharedPreferences.Editor editor = preferences.edit();
         Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
+        Intent coords = new Intent(MainActivity.this, MapsActivity.class);
         Intent controlCar = new Intent(MainActivity.this, ControllerActivity.class);
         Intent openMap = new Intent(MainActivity.this, MapsActivity.class);
         Intent goHome = new Intent(MainActivity.this, MainActivity.class);
@@ -98,6 +101,11 @@ public class MainActivity extends AppCompatActivity {
                 editor.putBoolean("controlSelected", true);
                 editor.commit();
                 startActivity(controlCar);
+                return true;
+            case R.id.coordsButton:
+                editor.putBoolean("coordsSelected", true);
+                editor.commit();
+                startActivity(coords);
                 return true;
             case R.id.controlNavigation:
                 editor.putBoolean("controlSelected", true);
