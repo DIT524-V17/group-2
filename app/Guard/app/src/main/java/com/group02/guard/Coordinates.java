@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * Created by doctorgaby on 15/03/2017.
+ * The class parses a coordinate string from Degrees to Decimal format
+ * @author Gabriel Bulai
+ * @version 1.0
  */
 
 public class Coordinates {

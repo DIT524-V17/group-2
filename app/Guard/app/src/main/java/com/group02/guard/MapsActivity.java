@@ -261,6 +261,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         clientThread = null;
     }
 
+    /**
+     * The class implements some variables that can be manipulated to discover the different
+     * states the communication
+     */
     public static class ClientHandler extends Handler {
         public static final int UPDATE_STATE = 0;
         public static final int UPDATE_MSG = 1;

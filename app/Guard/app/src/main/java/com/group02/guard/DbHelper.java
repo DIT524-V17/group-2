@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- * Created by doctorgaby on 5/5/2016.
+ * The class creates an internal SQLite database for user authentication credentials
+ * @author Gabriel Bulai
+ * @version 1.0
  */
 public class DbHelper extends SQLiteOpenHelper {
     public static final String TAG = DbHelper.class.getSimpleName();

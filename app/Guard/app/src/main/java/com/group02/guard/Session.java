@@ -2,7 +2,6 @@ package com.group02.guard;
 /**
  * The class creates a "session" held in shared preferences of the app.
  * There all user information will be stored
- *
  * @author Gabriel Bulai
  * @version 1.0
  */
