@@ -34,6 +34,7 @@ NewPing sonarBack(TRIGGER_PIN_BACK, ECHO_PIN_BACK, MAX_DISTANCE);
 Car car;
 SimpleTimer timer;
 ShieldMotors motors;
+Gyroscope gyro;
 
 int motorSpeedRight;
 int motorSpeedLeft;
@@ -50,13 +51,15 @@ String b = "B";
 String sfm = "FM";
 String sfr = "FR";
 String sfl = "FL";
-String sr = "R";
-String sl = "L";
+String sr = "SR";
+String sl = "SL";
 String sb = "SB";
 
 void setup() {
   Serial3.begin(9600);
   car.begin();
+  gyro.attach();
+  gyro.begin(50);
   timer.setInterval(5000, sendVoltage); //Sets the interval to send the voltage every 5 second
 }
 
@@ -161,3 +164,43 @@ boolean obstacleDetectionRear(){
   }
   return false;
 }
+
+void gyroCalculation(){
+    gyro.update(); //update the readings of the gyroscope, you should have this method being freely executed within your main loop
+    Serial.println(gyro.getAngularDisplacement());
+}
+
+void gyroSteering() {
+  if (Serial.available()) { //handle serial input if there is any
+    input = Serial.readStringUntil('\n');
+    if (input.startsWith("A")){
+      int inputAsInt = input.substring(1).toInt();
+    
+      if(inputAsInt == 0){
+        return;
+      } else if(inputAsInt > 0) {
+        car.setMotorSpeed(motorSpeedLeft, -motorSpeedRight); // left motors spin forward, right motors spin backward
+      } else if(inputAsInt < 0){
+        car.setMotorSpeed(-motorSpeedLeft, motorSpeedRight); // left motors spin backward, right motors spin forward
+      }
+      int initialPosition = gyro.getAngularDisplacement();
+      int degreesTurnedSoFar = 0; //this variable will hold the absolute displacement from the beginning of the rotation
+      while (abs(degreesTurnedSoFar) < abs(inputAsInt)) { //while absolute displacement hasn't reached the (absolute) target, keep turning
+        gyro.update(); //update to integrate the latest heading sensor readings
+        int currentHeading = gyro.getAngularDisplacement(); //in the scale of 0 to 360
+        if ((inputAsInt < 0) && (currentHeading > initialPosition)) { //if we are turning left and the current heading is larger than the
+          //initial one (e.g. started at 10 degrees and now we are at 350), we need to substract 360, so to eventually get a signed
+          currentHeading -= 360; //displacement from the initial heading (-20)
+        } else if ((inputAsInt > 0) && (currentHeading < initialPosition)) { //if we are turning right and the heading is smaller than the
+          //initial one (e.g. started at 350 degrees and now we are at 20), so to get a signed displacement (+30)
+          currentHeading += 360;    
+        }
+        degreesTurnedSoFar = initialPosition - currentHeading; //degrees turned so far is initial heading minus current (initial heading
+        //is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360 to currentHeading)
+      }
+      car.stop(); //we have reached the target, so stop the car
+    }
+  }
+ 
+}
+

@@ -11,7 +11,7 @@ To test your code you need to go to Run -> Record Espresso Test, afterwards you 
     Go to your terminal any workspace is fine.
     Write:
     adb shell monkey -p com.group02.guard -v 500
-    This will give you 500 psuedo-random events, alot of them will not berecorded by Espresso. 
+    This will give you 500 psuedo-random events, a lot of them will not be recorded by Espresso, lets figure this out. 
 
 ### JUnit4
-JUnit4 will be the standard we use for testing, you can use the log from the Monkey to see some edge cases but this is something we will have to learn to write, hopefully soon we will have implemented a fully automated JUnit test case generator. 
+JUnit4 will be the standard we use for testing, just write these tests for critical methods, we should not put to much time into this.  

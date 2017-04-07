@@ -14,9 +14,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 /**
- * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
  * Creates the "MainScreen" of the G.U.A.R.D. app. Layout used is activity_main.xml
- * @version 1.0.0
+ * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
+ * @version 1.0.1 EL
  */
 public class MainActivity extends AppCompatActivity {
 

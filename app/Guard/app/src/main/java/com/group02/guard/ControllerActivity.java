@@ -15,19 +15,21 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.pm.ActivityInfo;
-import java.nio.ByteBuffer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
- * @author Joacim Eberlen, Erik Laurin
- * @version 1.0.2 EL
+ * @author Joacim Eberlen, Erik Laurin, Axel Granli
+ * @version 1.0.3 AG
  */
-public class ControllerActivity extends AppCompatActivity {
+public class ControllerActivity extends MainActivity {
 
     // Following variables is used by the batteryImageButton function
     private Intent batteryStats;
@@ -36,6 +38,10 @@ public class ControllerActivity extends AppCompatActivity {
     private double analogReadValue;
     private double arduinoVoltage;
     private boolean criticalLevel = false;
+
+    //Our own implemented HashMap that has a default value of 0 for all keys.
+    //Todo: Use for sensor.
+    private Map<String, Integer> sensorValues = new SensorMap<>(0);
 
     Control analogue;
     TextView showMoveEvent;
@@ -48,49 +54,18 @@ public class ControllerActivity extends AppCompatActivity {
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
 
-    private int sfmReadValue;
-    private TextView sfm;
-    private ImageView sfmImage;
-
-    private int sflReadValue = 20;
-    private TextView sfl;
-    private ImageView sflImage;
-
-    private int sfrReadValue = 20;
-    private TextView sfr;
-    private ImageView sfrImage;
-
-    private int srReadValue = 30;
-    private TextView sr;
-    private ImageView srImage;
-
-    private int slReadValue = 50;
-    private TextView sl;
-    private ImageView slImage;
-
-    private int sbReadValue = 9;
-    private TextView sb;
-    private ImageView sbImage;
+    private int sfmReadValue, sfrReadValue, sflReadValue, srReadValue, slReadValue, sbReadValue;
+    private ImageView sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
 
     ToggleButton controlNav;
     SharedPreferences preferences;
     ImageButton optionMenu;
 
-    public static byte[] toByteArray(double value) {
-        byte[] bytes = new byte[8];
-        ByteBuffer.wrap(bytes).putDouble(value);
-        return bytes;
-    }
-
-    public static double toDouble(byte[] bytes) {
-        return ByteBuffer.wrap(bytes).getDouble();
-    }
-    //Set MAX_SPEED for motors
-    final int MAX_SPEED = 70;
+    static final int MAX_SPEED = 70;
 
     /**
      * Creates UI elements and initializes the BluetoothThread.
-     * @param savedInstanceState
+     * @param savedInstanceState Saved Instance State
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,22 +78,11 @@ public class ControllerActivity extends AppCompatActivity {
         analogue = (Control) findViewById(R.id.controlView);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
-        sfm = (TextView) findViewById(R.id.sfm_value);
         sfmImage = (ImageView) findViewById(R.id.sfm_image);
-
-        sfr = (TextView) findViewById(R.id.sfr_value);
         sfrImage = (ImageView) findViewById(R.id.sfr_image);
-
-        sfl = (TextView) findViewById(R.id.sfl_value);
         sflImage = (ImageView) findViewById(R.id.sfl_image);
-
-        sl = (TextView) findViewById(R.id.sl_value);
         slImage = (ImageView) findViewById(R.id.sl_image);
-
-        sr = (TextView) findViewById(R.id.sr_value);
         srImage = (ImageView) findViewById(R.id.sr_image);
-
-        sb = (TextView) findViewById(R.id.sb_value);
         sbImage = (ImageView) findViewById(R.id.sb_image);
 
         preferences = getPreferences(MODE_PRIVATE);
@@ -150,14 +114,18 @@ public class ControllerActivity extends AppCompatActivity {
                 Log.e("", "" + speed);
                 // [0] is left, [1] is right
                 int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
-                showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "." + "\nSpeed: " + speed);
+                showMoveEvent.setText("Angle: " + analogue.nAngle()
+                        + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
+                        + "\nSpeed: " + speed);
 
                 write(motors[0], motors[1]);
             }
 
             @Override
             public void onMoveStopped() {
-                showMoveEvent.setText("Angle: " + analogue.nAngle() + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "." + "\nSpeed: " + 0);
+                showMoveEvent.setText("Angle: " + analogue.nAngle()
+                        + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
+                        + "\nSpeed: " + 0);
                 write(0, 0);
             }
         });
@@ -172,8 +140,8 @@ public class ControllerActivity extends AppCompatActivity {
 
     /**
      *   Writing to the Arduino for motor control.
-     *   @param right Right motor.
-     *   @param left Left motor,
+     *   @param right Right motor
+     *   @param left Left motor
      */
     public void write(int left, int right){
             Message l = Message.obtain();
@@ -279,44 +247,41 @@ public class ControllerActivity extends AppCompatActivity {
 
     /**
      * The method takes and decodes the strings received via Bluetooth from the SmartCar.
-     * Depending on type of string (its first letter decides its use), various actions executes (@author Erik Laurin)
+     * Depending on type of string (its first letter decides its use), various actions executes (@author Erik Laurin and partly Axel Granli)
      * @param inputString String received from the SmartCar containing data
      */
     private void readInput(String inputString){
-        if(inputString.startsWith("B")){ //Updates the battery level
-            try {
-                analogReadValue = Integer.parseInt(inputString.substring(1).trim());
-                setBatteryLevel();
 
-            } catch(NumberFormatException e) {
-                System.out.println("Could not parse " + "'" + inputString.substring(1) +"'");
-            }
-        } else if (inputString.startsWith("fr")) {
+        if(inputString.startsWith("B")) { //Updates the battery level
+            analogReadValue = Integer.parseInt(inputString.substring(1).trim());
+            setBatteryLevel();
+        } else if (inputString.startsWith("FR")) { //Updates the sensor images depending on the value
             try {
+
                 sfrReadValue = Integer.parseInt(inputString.substring(2).trim());
                 setSensorValues();
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (inputString.startsWith("FM")) {
+        } else if (inputString.startsWith("FM")) {//Updates the sensor images depending on the value
             try {
                 sfmReadValue = Integer.parseInt(inputString.substring(2).trim());
-                Log.e("", "" + sfmReadValue);
                 setSensorValues();
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (inputString.startsWith("fl")) {
+        } else if (inputString.startsWith("FL")) {//Updates the sensor images depending on the value
             try {
                 sflReadValue = Integer.parseInt(inputString.substring(2).trim());
                 setSensorValues();
+                Log.d("my Tag", "" + String.valueOf(sflReadValue));
 
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (inputString.startsWith("r")) {
+        } else if (inputString.startsWith("SR")) {//Updates the sensor images depending on the value
             try {
                 srReadValue = Integer.parseInt(inputString.substring(1).trim());
                 setSensorValues();
@@ -324,7 +289,7 @@ public class ControllerActivity extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (inputString.startsWith("l")) {
+        } else if (inputString.startsWith("SL")) {//Updates the sensor images depending on the value
             try {
                 slReadValue = Integer.parseInt(inputString.substring(1).trim());
                 setSensorValues();
@@ -332,7 +297,7 @@ public class ControllerActivity extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 System.out.println("Could not parse");
             }
-        } else if (inputString.startsWith("sb")) {
+        } else if (inputString.startsWith("SB")) {//Updates the sensor images depending on the value
             try {
                 sbReadValue = Integer.parseInt(inputString.substring(2).trim());
                 setSensorValues();
@@ -342,15 +307,18 @@ public class ControllerActivity extends AppCompatActivity {
             }
         }
     }
-    private void setSensorValues() {
-        sfm.setText(String.valueOf(sfmReadValue));
-        sfl.setText(String.valueOf(sflReadValue));
-        sfr.setText(String.valueOf(sfrReadValue));
-        sr.setText(String.valueOf(srReadValue));
-        sl.setText(String.valueOf(slReadValue));
-        sb.setText(String.valueOf(sbReadValue));
 
-        if(sfmReadValue < 10){
+    /**
+     * This method sets the image for each sensor to a preferred transparency
+     * dependant on the distance(@author Axel Granli)
+     * Todo: Remove after testing.
+     */
+    private void setSensorValues() {
+
+        if (sfmReadValue == 0){
+            sfmImage.setImageAlpha(7);
+        }
+        else if(sfmReadValue < 10 && sfmReadValue > 0){
             sfmImage.setImageAlpha(255);
         }
         else if (sfmReadValue <= 20 && sfmReadValue > 10){
@@ -363,7 +331,10 @@ public class ControllerActivity extends AppCompatActivity {
             sfmImage.setImageAlpha(7);
         }
 
-        if(sflReadValue < 10){
+        if (sflReadValue == 0){
+            sflImage.setImageAlpha(7);
+        }
+        else if(sflReadValue < 10 && sflReadValue > 0){
             sflImage.setImageAlpha(255);
         }
         else if (sflReadValue <= 20 && sflReadValue > 10){
@@ -376,7 +347,10 @@ public class ControllerActivity extends AppCompatActivity {
             sflImage.setImageAlpha(7);
         }
 
-        if(sfrReadValue < 10){
+        if (sfrReadValue == 0){
+            sfrImage.setImageAlpha(7);
+        }
+        else if(sfrReadValue < 10 && sfrReadValue > 0){
             sfrImage.setImageAlpha(255);
         }
         else if (sfrReadValue <= 20 && sfrReadValue > 10){
@@ -389,7 +363,10 @@ public class ControllerActivity extends AppCompatActivity {
             sfrImage.setImageAlpha(7);
         }
 
-        if(slReadValue < 10){
+        if (slReadValue == 0){
+            slImage.setImageAlpha(7);
+        }
+        else if(slReadValue < 10 && slReadValue > 0){
             slImage.setImageAlpha(255);
         }
         else if (slReadValue <= 20 && slReadValue > 10){
@@ -402,7 +379,10 @@ public class ControllerActivity extends AppCompatActivity {
             slImage.setImageAlpha(7);
         }
 
-        if(srReadValue < 10){
+        if (srReadValue == 0){
+            srImage.setImageAlpha(7);
+        }
+        else if(srReadValue < 10 && srReadValue > 0){
             srImage.setImageAlpha(255);
         }
         else if (srReadValue <= 20 && srReadValue > 10){
@@ -415,7 +395,10 @@ public class ControllerActivity extends AppCompatActivity {
             srImage.setImageAlpha(7);
         }
 
-        if(sbReadValue < 10){
+        if (sbReadValue == 0){
+            sbImage.setImageAlpha(7);
+        }
+        else if(sbReadValue < 10 && sbReadValue > 0){
             sbImage.setImageAlpha(255);
         }
         else if (sbReadValue <= 20 && sbReadValue > 10){

@@ -14,7 +14,8 @@ import android.view.View;
  * The class also contains calculations of polar angle(), normal angle (nAngle()),
  * a onMoveListener(), a method for size change (onSizeChanged()), a scaling method(scale()).
  *
- * IMPORTANT: motorSpeed() sets two motor speeds calculated from nAngle() and the speed(Distance from center).
+ * IMPORTANT: motorSpeed() sets two motor speeds calculated from nAngle() and the
+ * speed(Distance from center).
  *
  * @version 1.0.0 JE
  */
@@ -25,7 +26,7 @@ public class Control extends View {
     float x, y;
     double r, t;
     int cx, cy, w, h;
-    final int RADIUS = 20;
+    static final int RADIUS = 20;
     Paint backGround = new Paint();
     Paint smallDotAndOuterBorder = new Paint();
     Paint smallDotBorder = new Paint();
@@ -35,8 +36,9 @@ public class Control extends View {
     private int toDo;
 
     /**
-     * This is the constructor for the control circle.
-     * @param context, attrs. autogen when connected to the xml-layout with the name com...Control
+     * Constructor for the control circle.
+     * @param context auto-generated when connected to the xml-layout with the name com...Control
+     * @param attrs auto-generated when connected to the xml-layout with the name com...Control
      */
     public Control(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -50,27 +52,30 @@ public class Control extends View {
         smallDotAndOuterBorder.setFlags(Paint.ANTI_ALIAS_FLAG);
     }
     /**
-     * This handles the changing of sizes for the control.
-     * @param w = width, h = height, oldw = old width, oldh = old height.
+     * Handles the changing of sizes for the control.
+     * @param w Width
+     * @param h Height
+     * @param oldH Old height
+     * @param oldW Old width
      */
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         this.w = w;
         this.h = h;
         cx = w / 2;
         cy = h / 2;
         x = cx;
         y = cy;
-        super.onSizeChanged(w, h, oldw, oldh);
+        super.onSizeChanged(w, h, oldW, oldH);
     }
     /**
-     * The metod for drawing the controller.
-     * @param canvas = The canvas on the UI thread.
+     * Draws the controller.
+     * @param canvas The canvas on the UI thread.
      */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawMyStuff(canvas);
+        drawController(canvas);
         switch (toDo) {
             case 1:
                 center();
@@ -83,10 +88,10 @@ public class Control extends View {
 
     /**
      * Drawing the circle on the canvas.
-     * @param canvas = The canvas on the UI thread.
+     * @param canvas The canvas on the UI thread.
      */
 
-    private void drawMyStuff(final Canvas canvas) {
+    private void drawController(final Canvas canvas) {
         canvas.drawCircle(cx, cy, w / 2, backGround);
         canvas.drawCircle(cx, cy, (w / 2) - 5, smallDotAndOuterBorder);
         canvas.drawCircle(cx, cy, w / 2 - 10, backGround);
@@ -96,8 +101,9 @@ public class Control extends View {
     }
 
     /**
-     * Getting the coorinates from the onTouchEvent.
-     * @param x, y.
+     * Getting the coordinates from the onTouchEvent.
+     * @param x X position
+     * @param y Y position
      *  n2p : normal to polar coordinates conversion
      * p2n : polar to normal coordinates conversion
      *  R : distance to polar center
@@ -123,7 +129,7 @@ public class Control extends View {
         return r * Math.sin(t) + cy;
     }
     /**
-     *  Geting an angle from 0-360 degrees.
+     *  Getting an angle from 0-360 degrees.
      */
     double nAngle(){
 
@@ -140,8 +146,12 @@ public class Control extends View {
     }
 
     /**
-     * This method scales all positive integers.
-     * @param oldMax, oldMin, newMax, newMin, input.
+     * Scales all positive integers.
+     * @param oldMax Old max double
+     * @param oldMin Old min double
+     * @param input Input received
+     * @param newMax New max double
+     * @param newMin New min double
      */
     public double scale(double oldMax, double oldMin, double newMax, double newMin, double input){
         double scaled = ((newMax - newMin) / (oldMax - oldMin) * (input - oldMax) + newMax);
@@ -151,7 +161,7 @@ public class Control extends View {
     /**
      * Speed rescaled to fit into 0 - 100 for the car speed.
      * @param newMax The maximum speed for the car
-     * @return
+     * @return Total speed
      */
     public double getSpeed(double newMax){
         //ToDo: Make this universal so it is reusable.
@@ -160,11 +170,11 @@ public class Control extends View {
     }
 
     /**
-     *  This method returns the distance between the center and the touched area.
-     * @param x1 = lesser x
-     * @param y1 = lesser y
-     * @param x2 = greater x
-     * @param y2 = greater y
+     * Returns the distance between the center and the touched area.
+     * @param x1 Lesser x
+     * @param y1 Lesser y
+     * @param x2 Greater x
+     * @param y2 Greater y
      * @return The distance
      */
 
@@ -174,7 +184,8 @@ public class Control extends View {
 
     /**
      * Dividing the speed and angle into different speeds for each motor.
-     * @param speed = the distance from origo to the MotionEvent, angle = The angle from origo.
+     * @param speed The distance from center to the MotionEvent,
+     * @param angle The angle from center.
      */
     public int[] motorSpeed(double speed, double angle){
 
@@ -224,7 +235,7 @@ public class Control extends View {
 
     /**
      * The handling of the touch event on the controller.
-     * @param event = the touch of a finger.
+     * @param event The touch of a finger.
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -233,25 +244,22 @@ public class Control extends View {
             case MotionEvent.ACTION_DOWN :
                 updatePosition(event);
                 break;
-
             case MotionEvent.ACTION_MOVE :
                 updatePosition(event);
                 break;
-
             case MotionEvent.ACTION_UP :
                 toDo = 1;
                 center();
                 moveListener.onMoveStopped();
                 break;
-            default :break;
-
+            default :
+                break;
         }
-
         return true;
     }
 
     /**
-     * Center the small dot on release of the touch event.
+     * Centers the small dot on release of the touch event.
      */
     private void center(){
         if(r > 15){
@@ -267,8 +275,8 @@ public class Control extends View {
     }
 
     /**
-     * Updating the position of the small dot that indicated where the event accours.
-     * @param e = a motion event.
+     * Updating the position of the small dot that indicated where the event occurs.
+     * @param e A motion event.
      */
     void updatePosition(MotionEvent e){
         r= Math.min(w/2-RADIUS, n2pR(e.getX(),e.getY()));
@@ -282,14 +290,14 @@ public class Control extends View {
         invalidate();
     }
     /**
-     * An interface to make choises to different Motion events.
-     * @param listener = listens to changes.
+     * An interface to make choices to different Motion events.
+     * @param listener Listens to changes.
      */
     public void setOnMoveListener(OnMoveListener listener){
         moveListener = listener;
     }
 
-    public interface OnMoveListener{
+    interface OnMoveListener{
         void onMoveInDirection(double polarAngle);
         void onMoveStopped();
     }
