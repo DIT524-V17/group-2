@@ -202,8 +202,8 @@ public class Control extends View {
 
             } else if (angle >= 90 && angle < 180) {
 
-                leftMotor = speed;
-                rightMotor = (leftMotor * angle/90) - leftMotor;
+                rightMotor = speed - 20;
+                leftMotor = (rightMotor * angle/90) - rightMotor;
 
                 motors[0] = (int)leftMotor * -1;
                 motors[1] = (int)rightMotor * -1;
@@ -212,8 +212,8 @@ public class Control extends View {
 
             } else if (angle >= 180 && angle < 270) {
 
-                rightMotor = speed;
-                leftMotor = rightMotor - (rightMotor * ((angle - 180)/90));
+                leftMotor = speed - 20;
+                rightMotor = leftMotor - (leftMotor * ((angle - 180)/90));
 
                 motors[0] = (int)leftMotor * -1;
                 motors[1] = (int)rightMotor * -1;
