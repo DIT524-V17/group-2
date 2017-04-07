@@ -32,10 +32,9 @@
             android:id="@+id/latitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="85dp"
+            android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="latitude" />
 
@@ -43,10 +42,8 @@
             android:id="@+id/longitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/latitude"
-            android:layout_marginTop="21dp"
             android:ems="10"
             android:hint="longitude" />
 
@@ -60,8 +57,8 @@
             android:layout_marginBottom="11dp"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:onClick="send"
-            android:text="send" />
+            android:onClick="parse"
+            android:text="parse" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -77,10 +74,9 @@
             android:id="@+id/curLat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/curLong"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="69dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="CurrentLat" />
 
@@ -88,10 +84,8 @@
             android:id="@+id/curLong"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="72dp"
+            android:layout_below="@+id/curLat"
             android:ems="10"
             android:hint="CurrentLng" />
     </RelativeLayout>

@@ -5,7 +5,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by doctorgaby on 09/03/2017.
+ * The class generates a hash string which will be used to encrypt user input
+ * @author Gabriel Bulai
+ * @version 1.0
  */
 
 public class HashInformation {

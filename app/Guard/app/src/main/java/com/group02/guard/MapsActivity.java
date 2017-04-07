@@ -1,10 +1,17 @@
 package com.group02.guard;
-
+/**
+ * @author Gabriel Bulai
+ * This class implements the google API and uses it to retreive current location of the phone
+ * @version 1.0.0 GB
+ */
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,11 +43,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 101;
     private static final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 102;
-
+    public static Double currentLatitude = 0.0;
+    public static Double currentLongitude = 0.0;
+    public static String bla = String.valueOf(currentLatitude);
+    public static String bla1 = String.valueOf(currentLongitude);
     TextView curLat;
     TextView curLng;
-    private Double currentLatitude = 0.0;
-    private Double currentLongitude = 0.0;
+    ClientHandler clientHandler;
+    ClientThread clientThread;
+    String address = "129.16.155.11";
+    int port = 8000;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
@@ -52,6 +64,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         if (servicesOK()) {
             setContentView(R.layout.activity_maps);
+            if (android.os.Build.VERSION.SDK_INT > 9) {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+            }
             //initMap();
             if (initMap()) {
                 Toast.makeText(this, "Map Connected", Toast.LENGTH_SHORT).show();
@@ -73,9 +89,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         curLat = (TextView) findViewById(R.id.curLat);
         curLng = (TextView) findViewById(R.id.curLong);
+        clientHandler = new ClientHandler(this);
+        clientThread = new ClientThread(
+                address,
+                port,
+                clientHandler);
+        clientThread.start();
+        Toast.makeText(getApplicationContext(), "Thread has been started", Toast.LENGTH_LONG).show();
     }
 
-    public void send(View view) {
+    public void parse(View view) {
         EditText latitude = (EditText) findViewById(R.id.latitude);
         EditText longitude = (EditText) findViewById(R.id.longitude);
 
@@ -171,7 +194,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentLongitude = location.getLongitude();
         curLat.setText(String.valueOf(currentLatitude));
         curLng.setText(String.valueOf(currentLongitude));
+        //navigate to the current location
         gotoLocation(currentLatitude, currentLongitude, 20);
+        //send coordinates to the server using a thread
+        clientThread.txMsg(currentLatitude.toString() + " " + currentLongitude.toString());
     }
 
     @Override
@@ -203,6 +229,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onStop();
         if (permissionIsGranted) {
             mGoogleApiClient.disconnect();
+        } else if (clientThread != null) {
+            clientThread.setRunning(false);
         }
     }
 
@@ -227,6 +255,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // code for coarse location
                 break;
         }
+    }
+
+    private void clientEnd() {
+        clientThread = null;
+    }
+
+    /**
+     * The class implements some variables that can be manipulated to discover the different
+     * states the communication
+     */
+    public static class ClientHandler extends Handler {
+        public static final int UPDATE_STATE = 0;
+        public static final int UPDATE_MSG = 1;
+        public static final int UPDATE_END = 2;
+        private MapsActivity parent;
+
+        public ClientHandler(MapsActivity parent) {
+            super();
+            this.parent = parent;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what) {
+                case UPDATE_END:
+                    parent.clientEnd();
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+
+        }
+
     }
 
 }

@@ -1,5 +1,11 @@
 package com.group02.guard;
-
+/**
+ * The class implements the registration process for the user, saving the credentials
+ * in the databases
+ *
+ * @author Gabriel Bulai
+ * @version 1.0
+ */
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
