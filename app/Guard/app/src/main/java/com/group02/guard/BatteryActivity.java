@@ -1,13 +1,16 @@
 package com.group02.guard;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class BatteryActivity extends MainActivity {
+/**
+ * The class creates an activity that displays detailed battery data
+ *
+ * @author Erik Laurin
+ * @version 1.0
+ */
 
+public class BatteryActivity extends MainActivity {
     TextView analogValue;
     TextView arduinoVoltage;
     TextView actualVoltage;

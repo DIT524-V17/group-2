@@ -4,58 +4,58 @@
     android:id="@+id/activity_battery"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.group02.guard.BatteryActivity"
     android:orientation="vertical"
-    android:weightSum="10">
+    android:weightSum="10"
+    tools:context="com.group02.guard.BatteryActivity">
 
 
     <include layout="@layout/toolbar_top"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible"/>
 
     <TextView
-        android:text="TextView"
+        android:id="@+id/analogValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/analogValue"
         android:layout_weight="0.2"
+        android:paddingStart="3dp"
         android:paddingTop="10dp"
-        android:paddingStart="3dp" />
+        android:text="TextView" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorMutedLight"
         android:layout_marginBottom="7dp"
+        android:background="@color/colorMutedLight"
         />
 
     <TextView
-        android:text="TextView"
+        android:id="@+id/arduinoVoltage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/arduinoVoltage"
         android:layout_weight="0.2"
-        android:paddingStart="3dp" />
+        android:paddingStart="3dp"
+        android:text="TextView" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorMutedLight"
-        android:layout_marginBottom="7dp" />
+        android:layout_marginBottom="7dp"
+        android:background="@color/colorMutedLight" />
 
     <TextView
-        android:text="TextView"
+        android:id="@+id/actualVoltage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/actualVoltage"
         android:layout_weight="0.2"
-        android:paddingStart="3dp" />
+        android:paddingStart="3dp"
+        android:text="TextView" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorMutedLight"
-        android:layout_marginBottom="7dp" />
+        android:layout_marginBottom="7dp"
+        android:background="@color/colorMutedLight" />
 
 </LinearLayout>
