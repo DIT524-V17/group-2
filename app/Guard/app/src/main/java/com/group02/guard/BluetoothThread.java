@@ -4,6 +4,7 @@ package com.group02.guard;
  * Created by jeberlen on 2017-03-06.
  */
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -249,6 +250,7 @@ public class BluetoothThread extends Thread {
             sendToReadHandler("CONNECTED");
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect!", e);
+
             sendToReadHandler("CONNECTION FAILED");
             disconnect();
             return;

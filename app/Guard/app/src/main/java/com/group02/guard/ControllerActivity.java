@@ -1,8 +1,10 @@
 package com.group02.guard;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -98,6 +100,22 @@ public class ControllerActivity extends MainActivity {
             public void handleMessage(Message message) {
 
             String s = (String) message.obj;
+                if(s.equals("CONNECTION FAILED")){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ControllerActivity.this);
+                    builder.setMessage("Could not connect")
+                            .setCancelable(false)
+                            .setNegativeButton("Reconnect", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = getIntent();
+                                    finish();
+                                    startActivity(intent);
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }else if(s.equals("CONNECTED")){
+                    showMoveEvent.setText("Connected");
+                }
             readInput(s);
             }
         });
