@@ -283,7 +283,7 @@ public class ControllerActivity extends MainActivity {
             }
         } else if (inputString.startsWith("SR")) {//Updates the sensor images depending on the value
             try {
-                srReadValue = Integer.parseInt(inputString.substring(1).trim());
+                srReadValue = Integer.parseInt(inputString.substring(2).trim());
                 setSensorValues();
 
             } catch (NumberFormatException e) {
@@ -291,7 +291,7 @@ public class ControllerActivity extends MainActivity {
             }
         } else if (inputString.startsWith("SL")) {//Updates the sensor images depending on the value
             try {
-                slReadValue = Integer.parseInt(inputString.substring(1).trim());
+                slReadValue = Integer.parseInt(inputString.substring(2).trim());
                 setSensorValues();
 
             } catch (NumberFormatException e) {
