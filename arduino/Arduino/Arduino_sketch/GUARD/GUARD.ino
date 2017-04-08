@@ -3,7 +3,6 @@
 #include <NewPing.h>
 #include <SoftwareSerial.h>
 
-
 #define TRIGGER_PIN_RIGHT_FRONT  51  // Arduino pin tied to trigger pin on the ultrasonic sensor
 #define ECHO_PIN_RIGHT_FRONT     50  // Arduino pin tied to echo pin on the right ultrasonic sensor
 
@@ -54,6 +53,8 @@ String sr = "R";
 String sl = "L";
 String sb = "SB";
 int mode;
+int angleGPS;
+int speedGPS;
 
 void setup() {
   Serial3.begin(9600);
@@ -66,10 +67,10 @@ void loop() {
   handleInput();
   sendSensorValues();
   ///in the future, add "else if" statements in case there are more then 2 modes
-  if(mode == 0) {
-    moveManual();
-  }else{
+  if(mode == 1) {
     moveGPS();
+  }else{
+    moveManual();
   }
 }
 
@@ -93,10 +94,9 @@ void moveManual() {
 }
 
 void moveGPS() {
-    motors.setAngle("Eriks Values);
-    motors.setSpeed("Eriks Values");
-  }
-}
+    motors.setAngle(angleGPS);  //Eriks Values
+    motors.setSpeed(speedGPS);  //Eriks Values
+} 
 
 void handleInput() { 
   if (Serial3.available()) {                        //Handle serial input if there is any
@@ -105,22 +105,22 @@ void handleInput() {
       motorSpeedRight = input.substring(1).toInt(); //Sets the motorspeed value for the right engines
     }else if(input.startsWith("L")){
       motorSpeedLeft = input.substring(1).toInt();
-    }else if(input.startsWith("G")){                //Set int mode, based on the selected mode in the app
-      mode = 1;
     }else if(input.startsWith("A")){
-
+      angleGPS = input.substring(1).toInt();           //Eriks Value
     }else if(input.startsWith("S")){
-      motorSpeedLeft = 1 //value from RPi
-      motorSpeedRight = 1 //value from RPi
+      speedGPS = input.substring(1).toInt();           //Eriks Value
+    }else if(input.startsWith("G")){                  //Set int mode, based on the selected mode in the app
+      mode = 1;
     }
-    
     mode = 0;
   }
+  Serial3.println(mode);
 }
 
 void sendVoltage() {
-  if(motorSpeedLeft == 0 && motorSpeedLeft == 0) //Sends the voltage only when the engines are not working (the voltage drops significantly while engines are running)
+  if(motorSpeedLeft == 0 && motorSpeedLeft == 0){ //Sends the voltage only when the engines are not working (the voltage drops significantly while engines are running)
     Serial3.println(b + analogRead(A0)); //Sends the voltage value to the phone  
+  }
 }
 
 void sendSensorValues() {
@@ -149,7 +149,6 @@ void sendSensorValues() {
     Serial3.println(sb + distanceBack);
     j = 0;
   }
-
 }
 
 boolean obstacleDetectionFront(){ //Loops through the sensors in front of the car, returns true if obstacle is detected

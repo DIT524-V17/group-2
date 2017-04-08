@@ -2,78 +2,87 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/toolbar_top"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:id="@+id/toolbar"/>
-    <include
-        layout="@layout/toolbar_bottom"
-        android:layout_alignParentBottom="true"
+
+    <fragment
+        android:id="@+id/topBar"
+        android:name="com.group02.guard.ToolbarTopFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:layout_alignParentTop="true"/>
+
+    <fragment
+        android:id="@+id/bottomBar"
+        android:name="com.group02.guard.ToolbarBottomFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+
     <TextView
-        android:text="G.U.A.R.D. GPS"
+        android:text="@string/gpsActivityText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/gpsText"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/topBar"
         android:gravity="center_horizontal"/>
 
     <ToggleButton
         android:id="@+id/startGps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textOn="Get Away Creep"
-        android:textOff="Follow Me"
+        android:textOn="@string/gpsToggleButtonOn"
+        android:textOff="@string/gpsToggleButtonOff"
         android:layout_below="@+id/gpsText"/>
 
     <TextView
         android:id="@+id/phoneCoordinates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Coordinates:"
+        android:text="@string/phoneCoordinates"
         android:layout_below="@+id/startGps"
         android:layout_marginTop="15dp"/>
+
     <TextView
         android:id="@+id/phoneLat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="  Lat"
+        android:text="@string/phoneLatitude"
         android:layout_below="@+id/phoneCoordinates"/>
+
     <TextView
         android:id="@+id/phoneLong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="  Long"
+        android:text="@string/phoneLongitude"
         android:layout_below="@+id/phoneLat"/>
+
     <TextView
         android:id="@+id/guardCoordinates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="G.U.A.R.D. Coordinates:"
+        android:text="@string/guardCoordinates"
         android:layout_below="@+id/phoneLong"
         android:layout_marginTop="15dp"/>
+
     <TextView
         android:id="@+id/guardLat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="  Lat"
+        android:text="@string/guardLatitude"
         android:layout_below="@+id/guardCoordinates"/>
+
     <TextView
         android:id="@+id/guardLong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="  Long"
+        android:text="@string/guardLongitude"
         android:layout_below="@+id/guardLat"/>
+
     <TextView
         android:id="@+id/gpsDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Distance: "
+        android:text="@string/gpsDistance"
         android:layout_below="@+id/guardLong"
         android:layout_marginTop="15dp"/>
-
 
 </RelativeLayout>

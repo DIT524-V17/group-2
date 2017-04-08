@@ -1,10 +1,10 @@
 package com.group02.guard;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -15,7 +15,7 @@ import android.widget.ToggleButton;
  * @version 1.0.0
  */
 
-public class GpsActivity extends Activity implements View.OnClickListener {
+public class GpsActivity extends AppCompatActivity {
 
     private TextView phoneLat;
     private TextView phoneLong;
@@ -39,7 +39,6 @@ public class GpsActivity extends Activity implements View.OnClickListener {
         carLong = (TextView) findViewById(R.id.guardLong);
         startGps = (ToggleButton) findViewById(R.id.startGps);
 
-        startGps.setOnClickListener(this);
         preferences = getPreferences(MODE_PRIVATE);
         gpsOn = preferences.getBoolean("gpsOn", false);
 
@@ -52,21 +51,24 @@ public class GpsActivity extends Activity implements View.OnClickListener {
         });
         writeHandler = connectBluetooth.getWriteHandler();
         connectBluetooth.start();
-    }
+//        bottom = new ToolbarBottomFragment();
 
-    @Override
-    public void onClick(View v){
-        SharedPreferences.Editor editor = preferences.edit();
+        startGps.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                SharedPreferences.Editor editor = preferences.edit();
 
-        if(startGps.isChecked()){
-            gpsOn = true;
-            editor.putBoolean("gpsOn", true);
-            editor.apply();
-        }else{
-            gpsOn = false;
-            editor.putBoolean("gpsOn", false);
-            editor.apply();
-        }
+                if(startGps.isChecked()){
+                    gpsOn = true;
+                    editor.putBoolean("gpsOn", true);
+                    editor.apply();
+                }else{
+                    gpsOn = false;
+                    editor.putBoolean("gpsOn", false);
+                    editor.apply();
+                }
+            }
+        });
     }
 
     /**

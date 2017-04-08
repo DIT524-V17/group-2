@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="vertical"
     android:weightSum="1.0">
-    <include layout="@layout/toolbar_top"
+    <fragment
+        android:id="@+id/topBar"
+        android:name="com.group02.guard.ToolbarTopFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        android:layout_height="wrap_content"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,10 +65,12 @@
         android:layout_alignParentBottom="true"
         android:text="Logout" />
 
-    <include
-        layout="@layout/toolbar_bottom"
+    <fragment
+        android:id="@+id/bottomBar"
+        android:name="com.group02.guard.ToolbarBottomFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:visibility="visible" />
+        android:layout_gravity="bottom"/>
+
 </LinearLayout>

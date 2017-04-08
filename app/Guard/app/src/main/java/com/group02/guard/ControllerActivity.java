@@ -72,19 +72,8 @@ public class ControllerActivity extends MainActivity {
     private TextView sb;
     private ImageView sbImage;
 
-    ImageButton controlNav;
     SharedPreferences preferences;
-    ImageButton optionMenu;
 
-    public static byte[] toByteArray(double value) {
-        byte[] bytes = new byte[8];
-        ByteBuffer.wrap(bytes).putDouble(value);
-        return bytes;
-    }
-
-    public static double toDouble(byte[] bytes) {
-        return ByteBuffer.wrap(bytes).getDouble();
-    }
     //Set MAX_SPEED for motors
     final int MAX_SPEED = 70;
 
@@ -101,7 +90,6 @@ public class ControllerActivity extends MainActivity {
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
         analogue = (Control) findViewById(R.id.controlView);
-        optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
         sfm = (TextView) findViewById(R.id.sfm_value);
         sfmImage = (ImageView) findViewById(R.id.sfm_image);
@@ -122,9 +110,6 @@ public class ControllerActivity extends MainActivity {
         sbImage = (ImageView) findViewById(R.id.sb_image);
 
         preferences = getPreferences(MODE_PRIVATE);
-//        controlNav = (ImageButton) findViewById(R.id.controlNavigation);
-//        boolean controllerSelected = preferences.getBoolean("controlSelected", false);
-//        controlNav.setChecked(controllerSelected);
 
         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages

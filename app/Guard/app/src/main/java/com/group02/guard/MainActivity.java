@@ -1,17 +1,11 @@
 package com.group02.guard;
 
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.widget.PopupMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 /**
  * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
@@ -20,21 +14,13 @@ import android.widget.Toast;
  */
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton connectNav;
-    ImageButton controlNav;
-    ImageButton cameraNav;
-    ImageButton mapNav;
-    ImageButton homeNav;
-    Button control;
-    Button map;
-    Button wifi;
-    Button gps;
-    ImageButton optionMenu;
+    private Button control;
+    private Button map;
+    private Button wifi;
+    private Button gps;
     private Button btnLogout;
     private Session session;
     SharedPreferences preferences;
-    Toolbar top;
-    Toolbar bottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -57,17 +43,8 @@ public class MainActivity extends AppCompatActivity {
         map = (Button) findViewById(R.id.mapsButton);
         wifi = (Button) findViewById(R.id.wifiDirectButton);
         gps = (Button) findViewById(R.id.gpsButton);
-        optionMenu = (ImageButton) findViewById(R.id.menuButton);
-
-        connectNav = (ImageButton) findViewById(R.id.connectNavigation);
-        controlNav = (ImageButton) findViewById(R.id.controlNavigation);
-        cameraNav = (ImageButton) findViewById(R.id.cameraNavigation);
-        mapNav = (ImageButton) findViewById(R.id.mapsNavigation);
-        homeNav = (ImageButton) findViewById(R.id.homeNavigation);
 
         preferences = getPreferences(MODE_PRIVATE);
-        top = (Toolbar) findViewById(R.id.top_toolbar);
-        bottom = (Toolbar) findViewById(R.id.bottom_toolbar);
     }
 
     private void logout() {
@@ -87,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         Intent wifiIntent = new Intent(MainActivity.this, WifiActivity.class);
         Intent controlIntent = new Intent(MainActivity.this, ControllerActivity.class);
         Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
-        Intent homeIntent = new Intent(MainActivity.this, MainActivity.class);
         Intent gpsIntent= new Intent(MainActivity.this, GpsActivity.class);
 
         switch (v.getId()) {
@@ -96,17 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.apply();
                 startActivity(wifiIntent);
                 return true;
-            case R.id.connectNavigation:
-                editor.putBoolean("connectSelected", true);
-                editor.commit();
-                startActivity(wifiIntent);
-                return true;
             case R.id.controlButton:
-                editor.putBoolean("controlSelected", true);
-                editor.commit();
-                startActivity(controlIntent);
-                return true;
-            case R.id.controlNavigation:
                 editor.putBoolean("controlSelected", true);
                 editor.commit();
                 startActivity(controlIntent);
@@ -116,63 +82,11 @@ public class MainActivity extends AppCompatActivity {
                 editor.commit();
                 startActivity(mapIntent);
                 return true;
-            case R.id.mapsNavigation:
-                editor.putBoolean("mapsSelected", true);
-                editor.commit();
-                startActivity(mapIntent);
-                return true;
             case R.id.gpsButton:
                 startActivity(gpsIntent);
                 return true;
-            case R.id.homeNavigation:
-                startActivity(homeIntent);
-                return true;
            default:
                 return false;
-        }
-    }
-
-    /**
-     * Creates a popup option menu
-     * @param v Current View
-     */
-    public void showOptionMenu(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_options, popup.getMenu());
-        popup.show();
-    }
-
-    /**
-     * Identifies selected option from the option menu by comparing their ids
-     * @param item The clicked option in the pop up menu
-     * @return true For the selected option
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_profile:
-                Toast.makeText(MainActivity.this, "Profile Selected", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.menu_security:
-                Toast.makeText(MainActivity.this, "Security Selected", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.menu_settings:
-                Toast.makeText(MainActivity.this, "Settings Selected", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.menu_themes:
-                Toast.makeText(MainActivity.this, "App Themes Selected", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.menu_feedback:
-                Toast.makeText(MainActivity.this, "Help & Feedback Selected", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 }
