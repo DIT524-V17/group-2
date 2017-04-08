@@ -5,28 +5,61 @@ import pynmea2
 from random import randrange, uniform
 from GpsAngle import calculateBearing, calculateDistance
 
-# from Boyan: angle and the distance to the mobile device
-# script that continuously send commands to the Arduino to follow the phone (setAngle, setSpeed)
+"""
+Script that fetches the SmartCar's coordinates, compare them to the mobile device's coordinates,
+and sends movement commands to the SmartCar to make it follow the mobile device in real time
 
-# check the connection by type "ls /dev/tty*" in Raspberry Pi terminal,
+Author Erik Laurin
+"""
 
+
+# final variables
 a = 'A'
 s = 'S'
-newLine = '\n'
-updateFrequency = 2
+new_line = '\n'
+update_frequency = 2
 
-#serialGPS = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
-#serialArduino = serial.Serial('/dev/ttyACM0', 9600)
+# serials
+serialGPS = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
+# serialArduino = serial.Serial('/dev/ttyACM0', 9600)
 
 class ThreadingGPSFollow():
-    """ Threading class
-    The run() method will be started and it will run in the background.
-    """
 
-    def drive(self, angle, distance, hdop, fix):
+    def send_angle(self, angle):
+        """
+        Sends angle to the Arduino
+        :param angle: in degrees how much the SmartCar should turn
+        """
+        byte_angle = str.encode(a + str(angle) + new_line)
+        print("Sends to arduino: " + byte_angle)
+        # serialArduino.write(byte_angle)
 
-        """ returns if precision too poor """
-        if hdop > 7 or fix != 2:
+
+    def send_speed(self, speed):
+        """
+        Sends speed to the Arduino
+        :param speed: the speed the SmartCar should be set to
+        """
+        byte_speed = str.encode(s + str(speed) + new_line)
+        print("Sends to arduino: " + byte_speed)
+        # serialArduino.write(byte_speed)
+
+    def drive(self, angle, distance, pdop, fix):
+        """
+        Evaluates if the SmartCar should move, and if so, what speed it should have
+        :param angle: the angle, in degrees, there is between the two different positions
+        :param distance: the distance, in meters, there is between the positions
+        :param pdop: the position (3D) dilution of precision (horizontal and vertical DOP combined)
+        :param fix: type of fix.
+            0 = no fix
+            1 = SPS
+            2 = DGPS
+            3 = SPS
+        """
+
+        """ if precision too poor - stops SmartCar and returns """
+        if pdop > 6 and fix not in [1, 2, 3]:
+            self.send_speed(0)
             return
 
         """ sets speed depending on distance to traveler """
@@ -37,66 +70,70 @@ class ThreadingGPSFollow():
         else:
             speed = 0
 
-        """ sends angle to Arduino """
-        print(a + str(angle))
-        #byteAngle = str.encode(a + str(angle) + newLine)
-        #serialArduino.write(byteAngle)
+        """ sends angle """
+        self.send_angle(angle)
 
-        """ waits until the arduino has gotten time to turn """
+        """ waits until the arduino has had enough time to turn """
         if angle < 180:
             time.sleep(1)
         else:
             time.sleep(2)
 
-        """ sends speed to Arduino """
-        print(s + str(speed))
-        #byteSpeed = str.encode(s + str(speed) + newLine)
-        #serialArduino.write(byteSpeed)
+        """ sends speed """
+        self.send_speed(speed)
 
         """ determines the update frequency"""
-        time.sleep(updateFrequency)
+        time.sleep(update_frequency)
+
 
     def __init__(self):
         """ Constructor """
 
         thread = threading.Thread(target=self.run, args=())
-        #thread.daemon = True                            # Daemonize thread
-        thread.start()                                   # Start the execution
+        thread.start()  # Start the execution
 
     def run(self):
         """ Method that runs forever """
 
-        oldAngle = 0
-        while True:
+        old_angle = 0
+        pdop = 99
 
-            GPSdata = serialGPS.readline()
-            if GPSdata.startswith('$GPGGA'):
-                try:
-                    nmeaData = pynmea2.parse(GPSdata, check=False)
-                    fix = nmeaData.gps_qual
-                    if fix != 0:
-                        GUARDlatitude = nmeaData.latitude
-                        GUARDlongitude = nmeaData.longitude
-                        hdop = nmeaData.horizontal_dil
+        while 1:
+            try:
+                nmea_raw_data = serialGPS.readline()
+                nmea_data = pynmea2.parse(nmea_raw_data)   # Parses into pynmea object ('nmea_raw_data, check=False' to disable checksum)
 
-                        distance = calculateDistance(GUARDlatitude, uniform(-90, 90), GUARDlongitude, uniform(-180, 180))
-                        angle = calculateBearing(GUARDlatitude, GUARDlongitude, uniform(-90, 90), uniform(-180, 180))
+                if isinstance(nmea_data, pynmea2.types.talker.GGA):
+                    fix = nmea_data.gps_qual
 
-                        print'Lat: ', GUARDlatitude
-                        print'Long: ', GUARDlongitude
-                        print'Fix quality: ', fix
-                        print'HDOP: ', hdop, '\n'
+                    if fix != 0:    # If GPS has a fix
+                        guard_latitude = nmea_data.latitude
+                        guard_longitude = nmea_data.longitude
 
-                        """ disregard minor change in angle """
-                        if abs(angle - oldAngle) < 3:
+                        distance = calculateDistance(guard_latitude, uniform(-90, 90), guard_longitude, uniform(-180, 180)) * 1000 # Multiplied with 1000 to get m from km
+                        angle = calculateBearing(guard_latitude, guard_longitude, uniform(-90, 90), uniform(-180, 180))
+
+                        print("Latitude: " + str(guard_latitude))
+                        print("Longitude: " + str(guard_longitude))
+                        print("PDOP: " + str(pdop))
+                        print("Fix quality: " + str(fix) + "\n")
+
+                        """ disregard minor changes in angle """
+                        if abs(angle - old_angle) < 3:
                             continue
                         else:
-                            self.drive(angle, distance, hdop, fix)
+                            old_angle = angle
+                            self.drive(angle, distance, pdop, 3)
                     else:
-                        print'Waiting for fix..'
-                except Exception as e:
-                    print("Error caught: ", e)
-            elif GPSdata.startswith(' ') or GPSdata.startswith(None):
-                print'No data from GPS device'
+                        print("Waiting for fix..")
+
+                elif isinstance(nmea_data, pynmea2.types.talker.GSA):
+                    pdop = nmea_data.pdop
+
+                elif nmea_raw_data.startswith(' '):
+                    print("No data from GPS device")
+
+            except Exception as e:
+                print("Error caught: ", e)
 
 ThreadingGPSFollow()
