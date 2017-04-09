@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.ImageButton;
@@ -22,7 +24,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.VideoView;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,6 +60,9 @@ public class ControllerActivity extends MainActivity {
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
 
+    private VideoView videoView;
+    private Uri videoStream;
+
     private int sfmReadValue, sfrReadValue, sflReadValue, srReadValue, slReadValue, sbReadValue;
     private ImageView sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
 
@@ -86,6 +93,11 @@ public class ControllerActivity extends MainActivity {
         slImage = (ImageView) findViewById(R.id.sl_image);
         srImage = (ImageView) findViewById(R.id.sr_image);
         sbImage = (ImageView) findViewById(R.id.sb_image);
+
+
+        videoView = (VideoView) findViewById(R.id.videoview);
+        videoStream = Uri.parse("10.0.12.8:20" );
+        videoView.setVideoURI(videoStream);
 
         preferences = getPreferences(MODE_PRIVATE);
         controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
