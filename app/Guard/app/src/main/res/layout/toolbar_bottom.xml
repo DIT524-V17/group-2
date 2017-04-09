@@ -15,55 +15,75 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ToggleButton
+            <ImageButton
                 android:id="@+id/homeNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.20"
-                android:background="@drawable/select_home"
-                android:onClick="onClick"
-                android:textOff=""
-                android:textOn="" />
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/activity_icon_home"
+                android:onClick="onClick"/>
 
-            <ToggleButton
+            <View
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="1" />
+
+            <ImageButton
                 android:id="@+id/connectNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.20"
-                android:background="@drawable/select_connect"
-                android:onClick="onClick"
-                android:textOff=""
-                android:textOn="" />
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/activity_icon_connection"
+                android:onClick="onClick" />
 
-            <ToggleButton
+            <View
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="1" />
+
+            <ImageButton
                 android:id="@+id/controlNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.20"
-                android:background="@drawable/select_control"
-                android:onClick="onClick"
-                android:textOff=""
-                android:textOn="" />
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/activity_icon_controller"
+                android:onClick="onClick"/>
 
-            <ToggleButton
+            <View
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="1" />
+
+            <ImageButton
                 android:id="@+id/cameraNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.20"
-                android:background="@drawable/select_camera"
-                android:onClick="onClick"
-                android:textOff=""
-                android:textOn="" />
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/activity_icon_camera"
+                android:onClick="onClick"/>
 
-            <ToggleButton
+            <View
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="1" />
+
+            <ImageButton
                 android:id="@+id/mapsNavigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.20"
-                android:background="@drawable/select_map"
-                android:onClick="onClick"
-                android:textOff=""
-                android:textOn="" />
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/activity_icon_map"
+                android:onClick="onClick" />
 
         </LinearLayout>
 

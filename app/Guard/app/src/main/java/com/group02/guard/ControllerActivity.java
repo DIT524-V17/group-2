@@ -25,6 +25,9 @@ import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
+
+import static java.lang.Math.round;
 
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
@@ -59,7 +62,7 @@ public class ControllerActivity extends MainActivity {
     private int sfmReadValue, sfrReadValue, sflReadValue, srReadValue, slReadValue, sbReadValue;
     private ImageView sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
 
-    ToggleButton controlNav;
+    ImageButton controlNav;
     SharedPreferences preferences;
     ImageButton optionMenu;
 
@@ -87,12 +90,7 @@ public class ControllerActivity extends MainActivity {
         srImage = (ImageView) findViewById(R.id.sr_image);
         sbImage = (ImageView) findViewById(R.id.sb_image);
 
-        preferences = getPreferences(MODE_PRIVATE);
-        controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
-        boolean controllerSelected = preferences.getBoolean("controlSelected", false);
-        controlNav.setChecked(controllerSelected);
-
-        // Initialize the Bluetooth thread, passing in a MAC address
+         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages
         btt = new BluetoothThread(address, new Handler() {
 
@@ -194,12 +192,12 @@ public class ControllerActivity extends MainActivity {
             batteryImageButton.setImageResource(R.drawable.half_charged_battery);
             criticalLevel = false;
         }
-        else if(voltage >= 1.05 && voltage < 1.20) {
+        else if(voltage >= 1.15 && voltage < 1.20) {
             batteryImageButton.clearColorFilter();
             batteryImageButton.setImageResource(R.drawable.low_battery);
             criticalLevel = false;
         }
-        if(voltage < 1.05){
+        if(voltage < 1.15){
             batteryImageButton.setImageResource(R.drawable.empty_battery);
             batteryImageButton.setColorFilter(Color.RED);  //For effect
             if(!criticalLevel) {
@@ -215,7 +213,7 @@ public class ControllerActivity extends MainActivity {
      * (@author Erik Laurin)
      */
     private void setCriticalBatteryLevelToast(){
-        CharSequence text = "Critical batteryImageButton level!";
+        CharSequence text = "Critical Battery Level!";
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(this, text, duration);
         toast.show();
@@ -228,12 +226,14 @@ public class ControllerActivity extends MainActivity {
     private void setCriticalBatteryLevelNotification(){
         NotificationCompat.Builder mBuilder= new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         mBuilder.setSmallIcon(R.drawable.notification_battery)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.guard))
-                .setContentTitle("SmartCar Critical Battery Level")
+                .setContentTitle("Critical Battery Level")
                 .setAutoCancel(true)
-                .setContentText("content")
+                .setContentText(String.format("%.3f", (arduinoVoltage)) + "V")
                 .setContentIntent(pendingIntent); //Sets the app to open MainActivity on press on notificaton
         NotificationManager notificationManager= (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, mBuilder.build());

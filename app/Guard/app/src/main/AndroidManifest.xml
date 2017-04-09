@@ -34,7 +34,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/GuardBasic">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,15 +45,19 @@
         <activity
             android:name=".ControllerActivity"
             android:label="@string/title_activity_controller"
-            android:theme="@style/GuardBasic" />
+            android:theme="@style/GuardBasic"
+            android:launchMode="singleInstance"/>
 
-        <activity android:name=".BatteryActivity" />
-        <activity android:name=".WifiActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".BatteryActivity"
+            android:launchMode="singleInstance"/>
+        <activity android:name=".WifiActivity"
+            android:launchMode="singleInstance"/>
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".RegisterActivity"/>
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
+            android:launchMode="singleInstance"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
 
         <!--
