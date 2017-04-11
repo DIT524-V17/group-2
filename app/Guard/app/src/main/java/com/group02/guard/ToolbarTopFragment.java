@@ -78,7 +78,7 @@ public class ToolbarTopFragment extends Fragment implements View.OnClickListener
                 Toast.makeText(getActivity(), "Check back in future sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
-            case R.id.menu_themes:
+            case R.id.menu_help:
                 Toast.makeText(getActivity(), "Check back in future sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;

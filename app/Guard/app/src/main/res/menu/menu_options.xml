@@ -5,27 +5,22 @@
         <item
             android:title="My Profile"
             android:id="@+id/menu_profile"
-            android:icon="@drawable/menu_icon_profile"
             android:onClick="onOptionsItemSelected"/>
         <item
             android:title="Security"
             android:id="@+id/menu_security"
-            android:icon="@drawable/menu_icon_security"
             android:onClick="onOptionsItemSelected"/>
         <item
             android:title="Settings"
             android:id="@+id/menu_settings"
-            android:icon="@drawable/menu_icon_settings"
             android:onClick="onOptionsItemSelected"/>
         <item
-            android:title="App Themes"
-            android:id="@+id/menu_themes"
-            android:icon="@drawable/menu_icon_themes"
+            android:title="Help"
+            android:id="@+id/menu_help"
             android:onClick="onOptionsItemSelected"/>
         <item
-            android:title="Help &amp; Feedback"
+            android:title="Feedback"
             android:id="@+id/menu_feedback"
-            android:icon="@drawable/menu_icon_help"
             android:onClick="onOptionsItemSelected"/>
     </group>
 </menu>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Guard</string>
+    <string name="app_name">G.U.A.R.D.</string>
     <string name="title_activity_controller">ControllerActivity</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_maps">Map</string>
@@ -16,8 +16,16 @@
     <string name="none">None</string>
     <string name="current_location">Current Location</string>
 
+    <!-- Strings for Main activity, found in activity_main.xml
+    -->
+    <string name="wifiActivity">WiFi Direct</string>
+    <string name="gpsActivity">GPS</string>
+    <string name="controllerActivity">Manual Control</string>
+    <string name="mapActivity">Map</string>
+    <string name="logoutButton">Logout</string>
+
     <!-- Strings for wifi activity, found in activity_wifi.xml
-   -->
+    -->
     <string name="wifiOnText">WiFi Direct is: </string>
     <string name="wifiToggleButtonOn">ON</string>
     <string name="wifiToggleButtonOff">OFF</string>
@@ -28,11 +36,11 @@
     <string name="gpsToggleButtonOn">Stop Following</string>
     <string name="gpsToggleButtonOff">Follow Me</string>
     <string name="phoneCoordinates">My Coordinates: </string>
-    <string name="phoneLatitude">    Lat</string>
-    <string name="phoneLongitude">    Long</string>
+    <string name="phoneLatitude">Lat</string>
+    <string name="phoneLongitude">Long</string>
     <string name="guardCoordinates">G.U.A.R.D. Car Coordinates: </string>
-    <string name="guardLatitude">    Lat</string>
-    <string name="guardLongitude">    Long</string>
+    <string name="guardLatitude">Lat</string>
+    <string name="guardLongitude">Long</string>
     <string name="gpsDistance">Distance: </string>
 
 </resources>

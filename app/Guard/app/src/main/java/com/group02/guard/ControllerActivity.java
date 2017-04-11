@@ -229,7 +229,7 @@ public class ControllerActivity extends MainActivity {
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         mBuilder.setSmallIcon(R.drawable.notification_battery)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.guard))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.guard_launcher))
                 .setContentTitle("SmartCar Critical Battery Level")
                 .setAutoCancel(true)
                 .setContentText("content")

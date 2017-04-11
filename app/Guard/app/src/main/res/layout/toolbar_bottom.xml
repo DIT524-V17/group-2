@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,7 +20,8 @@
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            android:src="@drawable/activity_icon_home"/>
+            app:srcCompat="@drawable/ic_menu_home"
+            android:tint="@color/colorMutedLight"/>
 
         <View
             android:layout_width="0dp"
@@ -33,7 +35,8 @@
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            android:src="@drawable/activity_icon_connection"/>
+            app:srcCompat="@drawable/ic_menu_wifi"
+            android:tint="@color/colorMutedLight"/>
 
         <View
             android:layout_width="0dp"
@@ -47,7 +50,8 @@
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            android:src="@drawable/activity_icon_controller"/>
+            app:srcCompat="@drawable/ic_menu_controller"
+            android:tint="@color/colorMutedLight"/>
 
         <View
             android:layout_width="0dp"
@@ -55,13 +59,14 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/cameraNavigation"
+            android:id="@+id/gpsNavigation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            android:src="@drawable/activity_icon_camera"/>
+            app:srcCompat="@drawable/ic_menu_gps"
+            android:tint="@color/colorMutedLight"/>
 
         <View
             android:layout_width="0dp"
@@ -75,7 +80,8 @@
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            android:src="@drawable/activity_icon_map"/>
+            app:srcCompat="@drawable/ic_menu_map"
+            android:tint="@color/colorMutedLight"/>
 
 
     </LinearLayout>

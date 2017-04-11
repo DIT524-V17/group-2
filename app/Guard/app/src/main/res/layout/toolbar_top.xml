@@ -21,13 +21,15 @@
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/menu" />
+                app:srcCompat="@drawable/ic_menu"
+                android:tint="@color/colorMutedLight"/>
 
             <TextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight=".8"
+                android:text="@string/app_name"
                 android:textAlignment="center" />
 
             <ImageButton

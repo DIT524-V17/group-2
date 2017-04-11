@@ -19,7 +19,7 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
 
     ImageButton connectNav;
     ImageButton controlNav;
-    ImageButton cameraNav;
+    ImageButton gpsNav;
     ImageButton mapsNav;
     ImageButton homeNav;
 
@@ -35,13 +35,13 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
 
         connectNav = (ImageButton) view.findViewById(R.id.connectNavigation);
         controlNav = (ImageButton) view.findViewById(R.id.controlNavigation);
-        cameraNav = (ImageButton) view.findViewById(R.id.cameraNavigation);
+        gpsNav = (ImageButton) view.findViewById(R.id.gpsNavigation);
         mapsNav = (ImageButton) view.findViewById(R.id.mapsNavigation);
         homeNav = (ImageButton) view.findViewById(R.id.homeNavigation);
 
         connectNav.setOnClickListener(this);
         controlNav.setOnClickListener(this);
-        cameraNav.setOnClickListener(this);
+        gpsNav.setOnClickListener(this);
         mapsNav.setOnClickListener(this);
         homeNav.setOnClickListener(this);
         return view;
@@ -57,26 +57,23 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
         Intent controlIntent = new Intent(getActivity(), ControllerActivity.class);
         Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
         Intent homeIntent = new Intent(getActivity(), MainActivity.class);
+        Intent gpsIntent= new Intent(getActivity(), GpsActivity.class);
+
 
         switch (v.getId()) {
             case R.id.homeNavigation:
-                homeNav.setImageResource(R.drawable.activity_icon_home_selected);
                 startActivity(homeIntent);
                 return;
             case R.id.connectNavigation:
-                connectNav.setImageResource(R.drawable.activity_icon_connection_selected);
                 startActivity(wifiIntent);
                 return;
-            case R.id.cameraNavigation:
-                Toast.makeText(getActivity(), "Check back in future sprints",
-                        Toast.LENGTH_SHORT).show();
+            case R.id.gpsNavigation:
+                startActivity(gpsIntent);
                 return;
             case R.id.controlNavigation:
-                controlNav.setImageResource(R.drawable.activity_icon_controller_selected);
                 startActivity(controlIntent);
                 return;
             case R.id.mapsNavigation:
-                mapsNav.setImageResource(R.drawable.activity_icon_map_selected);
                 startActivity(mapIntent);
                 return;
             default:
