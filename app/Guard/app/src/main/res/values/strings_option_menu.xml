@@ -12,6 +12,8 @@
             >Feedback</item>
         <item
             >Help</item>
+        <item
+            >Logout</item>
 
     </string-array>
 </resources>

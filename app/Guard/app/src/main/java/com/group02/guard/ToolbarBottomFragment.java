@@ -1,13 +1,15 @@
 package com.group02.guard;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
+import static com.group02.guard.R.color.colorMutedLight;
 
 /**
  * Creates a bottom toolbar used for navigating withing different activities
@@ -78,6 +80,19 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
                 return;
             default:
                 return;
+        }
+    }
+    public void buttonChecked(String buttonName){
+        if(buttonName.equals("gps"))  {
+            gpsNav.setColorFilter(Color.WHITE);
+        }else if(buttonName.equals("connect")) {
+            connectNav.setColorFilter(Color.WHITE);
+        }else if(buttonName.equals("control"))  {
+            controlNav.setColorFilter(Color.WHITE);
+        }else if(buttonName.equals("maps")){
+            mapsNav.setColorFilter(Color.WHITE);
+        }else{
+            homeNav.setColorFilter(Color.WHITE);
         }
     }
 }

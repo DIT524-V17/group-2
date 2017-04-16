@@ -77,6 +77,9 @@ public class WifiActivity extends AppCompatActivity {
                 }
             }
         });
+        ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.bottomBar);
+        fragment.buttonChecked("connect");
     }
 
     /**

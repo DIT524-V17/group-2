@@ -1,5 +1,6 @@
 package com.group02.guard;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 

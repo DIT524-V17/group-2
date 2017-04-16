@@ -16,22 +16,23 @@
     <string name="none">None</string>
     <string name="current_location">Current Location</string>
 
-    <!-- Strings for Main activity, found in activity_main.xml
-    -->
+    <!-- Strings for Main activity, found in activity_main.xml -->
     <string name="wifiActivity">WiFi Direct</string>
     <string name="gpsActivity">GPS</string>
     <string name="controllerActivity">Manual Control</string>
     <string name="mapActivity">Map</string>
     <string name="logoutButton">Logout</string>
+    <string name="wifiActivityDesc">WiFi Icon</string>
+    <string name="gpsActivityDesc">GPS Icon</string>
+    <string name="controllerActivityDesc">Controller Icon</string>
+    <string name="mapActivityDesc">Map Icon</string>
 
-    <!-- Strings for wifi activity, found in activity_wifi.xml
-    -->
+    <!-- Strings for wifi activity, found in activity_wifi.xml -->
     <string name="wifiOnText">WiFi Direct is: </string>
     <string name="wifiToggleButtonOn">ON</string>
     <string name="wifiToggleButtonOff">OFF</string>
 
-    <!-- Strings for GPS activity, found in activity_gps.xml
-    -->
+    <!-- Strings for GPS activity, found in activity_gps.xml -->
     <string name="gpsActivityText">G.U.A.R.D. GPS</string>
     <string name="gpsToggleButtonOn">Stop Following</string>
     <string name="gpsToggleButtonOff">Follow Me</string>
@@ -42,5 +43,24 @@
     <string name="guardLatitude">Lat</string>
     <string name="guardLongitude">Long</string>
     <string name="gpsDistance">Distance: </string>
+
+    <!-- Strings for GPS activity, found in activity_battery.xml -->
+    <string name="analogValueText">Analog Value</string>
+    <string name="arduinoVoltageText">Arduino Voltage</string>
+    <string name="actualVoltageText">Actual Voltage</string>
+
+    <!-- Strings for Menu activity, found in menu_options.xml -->
+    <string name="profileText">My Profile</string>
+    <string name="securityText">My Privacy</string>
+    <string name="settingsText">My Settings</string>
+    <string name="helpText">Help</string>
+    <string name="feedbackText">Feedback</string>
+    <string name="logoutText">Logout</string>
+    <string name="menuGuardGroup">G.U.A.R.D. App</string>
+    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_nav_drawer">NavDrawerActivity</string>
 
 </resources>

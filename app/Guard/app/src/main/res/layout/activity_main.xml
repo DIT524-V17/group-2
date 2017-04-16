@@ -1,148 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:baselineAligned="false"
-    android:orientation="vertical"
-    android:weightSum="1.0">
+    android:orientation="vertical">
 
     <fragment
         android:id="@+id/topBar"
-        android:layout_alignParentTop="true"
         android:name="com.group02.guard.ToolbarTopFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <!-- First row of buttons -->
-    <LinearLayout
-        android:id="@+id/firstRow"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topBar"
-        android:orientation="horizontal"
-        android:weightSum="1" >
-
-        <ImageButton
-            android:id="@+id/wifiDirectButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_connection"
-            android:tint="@color/colorMutedLight"/>
-
-        <ImageButton
-            android:id="@+id/gpsButton"
-            android:layout_width="match_parent"
-
-
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_gps"
-            android:tint="@color/colorMutedLight" />
-    </LinearLayout>
-
-    <!-- Text below the first row of buttons, with button activity names -->
-    <LinearLayout
-        android:id="@+id/firstRowText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/firstRow"
-        android:orientation="horizontal"
-        android:weightSum="1">
-
-        <TextView
-            android:layout_weight=".5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/wifiActivity"
-            android:textStyle="bold"
-            android:textAlignment="center"/>
-
-        <TextView
-            android:layout_weight=".5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/gpsActivity"
-            android:textStyle="bold"
-            android:textAlignment="center"/>
-
-    </LinearLayout>
-
-    <!-- Second row of buttons -->
-    <LinearLayout
-        android:id="@+id/secondRow"
-        android:layout_below="@id/firstRowText"
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1" >
-
-        <ImageButton
-            android:id="@+id/controlButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_controller"
-            android:tint="@color/colorMutedLight"/>
-
-        <ImageButton
-            android:id="@+id/mapsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_map"
-            android:tint="@color/colorMutedLight"/>
-    </LinearLayout>
-
-    <!-- Text below the second row of buttons, with button activity names -->
-    <LinearLayout
-        android:id="@+id/secondRowText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/secondRow"
-        android:orientation="horizontal"
-        android:weightSum="1">
-
-    <TextView
-        android:layout_weight=".5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/controllerActivity"
-        android:textStyle="bold"
-        android:textAlignment="center" />
-
-    <TextView
-        android:layout_weight=".5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/mapActivity"
-        android:textStyle="bold"
-        android:textAlignment="center"/>
-    </LinearLayout>
+        tools:layout="@layout/toolbar_top"/>
 
     <Button
-        android:id="@+id/btnLogout"
-        android:layout_below="@+id/secondRowText"
-        android:layout_marginTop="15dp"
+        android:id="@+id/controlButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/logoutButton" />
+        android:drawableTop="@drawable/ic_controller"
+        android:text="@string/controllerActivity"
+        android:drawableTint="@color/colorMutedLight"
+        android:layout_weight="0.3"/>
 
-    <fragment
-        android:id="@+id/bottomBar"
-        android:layout_alignParentBottom="true"
-        android:name="com.group02.guard.ToolbarBottomFragment"
+    <Button
+        android:id="@+id/mapsButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/ic_map"
+        android:text="@string/mapActivity"
+        android:drawableTint="@color/colorMutedLight"
+        android:layout_weight="0.3"/>
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/gpsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/ic_gps"
+        android:text="@string/gpsActivity"
+        android:drawableTint="@color/colorMutedLight"
+        android:layout_weight="0.3" />
+
+</LinearLayout>

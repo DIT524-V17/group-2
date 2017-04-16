@@ -19,7 +19,7 @@ import android.widget.Toast;
  * @version 1.0.0
  */
 
-public class ToolbarTopFragment extends Fragment implements View.OnClickListener {
+public class ToolbarTopFragment extends Fragment {
 
     Toolbar toolbar;
     ImageButton menuButton;
@@ -42,7 +42,12 @@ public class ToolbarTopFragment extends Fragment implements View.OnClickListener
         this.appTitle = (TextView) view.findViewById(R.id.toolbarTitle);
         appTitle.setText("G.U.A.R.D");
 
-        menuButton.setOnClickListener(this);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOptionMenu(v);
+            }
+        });
         return view;
     }
 
@@ -50,11 +55,10 @@ public class ToolbarTopFragment extends Fragment implements View.OnClickListener
      * Creates a popup option menu
      * @param v Current View
      */
-    @Override
-    public void onClick(View v) {
+    public void showOptionMenu(View v) {
         PopupMenu popup = new PopupMenu(getActivity(), v);
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_options, popup.getMenu());
+        inflater.inflate(R.menu.option_menu, popup.getMenu());
         popup.show();
     }
 
@@ -66,23 +70,23 @@ public class ToolbarTopFragment extends Fragment implements View.OnClickListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_profile:
+            case R.id.nav_profile:
                 Toast.makeText(getActivity(), "Check back in future sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
-            case R.id.menu_security:
+            case R.id.nav_settings:
                 Toast.makeText(getActivity(), "Check back in future sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
-            case R.id.menu_settings:
+            case R.id.nav_help:
                 Toast.makeText(getActivity(), "Check back in future sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
-            case R.id.menu_help:
+            case R.id.nav_feedback:
                 Toast.makeText(getActivity(), "Check back in future sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
-            case R.id.menu_feedback:
+            case R.id.nav_logout:
                 Toast.makeText(getActivity(), "Check back in future sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
@@ -90,4 +94,9 @@ public class ToolbarTopFragment extends Fragment implements View.OnClickListener
                 return false;
         }
     }
+//    private void logout() {
+//        session.setLoggedin(false);
+//        finish();
+//        startActivity(new Intent(getActivity(), LoginActivity.class));
+//    }
 }

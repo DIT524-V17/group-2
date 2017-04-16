@@ -13,9 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import android.content.pm.ActivityInfo;
-import java.nio.ByteBuffer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,7 +25,7 @@ import android.util.Log;
  * @author Joacim Eberlen, Erik Laurin
  * @version 1.0.2 EL
  */
-public class ControllerActivity extends MainActivity {
+public class ControllerActivity extends AppCompatActivity {
 
     // Following variables is used by the batteryImageButton function
     private Intent batteryStats;
@@ -153,6 +151,9 @@ public class ControllerActivity extends MainActivity {
         batteryStats = new Intent();
 
         setSensorValues();
+        ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.bottomBar);
+        fragment.buttonChecked("control");
     }
 
     /**
