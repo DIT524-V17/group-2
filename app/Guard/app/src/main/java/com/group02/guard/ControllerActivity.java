@@ -93,24 +93,6 @@ public class ControllerActivity extends MainActivity {
             public void handleMessage(Message message) {
 
             String s = (String) message.obj;
-                /*
-                if(s.equals("CONNECTION FAILED")){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ControllerActivity.this);
-                    builder.setMessage("Could not connect")
-                            .setCancelable(false)
-                            .setNegativeButton("Reconnect", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Intent intent = getIntent();
-                                    finish();
-                                    startActivity(intent);
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                }else if(s.equals("CONNECTED")){
-                    showMoveEvent.setText("Connected");
-                }
-                */
             readInput(s);
             }
         });
@@ -265,35 +247,34 @@ public class ControllerActivity extends MainActivity {
      */
     private void readInput(String inputString){
 
-        int parsedMsg = Integer.parseInt(inputString.substring(2).trim());
-
-
-        switch (inputString){
-            case "B":
+        switch (inputString.charAt(0) + inputString.charAt(1)) {
+            case 'B' + ' ':
                 analogReadValue = Integer.parseInt(inputString.substring(1).trim());
                 setBatteryLevel();
                 break;
-            case "FM":
-                sfmImage.setDistance(parsedMsg);
+            case 'F' + 'M':
+                sfmImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
-            case "FL":
-                sflImage.setDistance(parsedMsg);
+            case 'F' + 'L':
+                sflImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
-            case "FR":
-                sfrImage.setDistance(parsedMsg);
+            case 'F' + 'R':
+                sfrImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
-            case "SL":
-                slImage.setDistance(parsedMsg);
+            case 'S' + 'L':
+                slImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
-            case "SR":
-                srImage.setDistance(parsedMsg);
+            case 'S' + 'R':
+                srImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
-            case "SB":
-                sbImage.setDistance(parsedMsg);
+            case 'S' + 'B':
+                sbImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             default:
                 return;
 
         }
     }
+
+
 }

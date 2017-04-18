@@ -247,11 +247,11 @@ public class BluetoothThread extends Thread {
         // Attempt to connect and exit the thread if it failed
         try {
             connect();
-            sendToReadHandler("CONNECTED");
+            //sendToReadHandler("CONNECTED");
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect!", e);
 
-            sendToReadHandler("CONNECTION FAILED");
+            //sendToReadHandler("CONNECTION FAILED");
             disconnect();
             return;
         }
