@@ -1,92 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/bottom_toolbar"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary">
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/homeNavigation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_menu_home"
+            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
 
-            <ImageButton
-                android:id="@+id/homeNavigation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="centerInside"
-                android:src="@drawable/activity_icon_home"
-                android:onClick="onClick"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="1" />
+        <ImageButton
+            android:id="@+id/connectNavigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_menu_wifi"
+            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
 
-            <ImageButton
-                android:id="@+id/connectNavigation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="centerInside"
-                android:src="@drawable/activity_icon_connection"
-                android:onClick="onClick" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="1" />
+        <ImageButton
+            android:id="@+id/controlNavigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_menu_controller"
+            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
 
-            <ImageButton
-                android:id="@+id/controlNavigation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="centerInside"
-                android:src="@drawable/activity_icon_controller"
-                android:onClick="onClick"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="1" />
+        <ImageButton
+            android:id="@+id/gpsNavigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_menu_gps"
+            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
 
-            <ImageButton
-                android:id="@+id/cameraNavigation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="centerInside"
-                android:src="@drawable/activity_icon_camera"
-                android:onClick="onClick"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="1" />
+        <ImageButton
+            android:id="@+id/mapsNavigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_menu_map"
+            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
 
-            <ImageButton
-                android:id="@+id/mapsNavigation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="centerInside"
-                android:src="@drawable/activity_icon_map"
-                android:onClick="onClick" />
 
-        </LinearLayout>
+    </LinearLayout>
 
-    </android.support.v7.widget.Toolbar>
-
-</RelativeLayout>
+</android.support.v7.widget.Toolbar>

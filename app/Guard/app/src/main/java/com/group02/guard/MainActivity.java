@@ -4,76 +4,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.widget.PopupMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 /**
  * Creates the "MainScreen" of the G.U.A.R.D. app. Layout used is activity_main.xml
  * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
  * @version 1.0.1 EL
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ImageButton connectNav;
-    ImageButton controlNav;
-    ImageButton cameraNav;
-    ImageButton mapNav;
-    ImageButton homeNav;
-    Button control;
-    Button map;
-    Button wifi;
-    ImageButton optionMenu;
-    private Button btnLogout;
     private Session session;
-    SharedPreferences preferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        session = new Session(this);
-        if (!session.loggedin()) {
-            logout();
-        }
-        btnLogout = (Button) findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
+        Button control = (Button) findViewById(R.id.controlButton);
+        Button map = (Button) findViewById(R.id.mapsButton);
+        Button gps = (Button) findViewById(R.id.gpsButton);
 
-        control = (Button) findViewById(R.id.controlButton);
-        map = (Button) findViewById(R.id.mapsButton);
-        wifi = (Button) findViewById(R.id.wifiDirectButton);
-        optionMenu = (ImageButton) findViewById(R.id.menuButton);
-
-        connectNav = (ImageButton) findViewById(R.id.connectNavigation);
-        controlNav = (ImageButton) findViewById(R.id.controlNavigation);
-        cameraNav = (ImageButton) findViewById(R.id.cameraNavigation);
-        mapNav = (ImageButton) findViewById(R.id.mapsNavigation);
-        homeNav = (ImageButton) findViewById(R.id.homeNavigation);
-
-        preferences = getPreferences(MODE_PRIVATE);
+        control.setOnClickListener(this);
+        map.setOnClickListener(this);
+        gps.setOnClickListener(this);
     }
 
-    private void logout() {
-        session.setLoggedin(false);
-        finish();
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-    }
+//    private void logout() {
+//        session.setLoggedin(false);
+//        finish();
+//        startActivity(new Intent(this, LoginActivity.class));
+//    }
 
     /**
      * Starts new activities and saves booleans when buttons in the MainScreen are clicked.
      * The booleans are retrieved in other activities and are used to set the state of ToggleButton
      * @param v The current View
-     * @return true If a new activity is initiated, false by default
      */
     public boolean onClick(View v) {
         SharedPreferences.Editor editor = preferences.edit();
@@ -91,88 +58,18 @@ public class MainActivity extends AppCompatActivity {
         goHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         switch (v.getId()) {
-            case R.id.wifiDirectButton:
-                editor.putBoolean("connectSelected", true);
-                editor.apply();
-                startActivity(wifi);
-                return true;
-            case R.id.connectNavigation:
-                editor.putBoolean("connectSelected", true);
-                editor.commit();
-                startActivity(wifi);
-                return true;
             case R.id.controlButton:
-                editor.putBoolean("controlSelected", true);
-                editor.commit();
-                startActivity(controlCar);
-                return true;
-            case R.id.controlNavigation:
-                editor.putBoolean("controlSelected", true);
-                editor.commit();
-                startActivity(controlCar);
-                return true;
+                startActivity(controlIntent);
+                return;
             case R.id.mapsButton:
-                editor.putBoolean("mapsSelected", true);
-                editor.commit();
-                startActivity(openMap);
-                return true;
-            case R.id.mapsNavigation:
-                editor.putBoolean("mapsSelected", true);
-                editor.commit();
-                startActivity(openMap);
-                return true;
-            case R.id.homeNavigation:
-                startActivity(goHome);
-                return true;
-            case R.id.cameraNavigation:
-                Toast.makeText(this, "Check back in later sprints", Toast.LENGTH_SHORT).show();
-                return true;
+                startActivity(mapIntent);
+                return;
+            case R.id.gpsButton:
+                startActivity(gpsIntent);
+                return;
            default:
-                return false;
+                return;
         }
     }
 
-    /**
-     * Creates a popup option menu
-     * @param v Current View
-     */
-    public void showOptionMenu(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_options, popup.getMenu());
-        popup.show();
-    }
-
-    /**
-     * Identifies selected option from the option menu by comparing their ids
-     * @param item The clicked option in the pop up menu
-     * @return true For the selected option
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_profile:
-                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.menu_security:
-                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.menu_settings:
-                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.menu_themes:
-                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.menu_feedback:
-                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

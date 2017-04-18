@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/topBar"
+        android:name="com.group02.guard.ToolbarTopFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        tools:layout="@layout/toolbar_top" />
+
+    <fragment
+        android:id="@+id/bottomBar"
+        android:name="com.group02.guard.ToolbarBottomFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        tools:layout="@layout/toolbar_bottom" />
+
+    <TextView
+        android:text="@string/gpsActivityText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gpsText"
+        android:layout_below="@id/topBar"
+        android:gravity="center_horizontal"/>
+
+    <ToggleButton
+        android:id="@+id/startGps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="@string/gpsToggleButtonOn"
+        android:textOff="@string/gpsToggleButtonOff"
+        android:layout_below="@+id/gpsText"/>
+
+    <TextView
+        android:id="@+id/phoneCoordinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phoneCoordinates"
+        android:layout_below="@+id/startGps"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:id="@+id/phoneLat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phoneLatitude"
+        android:layout_below="@+id/phoneCoordinates"/>
+
+    <TextView
+        android:id="@+id/phoneLong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phoneLongitude"
+        android:layout_below="@+id/phoneLat"/>
+
+    <TextView
+        android:id="@+id/guardCoordinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/guardCoordinates"
+        android:layout_below="@+id/phoneLong"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:id="@+id/guardLat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/guardLatitude"
+        android:layout_below="@+id/guardCoordinates"/>
+
+    <TextView
+        android:id="@+id/guardLong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/guardLongitude"
+        android:layout_below="@+id/guardLat"/>
+
+    <TextView
+        android:id="@+id/gpsDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gpsDistance"
+        android:layout_below="@+id/guardLong"
+        android:layout_marginTop="15dp"/>
+
+</RelativeLayout>

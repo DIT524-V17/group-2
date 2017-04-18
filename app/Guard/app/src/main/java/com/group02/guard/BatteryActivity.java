@@ -1,6 +1,7 @@
 package com.group02.guard;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 /**
@@ -10,7 +11,7 @@ import android.widget.TextView;
  * @version 1.0
  */
 
-public class BatteryActivity extends MainActivity {
+public class BatteryActivity extends AppCompatActivity {
     TextView analogValue;
     TextView arduinoVoltage;
     TextView actualVoltage;
@@ -26,7 +27,9 @@ public class BatteryActivity extends MainActivity {
         actualVoltage = (TextView) findViewById(R.id.actualVoltage);
 
         analogValue.setText("Arduino analog read value: " + (b.getDouble("EXTRA_ANALOG")));
-        arduinoVoltage.setText("Arduino voltage input: " + String.format("%.3f", (b.getDouble("EXTRA_ARDUINO_VOLTAGE"))) + "V");
-        actualVoltage.setText("Estimated battery pack voltage: " + String.format("%.3f",(b.getDouble("EXTRA_ARDUINO_VOLTAGE"))*5.0) + "V");
+        arduinoVoltage.setText("Arduino voltage input: " + String.format("%.3f",
+                (b.getDouble("EXTRA_ARDUINO_VOLTAGE"))) + "V");
+        actualVoltage.setText("Estimated battery pack voltage: " + String.format("%.3f",
+                (b.getDouble("EXTRA_ARDUINO_VOLTAGE"))*5.0) + "V");
     }
 }

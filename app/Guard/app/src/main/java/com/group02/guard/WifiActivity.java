@@ -9,10 +9,10 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Layout used for the class is actiivity_wifi.xml
  * @version 1.0.0
  */
-public class WifiActivity extends MainActivity {
+public class WifiActivity extends AppCompatActivity {
     private WifiP2pManager wifiManager;
     private WifiP2pManager.Channel wifiChannel;
     private BroadcastReceiver wifiReceiver;
@@ -34,12 +34,9 @@ public class WifiActivity extends MainActivity {
     ListView peerView;
     boolean wifiDirectEnabled;
     ToggleButton onOff;
-    ImageButton connectNav;
     TextView connectedDeviceName;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
-    ImageButton optionMenu;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +56,6 @@ public class WifiActivity extends MainActivity {
 
         preferences = getPreferences(MODE_PRIVATE);
         onOff = (ToggleButton) findViewById(R.id.buttonOnOff);
-        connectNav = (ImageButton) findViewById(R.id.connectNavigation);
         connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
         peerView = (ListView) findViewById(R.id.peerList);
 
@@ -74,14 +70,16 @@ public class WifiActivity extends MainActivity {
                     onOff.setChecked(true);
                     editor.putBoolean("wifiOnOff", true);
                     editor.commit();
-                }
-                else{
+                } else{
                     onOff.setChecked(false);
                     editor.putBoolean("wifiOnOff", false);
                     editor.commit();
                 }
             }
         });
+        ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.bottomBar);
+        fragment.buttonChecked("connect");
     }
 
     /**

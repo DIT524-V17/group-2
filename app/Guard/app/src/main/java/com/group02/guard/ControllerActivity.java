@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,9 +36,6 @@ import static java.lang.Math.round;
 public class ControllerActivity extends MainActivity {
 
     // Following variables is used by the batteryImageButton function
-    private Intent batteryStats;
-    private Bundle batteryBundle;
-    private ImageButton batteryImageButton;
     private double analogReadValue;
     private double arduinoVoltage;
     private boolean criticalLevel = false;
@@ -57,11 +53,30 @@ public class ControllerActivity extends MainActivity {
     Handler writeHandler;
 
 
-    ImageButton controlNav;
-    SharedPreferences preferences;
-    ImageButton optionMenu;
+    private int sflReadValue = 20;
+    private TextView sfl;
+    private ImageView sflImage;
 
-    static final int MAX_SPEED = 70;
+    private int sfrReadValue = 20;
+    private TextView sfr;
+    private ImageView sfrImage;
+
+    private int srReadValue = 30;
+    private TextView sr;
+    private ImageView srImage;
+
+    private int slReadValue = 50;
+    private TextView sl;
+    private ImageView slImage;
+
+    private int sbReadValue = 9;
+    private TextView sb;
+    private ImageView sbImage;
+
+    ToolbarTopFragment topFragment;
+
+    //Set MAX_SPEED for motors
+    final int MAX_SPEED = 70;
 
     /**
      * Creates UI elements and initializes the BluetoothThread.
@@ -76,7 +91,6 @@ public class ControllerActivity extends MainActivity {
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
         analogue = (Control) findViewById(R.id.controlView);
-        optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
         sfmImage = (Sensor) findViewById(R.id.sensor_front_middle);
         sfrImage = (Sensor) findViewById(R.id.sensor_front_right);
@@ -125,10 +139,15 @@ public class ControllerActivity extends MainActivity {
             }
         });
 
-        batteryImageButton = (ImageButton) findViewById(R.id.batteryButton);
-        batteryImageButton.setVisibility(View.VISIBLE);
-        batteryBundle = new Bundle();
-        batteryStats = new Intent();
+        topFragment = (ToolbarTopFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.topBar);
+        topFragment.getBatteryButton().setVisibility(View.VISIBLE);
+        topFragment.getBatteryButton();
+
+        setSensorValues();
+        ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.bottomBar);
+        fragment.buttonChecked("control");
     }
 
     /**
@@ -155,28 +174,28 @@ public class ControllerActivity extends MainActivity {
         voltage /=8; //To get average voltage for each batteryImageButton
 
         if(voltage >= 1.40) {   //Sets image depending on batteryImageButton voltage = approx level based on alkaline AA discharge curve
-            batteryImageButton.clearColorFilter();
-            batteryImageButton.setImageResource(R.drawable.full_battery);
+            topFragment.getBatteryButton().clearColorFilter();
+            topFragment.getBatteryButton().setImageResource(R.drawable.full_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.30 && voltage < 1.40) {
-            batteryImageButton.clearColorFilter();
-            batteryImageButton.setImageResource(R.drawable.charged_battery);
+            topFragment.getBatteryButton().clearColorFilter();
+            topFragment.getBatteryButton().setImageResource(R.drawable.charged_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.20 && voltage < 1.30) {
-            batteryImageButton.clearColorFilter();
-            batteryImageButton.setImageResource(R.drawable.half_charged_battery);
+            topFragment.getBatteryButton().clearColorFilter();
+            topFragment.getBatteryButton().setImageResource(R.drawable.half_charged_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.15 && voltage < 1.20) {
-            batteryImageButton.clearColorFilter();
-            batteryImageButton.setImageResource(R.drawable.low_battery);
+            topFragment.getBatteryButton().clearColorFilter();
+            topFragment.getBatteryButton().setImageResource(R.drawable.low_battery);
             criticalLevel = false;
         }
         if(voltage < 1.15){
-            batteryImageButton.setImageResource(R.drawable.empty_battery);
-            batteryImageButton.setColorFilter(Color.RED);  //For effect
+            topFragment.getBatteryButton().setImageResource(R.drawable.empty_battery);
+            topFragment.getBatteryButton().setColorFilter(Color.RED);  //For effect
             if(!criticalLevel) {
                 setCriticalBatteryLevelToast(); //Calls for toast
                 setCriticalBatteryLevelNotification();  //Calls for notification
@@ -207,7 +226,7 @@ public class ControllerActivity extends MainActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         mBuilder.setSmallIcon(R.drawable.notification_battery)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.guard))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.guard_launcher))
                 .setContentTitle("Critical Battery Level")
                 .setAutoCancel(true)
                 .setContentText(String.format("%.3f", (arduinoVoltage)) + "V")
@@ -223,21 +242,9 @@ public class ControllerActivity extends MainActivity {
      */
     private double getVoltage(double analogReadValue){
         arduinoVoltage = analogReadValue* (5.0 / 1024.0); // Converts the analog reading to voltage
+        topFragment.setArduinoVoltage(arduinoVoltage);
         double voltage = arduinoVoltage * 5.0; //Restores the actual voltage (the voltage is divided by 5 since Arduino can handle max 5 V)
         return voltage;
-    }
-
-    /**
-     * Method is called when pressing the batteryImageButton. Opens a new View with detailed battery data (@author Erik Laurin)
-     * @param view current view is passed to the onClick method
-     */
-    public void displayBatteryStats(View view) {
-        batteryStats = new Intent(this, BatteryActivity.class);
-        batteryBundle = new Bundle();    //Sends intent extras in bundle
-        batteryBundle.putDouble("EXTRA_ANALOG", analogReadValue);
-        batteryBundle.putDouble("EXTRA_ARDUINO_VOLTAGE", arduinoVoltage);
-        batteryStats.putExtras(batteryBundle);
-        startActivity(batteryStats);
     }
 
     /**
@@ -250,6 +257,7 @@ public class ControllerActivity extends MainActivity {
         switch (inputString.charAt(0) + inputString.charAt(1)) {
             case 'B' + ' ':
                 analogReadValue = Integer.parseInt(inputString.substring(1).trim());
+                topFragment.setAnalogReadValue(analogReadValue);
                 setBatteryLevel();
                 break;
             case 'F' + 'M':
