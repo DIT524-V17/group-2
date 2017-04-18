@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.group02.guard"
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -47,7 +47,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     androidTestCompile 'org.mockito:mockito-android:2.7.19'
     compile 'com.github.hotchemi:permissionsdispatcher:2.3.2'
-    compile 'com.android.support:support-vector-drawable:25.2.0'
+    compile 'com.android.support:support-vector-drawable:25.1.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.2'
 }
