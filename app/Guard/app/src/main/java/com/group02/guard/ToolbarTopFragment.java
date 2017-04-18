@@ -1,5 +1,6 @@
 package com.group02.guard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
@@ -26,6 +27,13 @@ public class ToolbarTopFragment extends Fragment {
     ImageButton batteryButton;
     TextView appTitle;
 
+    private Intent batteryStats;
+    private Bundle batteryBundle;
+//    private ImageButton batteryImageButton;
+    private double analogReadValue;
+    private double arduinoVoltage;
+//    private boolean criticalLevel = false;
+
     /**
      * Inflates the top toolbar layout within fragments making it visible
      * @param inflater Layout inflater used to make the UI of this fragment visible
@@ -46,6 +54,13 @@ public class ToolbarTopFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showOptionMenu(v);
+            }
+        });
+
+        batteryButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                displayBatteryStats(v);
             }
         });
         return view;
@@ -94,9 +109,30 @@ public class ToolbarTopFragment extends Fragment {
                 return false;
         }
     }
-//    private void logout() {
-//        session.setLoggedin(false);
-//        finish();
-//        startActivity(new Intent(getActivity(), LoginActivity.class));
-//    }
+
+    /**
+     * Method is called when pressing the batteryImageButton.
+     * Opens a new View with detailed battery data (@author Erik Laurin)
+     * @param view current view is passed to the onClick method
+     */
+    public void displayBatteryStats(View view) {
+        batteryStats = new Intent(getActivity(), BatteryActivity.class);
+        batteryBundle = new Bundle();    //Sends intent extras in bundle
+        batteryBundle.putDouble("EXTRA_ANALOG", analogReadValue);
+        batteryBundle.putDouble("EXTRA_ARDUINO_VOLTAGE", arduinoVoltage);
+        batteryStats.putExtras(batteryBundle);
+        startActivity(batteryStats);
+    }
+
+    public ImageButton getBatteryButton(){
+        return batteryButton;
+    }
+
+    public void setAnalogReadValue(double newValue){
+        analogReadValue = newValue;
+    }
+
+    public void setArduinoVoltage(double newValue){
+        arduinoVoltage = newValue;
+    }
 }

@@ -36,13 +36,11 @@
                 android:id="@+id/batteryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:onClick="displayBatteryStats"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
                 android:src="@drawable/empty_battery"
                 android:visibility="invisible" />
-
         </LinearLayout>
 
 </android.support.v7.widget.Toolbar>

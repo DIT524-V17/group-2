@@ -28,9 +28,6 @@ import android.util.Log;
 public class ControllerActivity extends AppCompatActivity {
 
     // Following variables is used by the batteryImageButton function
-    private Intent batteryStats;
-    private Bundle batteryBundle;
-    private ImageButton batteryImageButton;
     private double analogReadValue;
     private double arduinoVoltage;
     private boolean criticalLevel = false;
@@ -70,7 +67,7 @@ public class ControllerActivity extends AppCompatActivity {
     private TextView sb;
     private ImageView sbImage;
 
-    SharedPreferences preferences;
+    ToolbarTopFragment topFragment;
 
     //Set MAX_SPEED for motors
     final int MAX_SPEED = 70;
@@ -90,25 +87,22 @@ public class ControllerActivity extends AppCompatActivity {
         analogue = (Control) findViewById(R.id.controlView);
 
         sfm = (TextView) findViewById(R.id.sfm_value);
-        sfmImage = (ImageView) findViewById(R.id.sfm_image);
+        sfmImage = (ImageView) findViewById(R.id.sensorFront);
 
         sfr = (TextView) findViewById(R.id.sfr_value);
-        sfrImage = (ImageView) findViewById(R.id.sfr_image);
+        sfrImage = (ImageView) findViewById(R.id.sensorFrontRight);
 
         sfl = (TextView) findViewById(R.id.sfl_value);
-        sflImage = (ImageView) findViewById(R.id.sfl_image);
+        sflImage = (ImageView) findViewById(R.id.sensorFrontLeft);
 
         sl = (TextView) findViewById(R.id.sl_value);
-        slImage = (ImageView) findViewById(R.id.sl_image);
+        slImage = (ImageView) findViewById(R.id.sensorLeft);
 
         sr = (TextView) findViewById(R.id.sr_value);
-        srImage = (ImageView) findViewById(R.id.sr_image);
+        srImage = (ImageView) findViewById(R.id.sensorRight);
 
         sb = (TextView) findViewById(R.id.sb_value);
-        sbImage = (ImageView) findViewById(R.id.sb_image);
-
-        preferences = getPreferences(MODE_PRIVATE);
-
+        sbImage = (ImageView) findViewById(R.id.sensorBack);
         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages
         btt = new BluetoothThread(address, new Handler() {
@@ -145,10 +139,10 @@ public class ControllerActivity extends AppCompatActivity {
             }
         });
 
-        batteryImageButton = (ImageButton) findViewById(R.id.batteryButton);
-        batteryImageButton.setVisibility(View.VISIBLE);
-        batteryBundle = new Bundle();
-        batteryStats = new Intent();
+        topFragment = (ToolbarTopFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.topBar);
+        topFragment.getBatteryButton().setVisibility(View.VISIBLE);
+        topFragment.getBatteryButton();
 
         setSensorValues();
         ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
@@ -180,28 +174,28 @@ public class ControllerActivity extends AppCompatActivity {
         voltage /=8; //To get average voltage for each batteryImageButton
 
         if(voltage >= 1.40) {   //Sets image depending on batteryImageButton voltage = approx level based on alkaline AA discharge curve
-            batteryImageButton.clearColorFilter();
-            batteryImageButton.setImageResource(R.drawable.full_battery);
+            topFragment.getBatteryButton().clearColorFilter();
+            topFragment.getBatteryButton().setImageResource(R.drawable.full_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.30 && voltage < 1.40) {
-            batteryImageButton.clearColorFilter();
-            batteryImageButton.setImageResource(R.drawable.charged_battery);
+            topFragment.getBatteryButton().clearColorFilter();
+            topFragment.getBatteryButton().setImageResource(R.drawable.charged_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.20 && voltage < 1.30) {
-            batteryImageButton.clearColorFilter();
-            batteryImageButton.setImageResource(R.drawable.half_charged_battery);
+            topFragment.getBatteryButton().clearColorFilter();
+            topFragment.getBatteryButton().setImageResource(R.drawable.half_charged_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.05 && voltage < 1.20) {
-            batteryImageButton.clearColorFilter();
-            batteryImageButton.setImageResource(R.drawable.low_battery);
+            topFragment.getBatteryButton().clearColorFilter();
+            topFragment.getBatteryButton().setImageResource(R.drawable.low_battery);
             criticalLevel = false;
         }
         if(voltage < 1.05){
-            batteryImageButton.setImageResource(R.drawable.empty_battery);
-            batteryImageButton.setColorFilter(Color.RED);  //For effect
+            topFragment.getBatteryButton().setImageResource(R.drawable.empty_battery);
+            topFragment.getBatteryButton().setColorFilter(Color.RED);  //For effect
             if(!criticalLevel) {
                 setCriticalBatteryLevelToast(); //Calls for toast
                 setCriticalBatteryLevelNotification();  //Calls for notification
@@ -246,21 +240,9 @@ public class ControllerActivity extends AppCompatActivity {
      */
     private double getVoltage(double analogReadValue){
         arduinoVoltage = analogReadValue* (5.0 / 1024.0); // Converts the analog reading to voltage
+        topFragment.setArduinoVoltage(arduinoVoltage);
         double voltage = arduinoVoltage * 5.0; //Restores the actual voltage (the voltage is divided by 5 since Arduino can handle max 5 V)
         return voltage;
-    }
-
-    /**
-     * Method is called when pressing the batteryImageButton. Opens a new View with detailed battery data (@author Erik Laurin)
-     * @param view current view is passed to the onClick method
-     */
-    public void displayBatteryStats(View view) {
-        batteryStats = new Intent(this, BatteryActivity.class);
-        batteryBundle = new Bundle();    //Sends intent extras in bundle
-        batteryBundle.putDouble("EXTRA_ANALOG", analogReadValue);
-        batteryBundle.putDouble("EXTRA_ARDUINO_VOLTAGE", arduinoVoltage);
-        batteryStats.putExtras(batteryBundle);
-        startActivity(batteryStats);
     }
 
     /**
@@ -272,6 +254,7 @@ public class ControllerActivity extends AppCompatActivity {
         if(inputString.startsWith("B")){ //Updates the battery level
             try {
                 analogReadValue = Integer.parseInt(inputString.substring(1).trim());
+                topFragment.setAnalogReadValue(analogReadValue);
                 setBatteryLevel();
 
             } catch(NumberFormatException e) {

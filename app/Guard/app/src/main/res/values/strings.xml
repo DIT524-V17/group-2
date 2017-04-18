@@ -44,12 +44,12 @@
     <string name="guardLongitude">Long</string>
     <string name="gpsDistance">Distance: </string>
 
-    <!-- Strings for GPS activity, found in activity_battery.xml -->
+    <!-- Strings for Battery activity, found in activity_battery.xml -->
     <string name="analogValueText">Analog Value</string>
     <string name="arduinoVoltageText">Arduino Voltage</string>
     <string name="actualVoltageText">Actual Voltage</string>
 
-    <!-- Strings for Menu activity, found in menu_options.xml -->
+    <!-- Strings for Menu Options, found in menu_options.xml -->
     <string name="profileText">My Profile</string>
     <string name="securityText">My Privacy</string>
     <string name="settingsText">My Settings</string>
@@ -57,10 +57,5 @@
     <string name="feedbackText">Feedback</string>
     <string name="logoutText">Logout</string>
     <string name="menuGuardGroup">G.U.A.R.D. App</string>
-    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_nav_drawer">NavDrawerActivity</string>
 
 </resources>
