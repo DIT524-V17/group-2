@@ -3,7 +3,6 @@
 #include <NewPing.h>
 #include <SoftwareSerial.h>
 
-
 #define TRIGGER_PIN_RIGHT_FRONT  51  // Arduino pin tied to trigger pin on the ultrasonic sensor
 #define ECHO_PIN_RIGHT_FRONT     50  // Arduino pin tied to echo pin on the right ultrasonic sensor
 
@@ -55,6 +54,9 @@ String sfl = "FL";
 String sr = "SR";
 String sl = "SL";
 String sb = "SB";
+int mode;
+int angleGPS;
+int speedGPS;
 
 void setup() {
   Serial3.begin(9600);
@@ -69,40 +71,61 @@ void loop() {
   timer.run();
   handleInput();
   sendSensorValues();
-  if(motorSpeedLeft > 0 && motorSpeedRight > 0){  //If the car gets input to go forward
-    if(!obstacleDetectionFront()){  //If there is no obstacles in front of the car
-      motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight); //Sets input speed
+  ///in the future, add "else if" statements in case there are more then 2 modes
+  if(mode == 1) {
+    moveGPS();
+  }else{
+    moveManual();
+  }
+}
+
+void moveManual() {
+  if(motorSpeedLeft > 0 && motorSpeedRight > 0){              //If the car gets input to go forward
+    if(!obstacleDetectionFront()){                            //If there is no obstacles in front of the car
+      motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);  //Sets input speed
     }else{
-    motors.setMotorSpeed(0, 0); //Sets speed to 0 since obstacle in front detected
+      motors.setMotorSpeed(0, 0);                             //Sets speed to 0 since obstacle in front detected
     }
   }
-
   else if(motorSpeedLeft < 0 && motorSpeedRight < 0){
     if(!obstacleDetectionRear()){
       motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);
     }else{
-    motors.setMotorSpeed(0, 0);
+      motors.setMotorSpeed(0, 0);
     }
-  }
-  else{
-    motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);  //When input is neither forwards nor backwards
+  }else{
+    motors.setMotorSpeed(motorSpeedLeft, motorSpeedRight);    //When input is neither forwards nor backwards
   }
 }
 
+void moveGPS() {
+    motors.setAngle(angleGPS);  //Eriks Values
+    motors.setSpeed(speedGPS);  //Eriks Values
+} 
+
 void handleInput() { 
-  if (Serial3.available()) { //handle serial input if there is any
+  if (Serial3.available()) {                        //Handle serial input if there is any
     input = Serial3.readStringUntil('\n');
-    if (input.startsWith("R")){
+    if(input.startsWith("R")){
       motorSpeedRight = input.substring(1).toInt(); //Sets the motorspeed value for the right engines
-    }else if (input.startsWith("L")){
+    }else if(input.startsWith("L")){
       motorSpeedLeft = input.substring(1).toInt();
+    }else if(input.startsWith("A")){
+      angleGPS = input.substring(1).toInt();           //Eriks Value
+    }else if(input.startsWith("S")){
+      speedGPS = input.substring(1).toInt();           //Eriks Value
+    }else if(input.startsWith("G")){                  //Set int mode, based on the selected mode in the app
+      mode = 1;
     }
+    mode = 0;
   }
+  Serial3.println(mode);
 }
 
 void sendVoltage() {
-  if(motorSpeedLeft == 0 && motorSpeedLeft == 0) //Sends the voltage only when the engines are not working (the voltage drops significantly while engines are running)
+  if(motorSpeedLeft == 0 && motorSpeedLeft == 0){ //Sends the voltage only when the engines are not working (the voltage drops significantly while engines are running)
     Serial3.println(b + analogRead(A0)); //Sends the voltage value to the phone  
+  }
 }
 
 void sendSensorValues() {
@@ -131,7 +154,6 @@ void sendSensorValues() {
     Serial3.println(sb + distanceBack);
     j = 0;
   }
-
 }
 
 boolean obstacleDetectionFront(){ //Loops through the sensors in front of the car, returns true if obstacle is detected

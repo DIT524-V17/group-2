@@ -1,53 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/toolbar_top"
+
+    <fragment
+        android:id="@+id/topBar"
+        android:name="com.group02.guard.ToolbarTopFragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        tools:layout="@layout/toolbar_top" />
+
+    <fragment
+        android:id="@+id/bottomBar"
+        android:name="com.group02.guard.ToolbarBottomFragment"
         android:layout_width="match_parent"
-        android:visibility="visible"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        tools:layout="@layout/toolbar_bottom" />
 
-    <RelativeLayout
+    <TextView
+        android:text="@string/wifiOnText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:id="@+id/wifiDirectText"
+        android:layout_below="@id/topBar"/>
 
-        <TextView
-            android:text="WiFi Direct is:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/wifiDirectText"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"/>
+    <ToggleButton
+        android:textOn="@string/wifiToggleButtonOn"
+        android:textOff="@string/wifiToggleButtonOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonOnOff"
+        android:layout_below="@id/wifiDirectText"
+        android:layout_alignParentStart="true" />
 
-        <ToggleButton
-            android:textOn="ON"
-            android:textOff="OFF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonOnOff"
-            android:layout_below="@id/wifiDirectText"
-            android:layout_alignParentStart="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/connectedDevice"
+        android:layout_below="@id/buttonOnOff"
+        android:layout_alignParentStart="true"/>
 
-       <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/connectedDevice"
-            android:layout_below="@id/buttonOnOff"
-            android:layout_alignParentStart="true"/>
+    <ListView
+        android:id="@+id/peerList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonOnOff"
+        android:layout_above="@id/bottomBar"
+        android:layout_marginTop="15dp"/>
 
-        <ListView
-            android:id="@+id/peerList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/buttonOnOff"
-            android:layout_marginTop="15dp"/>
-
-        <include
-            layout="@layout/toolbar_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

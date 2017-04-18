@@ -1,61 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_battery"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="10"
     tools:context="com.group02.guard.BatteryActivity">
 
-
-    <include layout="@layout/toolbar_top"
+    <fragment
+        android:id="@+id/topBar"
+        android:name="com.group02.guard.ToolbarTopFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        tools:layout="@layout/toolbar_top"
+        android:layout_alignParentTop="true"/>
 
     <TextView
         android:id="@+id/analogValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
         android:paddingStart="3dp"
+        android:paddingEnd="3dp"
         android:paddingTop="10dp"
-        android:text="TextView" />
+        android:text="@string/analogValueText"
+        android:layout_below="@id/topBar"/>
 
     <View
+        android:id="@+id/firstDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="7dp"
         android:background="@color/colorMutedLight"
-        />
+        android:layout_below="@id/analogValue"/>
 
     <TextView
         android:id="@+id/arduinoVoltage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
         android:paddingStart="3dp"
-        android:text="TextView" />
+        android:paddingEnd="3dp"
+        android:text="@string/arduinoVoltageText"
+        android:layout_below="@id/firstDivider"/>
 
     <View
+        android:id="@+id/secondDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="7dp"
-        android:background="@color/colorMutedLight" />
+        android:background="@color/colorMutedLight"
+        android:layout_below="@id/arduinoVoltage"/>
 
     <TextView
         android:id="@+id/actualVoltage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
         android:paddingStart="3dp"
-        android:text="TextView" />
+        android:paddingEnd="3dp"
+        android:text="@string/actualVoltageText"
+        android:layout_below="@id/secondDivider"/>
 
     <View
+        android:id="@+id/thirdDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="7dp"
-        android:background="@color/colorMutedLight" />
+        android:background="@color/colorMutedLight"
+        android:layout_below="@id/actualVoltage"/>
 
-</LinearLayout>
+    <fragment
+        android:id="@+id/bottomBar"
+        android:name="com.group02.guard.ToolbarBottomFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/toolbar_bottom"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
