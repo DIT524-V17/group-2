@@ -73,7 +73,7 @@ public class ToolbarTopFragment extends Fragment {
     public void showOptionMenu(View v) {
         PopupMenu popup = new PopupMenu(getActivity(), v);
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.option_menu, popup.getMenu());
+        inflater.inflate(R.menu.menu_option, popup.getMenu());
         popup.show();
     }
 

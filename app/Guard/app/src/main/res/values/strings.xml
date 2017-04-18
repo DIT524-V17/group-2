@@ -8,6 +8,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_bluetooth">BluetoothActivity</string>
 
+    <!-- Strings for Map Options, found in menu_main.xml -->
     <string name="location_label">Location:</string>
     <string name="normal">Normal</string>
     <string name="satellite">Satellite</string>
@@ -22,12 +23,8 @@
     <string name="controllerActivity">Manual Control</string>
     <string name="mapActivity">Map</string>
     <string name="logoutButton">Logout</string>
-    <string name="wifiActivityDesc">WiFi Icon</string>
-    <string name="gpsActivityDesc">GPS Icon</string>
-    <string name="controllerActivityDesc">Controller Icon</string>
-    <string name="mapActivityDesc">Map Icon</string>
 
-    <!-- Strings for wifi activity, found in activity_wifi.xml -->
+    <!-- Strings for WiFi activity, found in activity_wifi.xml -->
     <string name="wifiOnText">WiFi Direct is: </string>
     <string name="wifiToggleButtonOn">ON</string>
     <string name="wifiToggleButtonOff">OFF</string>
@@ -57,5 +54,14 @@
     <string name="feedbackText">Feedback</string>
     <string name="logoutText">Logout</string>
     <string name="menuGuardGroup">G.U.A.R.D. App</string>
+
+    <!-- Strings for ImageButton content description, found throughout all xml-->
+    <string name="homeIconDesc">Home Icon</string>
+    <string name="connectIconDesc">WiFi Icon</string>
+    <string name="controlIconDesc">Controller Icon</string>
+    <string name="gpsIconDesc">GPS Icon</string>
+    <string name="mapIconDesc">Map Icon</string>
+    <string name="batteryIconDesc">Battery Icon</string>
+    <string name="menuIconDesc">Menu Icon</string>
 
 </resources>

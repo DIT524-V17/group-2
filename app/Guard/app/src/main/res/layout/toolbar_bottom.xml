@@ -21,7 +21,8 @@
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_menu_home"
-            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
+            android:tint="@color/common_google_signin_btn_text_dark_focused"
+            android:contentDescription="@string/homeIconDesc"/>
 
         <View
             android:layout_width="0dp"
@@ -36,7 +37,8 @@
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_menu_wifi"
-            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
+            android:tint="@color/common_google_signin_btn_text_dark_focused"
+            android:contentDescription="@string/connectIconDesc"/>
 
         <View
             android:layout_width="0dp"
@@ -51,7 +53,8 @@
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_menu_controller"
-            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
+            android:tint="@color/common_google_signin_btn_text_dark_focused"
+            android:contentDescription="@string/controlIconDesc"/>
 
         <View
             android:layout_width="0dp"
@@ -66,7 +69,8 @@
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_menu_gps"
-            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
+            android:tint="@color/common_google_signin_btn_text_dark_focused"
+            android:contentDescription="@string/gpsIconDesc"/>
 
         <View
             android:layout_width="0dp"
@@ -81,8 +85,9 @@
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_menu_map"
-            android:tint="@color/common_google_signin_btn_text_dark_focused"/>
-
+            android:tint="@color/common_google_signin_btn_text_dark_focused"
+            android:contentDescription="@string/mapIconDesc"
+            android:layout_marginEnd="15dp"/>
 
     </LinearLayout>
 
