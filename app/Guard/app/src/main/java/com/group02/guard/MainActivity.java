@@ -42,20 +42,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * The booleans are retrieved in other activities and are used to set the state of ToggleButton
      * @param v The current View
      */
-    public boolean onClick(View v) {
-        SharedPreferences.Editor editor = preferences.edit();
+    @Override
+    public void onClick(View v) {
         Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
         wifi.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         wifi.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Intent controlCar = new Intent(MainActivity.this, ControllerActivity.class);
-        controlCar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        controlCar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Intent openMap = new Intent(MainActivity.this, MapsActivity.class);
-        openMap.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        openMap.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Intent goHome = new Intent(MainActivity.this, MainActivity.class);
-        goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        goHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent controlIntent = new Intent(MainActivity.this, ControllerActivity.class);
+        controlIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        controlIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
+        mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent gpsIntent = new Intent(MainActivity.this, GpsActivity.class);
+        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         switch (v.getId()) {
             case R.id.controlButton:

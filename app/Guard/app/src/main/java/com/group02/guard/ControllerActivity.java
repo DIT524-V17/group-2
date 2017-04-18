@@ -1,19 +1,14 @@
 package com.group02.guard;
 
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.ImageView;
 import android.widget.Toast;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -22,18 +17,12 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import static java.lang.Math.round;
-
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
  * @author Joacim Eberlen, Erik Laurin, Axel Granli
  * @version 1.0.4 JE
  */
-public class ControllerActivity extends MainActivity {
+public class ControllerActivity extends AppCompatActivity {
 
     // Following variables is used by the batteryImageButton function
     private double analogReadValue;
@@ -51,27 +40,6 @@ public class ControllerActivity extends MainActivity {
 
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
-
-
-    private int sflReadValue = 20;
-    private TextView sfl;
-    private ImageView sflImage;
-
-    private int sfrReadValue = 20;
-    private TextView sfr;
-    private ImageView sfrImage;
-
-    private int srReadValue = 30;
-    private TextView sr;
-    private ImageView srImage;
-
-    private int slReadValue = 50;
-    private TextView sl;
-    private ImageView slImage;
-
-    private int sbReadValue = 9;
-    private TextView sb;
-    private ImageView sbImage;
 
     ToolbarTopFragment topFragment;
 
@@ -142,11 +110,9 @@ public class ControllerActivity extends MainActivity {
         topFragment = (ToolbarTopFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.topBar);
         topFragment.getBatteryButton().setVisibility(View.VISIBLE);
-        topFragment.getBatteryButton();
 
-        setSensorValues();
         ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.bottomBar);
+                .findFragmentById(R.id.bottomBarr);
         fragment.buttonChecked("control");
     }
 
@@ -249,7 +215,8 @@ public class ControllerActivity extends MainActivity {
 
     /**
      * The method takes and decodes the strings received via Bluetooth from the SmartCar.
-     * Depending on type of string (its first letter decides its use), various actions executes (@author Erik Laurin and partly Axel Granli)
+     * Depending on type of string (its first letter decides its use),
+     * various actions executes (@author Erik Laurin and partly Axel Granli)
      * @param inputString String received from the SmartCar containing data
      */
     private void readInput(String inputString){
