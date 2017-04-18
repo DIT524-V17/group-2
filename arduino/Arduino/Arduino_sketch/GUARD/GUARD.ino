@@ -33,6 +33,7 @@ NewPing sonarBack(TRIGGER_PIN_BACK, ECHO_PIN_BACK, MAX_DISTANCE);
 
 Car car;
 SimpleTimer timer;
+SimpleTimer sensorTimer;
 ShieldMotors motors;
 Gyroscope gyro;
 
@@ -61,6 +62,7 @@ void setup() {
   gyro.attach();
   gyro.begin(50);
   timer.setInterval(5000, sendVoltage); //Sets the interval to send the voltage every 5 second
+  sensorTimer.setInterval(500, sendSensorValues);
 }
 
 void loop() {

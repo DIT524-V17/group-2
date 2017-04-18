@@ -1,9 +1,9 @@
 package com.group02.guard;
 
+import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 /**
  * Creates the "MainScreen" of the G.U.A.R.D. app. Layout used is activity_main.xml
@@ -20,19 +19,18 @@ import android.widget.ToggleButton;
  */
 public class MainActivity extends AppCompatActivity {
 
-    ToggleButton connectNav;
-    ToggleButton controlNav;
-    ToggleButton cameraNav;
-    ToggleButton mapNav;
-    ToggleButton homeNav;
+    ImageButton connectNav;
+    ImageButton controlNav;
+    ImageButton cameraNav;
+    ImageButton mapNav;
+    ImageButton homeNav;
     Button control;
     Button map;
-    Button coords;
     Button wifi;
     ImageButton optionMenu;
-    SharedPreferences preferences;
     private Button btnLogout;
     private Session session;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -53,15 +51,14 @@ public class MainActivity extends AppCompatActivity {
 
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
-        coords = (Button) findViewById(R.id.coordsButton);
         wifi = (Button) findViewById(R.id.wifiDirectButton);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
-        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
-        controlNav = (ToggleButton) findViewById(R.id.controlNavigation);
-        cameraNav = (ToggleButton) findViewById(R.id.cameraNavigation);
-        mapNav = (ToggleButton) findViewById(R.id.mapsNavigation);
-        homeNav = (ToggleButton) findViewById(R.id.homeNavigation);
+        connectNav = (ImageButton) findViewById(R.id.connectNavigation);
+        controlNav = (ImageButton) findViewById(R.id.controlNavigation);
+        cameraNav = (ImageButton) findViewById(R.id.cameraNavigation);
+        mapNav = (ImageButton) findViewById(R.id.mapsNavigation);
+        homeNav = (ImageButton) findViewById(R.id.homeNavigation);
 
         preferences = getPreferences(MODE_PRIVATE);
     }
@@ -81,10 +78,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onClick(View v) {
         SharedPreferences.Editor editor = preferences.edit();
         Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
-        Intent coords = new Intent(MainActivity.this, MapsActivity.class);
+        wifi.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        wifi.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Intent controlCar = new Intent(MainActivity.this, ControllerActivity.class);
+        controlCar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        controlCar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Intent openMap = new Intent(MainActivity.this, MapsActivity.class);
+        openMap.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        openMap.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Intent goHome = new Intent(MainActivity.this, MainActivity.class);
+        goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        goHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         switch (v.getId()) {
             case R.id.wifiDirectButton:
@@ -101,11 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 editor.putBoolean("controlSelected", true);
                 editor.commit();
                 startActivity(controlCar);
-                return true;
-            case R.id.coordsButton:
-                editor.putBoolean("coordsSelected", true);
-                editor.commit();
-                startActivity(coords);
                 return true;
             case R.id.controlNavigation:
                 editor.putBoolean("controlSelected", true);
@@ -124,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.homeNavigation:
                 startActivity(goHome);
+                return true;
+            case R.id.cameraNavigation:
+                Toast.makeText(this, "Check back in later sprints", Toast.LENGTH_SHORT).show();
                 return true;
            default:
                 return false;
@@ -150,23 +152,23 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_profile:
-                Toast.makeText(MainActivity.this, "Profile Selected", Toast.LENGTH_SHORT)
+                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
             case R.id.menu_security:
-                Toast.makeText(MainActivity.this, "Security Selected", Toast.LENGTH_SHORT)
+                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
             case R.id.menu_settings:
-                Toast.makeText(MainActivity.this, "Settings Selected", Toast.LENGTH_SHORT)
+                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
             case R.id.menu_themes:
-                Toast.makeText(MainActivity.this, "App Themes Selected", Toast.LENGTH_SHORT)
+                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
             case R.id.menu_feedback:
-                Toast.makeText(MainActivity.this, "Help & Feedback Selected", Toast.LENGTH_SHORT)
+                Toast.makeText(MainActivity.this, "Check back in later sprints", Toast.LENGTH_SHORT)
                         .show();
                 return true;
             default:

@@ -2,7 +2,8 @@ from math import *
 
 
 
-
+##method for calculating angle by having smartCar gps location and externalController gps location
+##method is based on math theory
 def calculateBearing(smartCarLa, smartCarLo, externalControllerLa, externalControllerLo) :
 
     longDiff= externalControllerLo-smartCarLo
@@ -10,6 +11,8 @@ def calculateBearing(smartCarLa, smartCarLo, externalControllerLa, externalContr
     x = cos(smartCarLa)*sin(externalControllerLa)-sin(smartCarLa)*cos(externalControllerLa)*cos(longDiff)
     return degrees((atan2(y, x))+360)%360
 
+##method for process raw gps data
+##it will return only longtitude and latitude
 def filterGPS(smartCarGPS, externalControllerGPS):
 
     smartCarLo=smartCarGPS.fix.longitude
@@ -19,6 +22,8 @@ def filterGPS(smartCarGPS, externalControllerGPS):
 
     return(smartCarLo, smartCarLa, externalControllerLo,externalControllerLa )
 
+##method for calculating the distance between smartCar and externalController
+##the return data will be kilometers
 def distance(smartCarLa, externalControllerLa, smartCarLo, externalControllerLo):
 
     radius = 6371 # km

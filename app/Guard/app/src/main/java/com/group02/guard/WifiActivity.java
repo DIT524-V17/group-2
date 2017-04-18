@@ -34,7 +34,7 @@ public class WifiActivity extends MainActivity {
     ListView peerView;
     boolean wifiDirectEnabled;
     ToggleButton onOff;
-    ToggleButton connectNav;
+    ImageButton connectNav;
     TextView connectedDeviceName;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -59,14 +59,11 @@ public class WifiActivity extends MainActivity {
 
         preferences = getPreferences(MODE_PRIVATE);
         onOff = (ToggleButton) findViewById(R.id.buttonOnOff);
-        connectNav = (ToggleButton) findViewById(R.id.connectNavigation);
+        connectNav = (ImageButton) findViewById(R.id.connectNavigation);
         connectedDeviceName = (TextView) findViewById(R.id.connectedDevice);
         peerView = (ListView) findViewById(R.id.peerList);
 
-        optionMenu = (ImageButton) findViewById(R.id.menuButton);
-        boolean connectorSelected = preferences.getBoolean("connectSelected", false);
         boolean wifiOnOff = preferences.getBoolean("wifiOnOff", false);
-        connectNav.setChecked(connectorSelected);
         onOff.setChecked(wifiOnOff);
         editor = preferences.edit();
         onOff.setOnClickListener(new View.OnClickListener() {
