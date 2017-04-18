@@ -32,7 +32,7 @@ import static java.lang.Math.round;
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
  * @author Joacim Eberlen, Erik Laurin, Axel Granli
- * @version 1.0.3 AG
+ * @version 1.0.4 JE
  */
 public class ControllerActivity extends MainActivity {
 
@@ -44,12 +44,9 @@ public class ControllerActivity extends MainActivity {
     private double arduinoVoltage;
     private boolean criticalLevel = false;
 
-    //Our own implemented HashMap that has a default value of 0 for all keys.
-    //Todo: Use for sensor.
-    private Map<String, Integer> sensorValues = new SensorMap<>(0);
-
-    Control analogue;
-    TextView showMoveEvent;
+    private Sensor sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
+    private Control analogue;
+    private TextView showMoveEvent;
 
     String address = "20:15:10:20:11:37";
 
@@ -59,8 +56,6 @@ public class ControllerActivity extends MainActivity {
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
 
-    private int sfmReadValue, sfrReadValue, sflReadValue, srReadValue, slReadValue, sbReadValue;
-    private ImageView sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
 
     ImageButton controlNav;
     SharedPreferences preferences;
@@ -83,12 +78,12 @@ public class ControllerActivity extends MainActivity {
         analogue = (Control) findViewById(R.id.controlView);
         optionMenu = (ImageButton) findViewById(R.id.menuButton);
 
-        sfmImage = (ImageView) findViewById(R.id.sfm_image);
-        sfrImage = (ImageView) findViewById(R.id.sfr_image);
-        sflImage = (ImageView) findViewById(R.id.sfl_image);
-        slImage = (ImageView) findViewById(R.id.sl_image);
-        srImage = (ImageView) findViewById(R.id.sr_image);
-        sbImage = (ImageView) findViewById(R.id.sb_image);
+        sfmImage = (Sensor) findViewById(R.id.sensor_front_middle);
+        sfrImage = (Sensor) findViewById(R.id.sensor_front_right);
+        sflImage = (Sensor) findViewById(R.id.sensor_front_left);
+        slImage = (Sensor) findViewById(R.id.sensor_left);
+        srImage = (Sensor) findViewById(R.id.sensor_right);
+        sbImage = (Sensor) findViewById(R.id.sensor_back);
 
          // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages
@@ -98,6 +93,7 @@ public class ControllerActivity extends MainActivity {
             public void handleMessage(Message message) {
 
             String s = (String) message.obj;
+                /*
                 if(s.equals("CONNECTION FAILED")){
                     AlertDialog.Builder builder = new AlertDialog.Builder(ControllerActivity.this);
                     builder.setMessage("Could not connect")
@@ -114,6 +110,7 @@ public class ControllerActivity extends MainActivity {
                 }else if(s.equals("CONNECTED")){
                     showMoveEvent.setText("Connected");
                 }
+                */
             readInput(s);
             }
         });
@@ -150,8 +147,6 @@ public class ControllerActivity extends MainActivity {
         batteryImageButton.setVisibility(View.VISIBLE);
         batteryBundle = new Bundle();
         batteryStats = new Intent();
-
-        setSensorValues();
     }
 
     /**
@@ -270,163 +265,35 @@ public class ControllerActivity extends MainActivity {
      */
     private void readInput(String inputString){
 
-        if(inputString.startsWith("B")) { //Updates the battery level
-            analogReadValue = Integer.parseInt(inputString.substring(1).trim());
-            setBatteryLevel();
-        } else if (inputString.startsWith("FR")) { //Updates the sensor images depending on the value
-            try {
+        int parsedMsg = Integer.parseInt(inputString.substring(2).trim());
 
-                sfrReadValue = Integer.parseInt(inputString.substring(2).trim());
-                setSensorValues();
 
-            } catch (NumberFormatException e) {
-                System.out.println("Could not parse");
-            }
-        } else if (inputString.startsWith("FM")) {//Updates the sensor images depending on the value
-            try {
-                sfmReadValue = Integer.parseInt(inputString.substring(2).trim());
-                setSensorValues();
+        switch (inputString){
+            case "B":
+                analogReadValue = Integer.parseInt(inputString.substring(1).trim());
+                setBatteryLevel();
+                break;
+            case "FM":
+                sfmImage.setDistance(parsedMsg);
+                break;
+            case "FL":
+                sflImage.setDistance(parsedMsg);
+                break;
+            case "FR":
+                sfrImage.setDistance(parsedMsg);
+                break;
+            case "SL":
+                slImage.setDistance(parsedMsg);
+                break;
+            case "SR":
+                srImage.setDistance(parsedMsg);
+                break;
+            case "SB":
+                sbImage.setDistance(parsedMsg);
+                break;
+            default:
+                return;
 
-            } catch (NumberFormatException e) {
-                System.out.println("Could not parse");
-            }
-        } else if (inputString.startsWith("FL")) {//Updates the sensor images depending on the value
-            try {
-                sflReadValue = Integer.parseInt(inputString.substring(2).trim());
-                setSensorValues();
-                Log.d("my Tag", "" + String.valueOf(sflReadValue));
-
-            } catch (NumberFormatException e) {
-                System.out.println("Could not parse");
-            }
-        } else if (inputString.startsWith("SR")) {//Updates the sensor images depending on the value
-            try {
-                srReadValue = Integer.parseInt(inputString.substring(2).trim());
-                setSensorValues();
-
-            } catch (NumberFormatException e) {
-                System.out.println("Could not parse");
-            }
-        } else if (inputString.startsWith("SL")) {//Updates the sensor images depending on the value
-            try {
-                slReadValue = Integer.parseInt(inputString.substring(2).trim());
-                setSensorValues();
-
-            } catch (NumberFormatException e) {
-                System.out.println("Could not parse");
-            }
-        } else if (inputString.startsWith("SB")) {//Updates the sensor images depending on the value
-            try {
-                sbReadValue = Integer.parseInt(inputString.substring(2).trim());
-                setSensorValues();
-
-            } catch (NumberFormatException e) {
-                System.out.println("Could not parse");
-            }
-        }
-    }
-
-    /**
-     * This method sets the image for each sensor to a preferred transparency
-     * dependant on the distance(@author Axel Granli)
-     * Todo: Remove after testing.
-     */
-    private void setSensorValues() {
-
-        if (sfmReadValue == 0){
-            sfmImage.setImageAlpha(7);
-        }
-        else if(sfmReadValue < 10 && sfmReadValue > 0){
-            sfmImage.setImageAlpha(255);
-        }
-        else if (sfmReadValue <= 20 && sfmReadValue > 10){
-            sfmImage.setImageAlpha(170);
-        }
-        else if (sfmReadValue <= 40 && sfmReadValue > 20){
-            sfmImage.setImageAlpha(85);
-        }
-        else if (sfmReadValue > 40){
-            sfmImage.setImageAlpha(7);
-        }
-
-        if (sflReadValue == 0){
-            sflImage.setImageAlpha(7);
-        }
-        else if(sflReadValue < 10 && sflReadValue > 0){
-            sflImage.setImageAlpha(255);
-        }
-        else if (sflReadValue <= 20 && sflReadValue > 10){
-            sflImage.setImageAlpha(170);
-        }
-        else if (sflReadValue <= 40 && sflReadValue > 20){
-            sflImage.setImageAlpha(85);
-        }
-        else if (sflReadValue > 40){
-            sflImage.setImageAlpha(7);
-        }
-
-        if (sfrReadValue == 0){
-            sfrImage.setImageAlpha(7);
-        }
-        else if(sfrReadValue < 10 && sfrReadValue > 0){
-            sfrImage.setImageAlpha(255);
-        }
-        else if (sfrReadValue <= 20 && sfrReadValue > 10){
-            sfrImage.setImageAlpha(170);
-        }
-        else if (sfrReadValue <= 40 && sfrReadValue > 20){
-            sfrImage.setImageAlpha(85);
-        }
-        else if (sfrReadValue > 40){
-            sfrImage.setImageAlpha(7);
-        }
-
-        if (slReadValue == 0){
-            slImage.setImageAlpha(7);
-        }
-        else if(slReadValue < 10 && slReadValue > 0){
-            slImage.setImageAlpha(255);
-        }
-        else if (slReadValue <= 20 && slReadValue > 10){
-            slImage.setImageAlpha(170);
-        }
-        else if (slReadValue <= 40 && slReadValue > 20){
-            slImage.setImageAlpha(85);
-        }
-        else if (slReadValue > 40){
-            slImage.setImageAlpha(7);
-        }
-
-        if (srReadValue == 0){
-            srImage.setImageAlpha(7);
-        }
-        else if(srReadValue < 10 && srReadValue > 0){
-            srImage.setImageAlpha(255);
-        }
-        else if (srReadValue <= 20 && srReadValue > 10){
-            srImage.setImageAlpha(170);
-        }
-        else if (srReadValue <= 40 && srReadValue > 20){
-            srImage.setImageAlpha(85);
-        }
-        else if (srReadValue > 40){
-            srImage.setImageAlpha(7);
-        }
-
-        if (sbReadValue == 0){
-            sbImage.setImageAlpha(7);
-        }
-        else if(sbReadValue < 10 && sbReadValue > 0){
-            sbImage.setImageAlpha(255);
-        }
-        else if (sbReadValue <= 20 && sbReadValue > 10){
-            sbImage.setImageAlpha(170);
-        }
-        else if (sbReadValue <= 40 && sbReadValue > 20){
-            sbImage.setImageAlpha(85);
-        }
-        else if (sbReadValue > 40){
-            sbImage.setImageAlpha(7);
         }
     }
 }
