@@ -45,8 +45,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 102;
     public static Double currentLatitude = 0.0;
     public static Double currentLongitude = 0.0;
-    public static String bla = String.valueOf(currentLatitude);
-    public static String bla1 = String.valueOf(currentLongitude);
     TextView curLat;
     TextView curLng;
     ClientHandler clientHandler;

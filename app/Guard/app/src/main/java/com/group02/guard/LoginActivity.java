@@ -16,7 +16,8 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button login, register, enterDeveloper;
+    private Button login, register;
+    //enterDeveloper;
     private EditText etEmail, etPass;
     private DbHelper db;
     private Session session;
@@ -30,10 +31,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         session = new Session(this);
         login = (Button) findViewById(R.id.btnLogin);
         register = (Button) findViewById(R.id.btnReg);
-        enterDeveloper = (Button) findViewById(R.id.btnDev);
+        //enterDeveloper = (Button) findViewById(R.id.btnDev);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
-        enterDeveloper.setOnClickListener(this);
+        // enterDeveloper.setOnClickListener(this);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
 
