@@ -1,22 +1,28 @@
-<<<<<<< HEAD
 # G.U.A.R.D
- 
+This is the G.U.A.R.D Project, a WIP SmartCar based on [Smartcar](http://plat.is/smartcar) Arduino library. 
+ The main goal of this particular SmartCar is; a SmartCar that has the functionallity of getting to a person by GPS-tracking, a camera feed on an analog controller and obstacle avoidence using lidar technology with a SLAM algorithm.
 ## Getting started
- 
+Not fully ready for getting started on your own, some hardware specs is missing at the moment.
 ### Prerequisites
-
+Not fully ready for getting started on your own, some hardware specs is missing at the moment.
+Android studio
+Android phone with wifi and bluetooth capabilities.
 ### Installing
-
+Not fully ready for getting started on your own, some hardware specs is missing at the moment.
 ## Running the tests
-
+Install the APK through android studio, with this you can test the application even without a SmartCar.
 ## Deployment
 
 ## Authors
-
+Erik Laurin, Joacim Eberlen, Justinas Stirbys, Shaun McMurray, Boyan Dai, Gabriel Bulai
 ## License
 
 ## Acknowledgments
-=======
+Dimitris Platis: The creator of the SmartCar Shield arduino library http://plat.is/smartcar.
+
+
+
+
 # Smartcar Mock
 A testing and mocking framework for the [Smartcar](http://plat.is/smartcar) Arduino library. You can use this to unit test your Smartcar sketches.
 
