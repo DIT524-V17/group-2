@@ -1,8 +1,6 @@
 import socket
 import threading
 import time
-import threading
-import time
 import serial
 import pynmea2
 from random import randrange, uniform
