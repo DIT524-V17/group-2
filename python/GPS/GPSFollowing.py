@@ -2,6 +2,7 @@ import threading
 import time
 import serial
 import pynmea2
+import socket
 from random import randrange, uniform
 from GpsAngle import calculateBearing, calculateDistance
 
@@ -21,6 +22,7 @@ gpsctl -n -D 4 /dev/ttyUSB0
 sudo killall gpsd
 sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
 """
+
 # final variables
 a = 'A'
 s = 'S'
@@ -31,7 +33,23 @@ update_frequency = 2
 serialGPS = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
 # serialArduino = serial.Serial('/dev/ttyACM0', 9600)
 
+# GPS send
+serverName = 'localhost'
+serverPort = 8000
+clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+clientSocket.connect((serverName, serverPort))
+
 class ThreadingGPSFollow():
+
+    def send_gps(self, message):
+        """
+        Sends a message to the Java server (used for SmartCar's coordinates)
+        :param message: the string to be sent to the Java server
+
+        Author Gabriel
+        """
+        clientSocket.sendto(message.encode('utf-8'), (serverName, serverPort))
+
 
     def send_angle(self, angle):
         """
@@ -132,9 +150,14 @@ class ThreadingGPSFollow():
                         else:
                             old_angle = angle
                             self.drive(angle, distance, pdop, 3)
+
+                        """ sends GPS info to Java server"""
+                        message = str(guard_latitude) + ":" + str(guard_longitude) + "\n"
+                        self.send_gps(message)
+
                     else:
                         print("Waiting for fix..")
-
+                        print(nmea_raw_data)
                 elif isinstance(nmea_data, pynmea2.types.talker.GSA):
                     pdop = nmea_data.pdop
 
