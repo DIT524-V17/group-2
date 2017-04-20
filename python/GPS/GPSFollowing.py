@@ -12,7 +12,15 @@ and sends movement commands to the SmartCar to make it follow the mobile device 
 Author Erik Laurin
 """
 
+"""
+sudo systemctl stop gpsd.socket
+sudo systemctl disable gpsd.socket
 
+gpsctl -n -D 4 /dev/ttyUSB0
+
+sudo killall gpsd
+sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+"""
 # final variables
 a = 'A'
 s = 'S'
