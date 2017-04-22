@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -26,7 +29,7 @@ public static void main(String[] args) throws IOException {
             System.out.println("Number of connected clients " + count);
         }
     }
-
+//future implementation of list of clients
 //ArrayList<DataOutputStream> clients = new ArrayList<DataOutputStream>();
 //DataOutputStream os = new DataOutputStream(clientSocket.getOutputStream());
 //clients.add(os);
@@ -41,15 +44,17 @@ public static void main(String[] args) throws IOException {
             InputStream inputStream = socket.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            BufferedWriter bw = new BufferedWriter(new FileWriter("/Users/doctorgaby/Desktop/com/coordinates.txt"));
+            Writer writer = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream("/home/administrator/Java/coordinates.txt", false), "UTF-8"));
                
             String line;
             while((line = bufferedReader.readLine()) != null){
                 System.out.println(line);
-                bw.append(line+ "\n");
+                writer.write(line);
+                writer.append("\n");
             }
-            bw.append("finish");
-            bw.close();
+            writer.append("finish");
+            writer.close();
             socket.close();
         }catch(IOException e){
             e.printStackTrace();
