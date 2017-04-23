@@ -150,6 +150,9 @@ class threading_GPS_following():
         #determines the update frequency
         time.sleep(update_frequency)
 
+        time.sleep(10)
+        self.send_speed(0)
+
     def __init__(self):
         """ Constructor """
 
@@ -167,5 +170,9 @@ class threading_GPS_following():
 
             except Exception as e:
                 print("", e)
+            except (KeyboardInterrupt, SystemExit):
+                self.send_speed(0)
+                print("wefererferer")
+
 
 threading_GPS_following()
