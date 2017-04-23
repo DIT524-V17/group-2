@@ -16,9 +16,9 @@ public class MultiThreadedServer {
    boolean ServerOn = true;
    public MultiThreadedServer() { 
       try {
-         myServerSocket = new ServerSocket(8888);
+         myServerSocket = new ServerSocket(8000);
       } catch(IOException ioe) { 
-         System.out.println("Could not create server socket on port 8888. Quitting.");
+         System.out.println("Could not create server socket on port 8000. Quitting.");
          System.exit(-1);
       } 
 		

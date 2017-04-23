@@ -39,14 +39,15 @@ class threading_GPS_following():
             phone_longitude = float(phone_longitudes)
             phone_pdop = float(phone_pdops)
             phone_fix = float(phone_fixs)
-
-
-        except:
-            self.get_phone_coords()
+        except Exception as e:
+            print("", e)
+            #self.get_phone_coords()
+        """
         print('phone_lat: ' + str(phone_latitude) + '\n')
         print('phone_long: '+ str(phone_longitude) + '\n')
         print('phone_pdop: ' + str(phone_pdop) + '\n')
         print('phone_fix: ' + str(phone_fix) + '\n')
+        """
 
     def get_smartcar_coords(self):
         global smartcar_latitude
@@ -62,12 +63,15 @@ class threading_GPS_following():
             smartcar_pdop = float(smartcar_pdops)
             smartcar_fix = float(smartcar_fixs)
 
-        except:
-            self.get_smartcar_coords()
+        except Exception as e:
+            print("", e)
+            #self.get_smartcar_coords()
+        """
         print('smartcar_lat: ' + str(smartcar_latitude) + '\n')
         print('smartcar_long: '+ str(smartcar_longitude) + '\n')
         print('smartcar_pdop: ' + str(smartcar_pdop) + '\n')
         print('smartcar_fix: ' + str(smartcar_fix) + '\n')
+        """
 
     def send_angle(self, angle):
         """
@@ -109,6 +113,7 @@ class threading_GPS_following():
         angle = calculateBearing(smartcar_latitude, smartcar_longitude, smartcar_latitude, smartcar_longitude)
         speed = 50
 
+        """
         # disregard minor changes in angle
         if abs(angle - old_angle) < 5:
             return
@@ -128,13 +133,12 @@ class threading_GPS_following():
             speed = 40
         else:
             speed = 0
-
+"""
 
         #sends angle
         self.send_angle(angle)
 
         #waits until the SmartCar has had enough time to turn
-
         if angle < 180:
             time.sleep(1)
         else:

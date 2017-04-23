@@ -45,7 +45,7 @@ public static void main(String[] args) throws IOException {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             Writer writer = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream("/home/administrator/Java/coordinates.txt", false), "UTF-8"));
+                    new FileOutputStream("/home/pi/repo/group-2/java/coordinates.txt", false), "UTF-8"));
                
             String line;
             while((line = bufferedReader.readLine()) != null){
