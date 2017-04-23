@@ -47,7 +47,7 @@ int distanceSideRight = 0;
 int distanceBack = 0;
 int i = 0;
 int j = 0;
-String b = "B";
+String b = "BB";
 String sfm = "FM";
 String sfr = "FR";
 String sfl = "FL";
@@ -123,7 +123,7 @@ void handleInput() {
 }
 
 void sendVoltage() {
-  if(motorSpeedLeft == 0 && motorSpeedLeft == 0){ //Sends the voltage only when the engines are not working (the voltage drops significantly while engines are running)
+  if(motorSpeedLeft == 0 && motorSpeedRight == 0){ //Sends the voltage only when the engines are not working (the voltage drops significantly while engines are running)
     Serial3.println(b + analogRead(A0)); //Sends the voltage value to the phone  
   }
 }
