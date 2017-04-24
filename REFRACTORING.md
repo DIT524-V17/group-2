@@ -7,12 +7,12 @@
 		
 #### Thresholds
 Maximums:
-LOC - Look at these
-Ciclomatic complexity - 15
-Depth - 7
-If any of these thresholds are met add the Class to trello for critical refractoring.
+LOC (Lines of code) - Not a real maximum, a high amount might be more error prone.
+Cyclomatic complexity - 15
+Block Depth - 7
+If any of these thresholds are met add the Class to trello for critical refractoring, also add as issue on github.
 
 #### Who does what?
-Decide this on next meeting.
+During code review, we will know which classes have to highest complexity. Who should refactor the specified class is decided on as a group. 
 #### When?
-During friday code reviews.
+During friday code reviews. If the refactoring is critical, make the changes ASAP.
