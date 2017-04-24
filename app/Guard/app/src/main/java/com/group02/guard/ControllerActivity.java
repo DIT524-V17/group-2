@@ -103,6 +103,7 @@ public class ControllerActivity extends AppCompatActivity {
                 showMoveEvent.setText("Angle: " + analogue.nAngle()
                         + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
                         + "\nSpeed: " + 0);
+
                 write(0, 0);
             }
         });
@@ -114,7 +115,9 @@ public class ControllerActivity extends AppCompatActivity {
         ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.bottomBarr);
         fragment.buttonChecked("control");
+
     }
+
 
     /**
      *   Writing to the Arduino for motor control.
