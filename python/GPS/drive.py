@@ -150,6 +150,7 @@ class threading_GPS_following():
         #determines the update frequency
         time.sleep(update_frequency)
 
+
     def __init__(self):
         """ Constructor """
 
