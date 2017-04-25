@@ -14,7 +14,7 @@ smartcar_longitude, smartcar_latitude, smartcar_pdop, smartcar_fix = 0, 0, 0, 0
 
 # helper variables
 old_angle, exitFlag = 0, 0
-no_fix_phone_bol, no_fix_smartcar_bol = False, False
+no_fix_bol = True
 update_frequency = 2
 
 
@@ -33,24 +33,14 @@ def no_fix(device):
     When GPS accuracy is too poor, this function is called and the SmartCar stops until the accuracy becomes suffice again
     :param device: the unit that has too poor GPS accuracy
     """
-    if device == 'phone':
-        global no_fix_phone_bol
-        if not (no_fix_phone_bol):
-            send_speed(0)
-            no_fix_phone_bol = True
-            print(device + ' - no fix (1). Setting speed to 0 and waiting for fix..')
-        else:
-            print('waiting for ' + device + ' fix..')
-            time.sleep(1)
-    elif device == 'smartcar':
-        global no_fix_smartcar_bol
-        if not (no_fix_smartcar_bol):
-            send_speed(0)
-            no_fix_smartcar_bol = True
-            print(device + ' - no fix (1). Setting speed to 0 and waiting for fix..')
-        else:
-            print('waiting for ' + device + ' fix..')
-            time.sleep(1)
+    global no_fix_bol
+    if not (no_fix_bol):
+        send_speed(0)
+        no_fix_bol = True
+        print(device + ' - no fix (1). Setting speed to 0 and waiting for fix..')
+    else:
+        print('waiting for ' + device + ' fix..')
+        time.sleep(1)
 
 
 class phone_coordinates(threading.Thread):
@@ -76,8 +66,7 @@ def get_phone_coordinates(threadName):
             coords = open('/home/pi/repo/group-2/GPSfollowing/coords_phone.txt', "r", -1)
             phone_latitudes, phone_longitudes = coords.read().split()
 
-            if (
-                phone_latitudes == '0'):  # '0' codes for that the phone application wants to terminate the autonomous following
+            if (phone_latitudes == '0'):  # '0' codes for termination command from phone application
                 exit('phone - exit command (0)')
             elif (phone_latitudes == '1'):  # '1' codes for that the phone has insufficient GPS signal
                 no_fix('phone')
@@ -124,6 +113,9 @@ def get_smartcar_coordinates(threadName):
         try:
             coords = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "r", -1)
             smartcar_latitudes, smartcar_longitudes, smartcar_pdops, smartcar_fixs = coords.read().split()
+
+            if (smartcar_latitudes == '1'):  # '1' codes for that the SmartCar has insufficient GPS signal
+                no_fix('SmartCar')
 
             global smartcar_latitude
             global smartcar_longitude
@@ -173,9 +165,8 @@ def drive_smartcar(threadName):
     while not exitFlag:
         # print ("%s: %s" % (threadName, time.ctime(time.time())))
 
-        global no_fix_smartcar_bol
-        global no_fix_phone_bol
-        if (no_fix_phone_bol) or (no_fix_smartcar_bol): # if insufficient GPS signal, returns to top of function
+        global no_fix_bol
+        if (no_fix_bol): # if insufficient GPS signal, returns to top of function
             continue
 
         global old_angle
@@ -247,6 +238,17 @@ def send_speed(speed):
     print("Sent to SmartCar: " + s + str(speed))
 
 
+# Overwrite old GPS coordinates
+try:
+    coords_phone = open('/home/pi/repo/group-2/GPSfollowing/coords_phone.txt', "w", -1)
+    coords_smartcar = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "w", -1)
+    coords_phone.write('1 0')
+    coords_smartcar.write('1 0 0 0')
+    coords_phone.close()
+    coords_smartcar.close()
+except Exception as e:
+    print("", e)
+
 # Create new threads
 thread_phone_coordinates = phone_coordinates(1, "Thread-phone_coordinates")
 thread_smartcar_coordinates = smartcar_coordinates(2, "Thread-smartcar_coordinates")
@@ -255,6 +257,7 @@ thread_drive = drive(3, "Thread-drive")
 # Start new Threads
 thread_phone_coordinates.start()
 thread_smartcar_coordinates.start()
+#time.sleep(1)
 thread_drive.start()
 
 # Awaits all threads to terminate

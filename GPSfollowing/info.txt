@@ -1,4 +1,12 @@
 - smartcar_GPS. Run on start-up of the Pi. Gets SmartCar's coordinates
+
 - drive. Run on command from phone application. Logic for self driving
+
 - set_coords_phone. Takes two args (lat & long), and sets them as coordinates for the phone.
-	example: set_coords_phone 12.123145 65.342342
+	example: 1. ssh pi@192.168.1.105 (psw: raspberry)
+		 2. python home/pi/repo/group-2/GPSfollowing/set_coords_phone 54.327 11.244		 
+	
+	when received lat =  0, terminate script (sends command to SmartCar to stop and exits)
+			     1, bad GPS signal (sends command to SmartCar to stop 
+						and awaits an actual coordinate before continuing)
+
