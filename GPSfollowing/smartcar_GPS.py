@@ -1,22 +1,36 @@
 import threading
 import serial
 import pynmea2
+import time
+
+serial_bol = False
+
+# SmartCar GPS variables
+smartcar_latitude, smartcar_longitude, pdop, fix = 0, 0, 0, 0
+
 
 # serials
-serial_GPS = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
+while not serial_bol:
+    try:
+        serial_GPS = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
+    except Exception:
+        try:
+            serial_GPS = serial.Serial(port='/dev/ttyUSB1', baudrate=4800, timeout=None)
+        except:
+            time.sleep(1)
+        else:
+            serial_bol = True
+    else:
+        serial_bol = True
 
-
-smartcar_latitude = 0
-smartcar_longitude  = 0
-pdop  = 0
-fix  = 0
 
 class smartcar_GPS():
 
     def write_to_file(self):
         try:
             coords = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "w", -1 )
-            message = str(smartcar_latitude) + ' ' + str(smartcar_longitude) + ' ' + str(pdop) + ' ' + str(fix)
+            message = str('shauny')
+            #message = str(smartcar_latitude) + ' ' + str(smartcar_longitude) + ' ' + str(pdop) + ' ' + str(fix)
             coords.write(message)
         except:
             pass
@@ -57,6 +71,7 @@ class smartcar_GPS():
                     else:
                         print("Waiting for fix..")
                         print(nmea_raw_data)
+                        self.write_to_file()
 
                 elif isinstance(nmea_data, pynmea2.types.talker.GSA):
                     pdop = nmea_data.pdop
