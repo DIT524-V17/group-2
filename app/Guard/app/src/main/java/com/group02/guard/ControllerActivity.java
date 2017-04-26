@@ -94,7 +94,6 @@ public class ControllerActivity extends AppCompatActivity {
                 showMoveEvent.setText("Angle: " + analogue.nAngle()
                         + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
                         + "\nSpeed: " + speed);
-
                 write(motors[0], motors[1]);
             }
 
@@ -103,7 +102,6 @@ public class ControllerActivity extends AppCompatActivity {
                 showMoveEvent.setText("Angle: " + analogue.nAngle()
                         + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
                         + "\nSpeed: " + 0);
-
                 write(0, 0);
             }
         });
@@ -225,7 +223,7 @@ public class ControllerActivity extends AppCompatActivity {
     private void readInput(String inputString){
 
         switch (inputString.charAt(0) + inputString.charAt(1)) {
-            case 'B' + ' ':
+            case 'B' + 'B':
                 analogReadValue = Integer.parseInt(inputString.substring(1).trim());
                 topFragment.setAnalogReadValue(analogReadValue);
                 setBatteryLevel();
@@ -249,7 +247,7 @@ public class ControllerActivity extends AppCompatActivity {
                 sbImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             default:
-                return;
+                break;
 
         }
     }
