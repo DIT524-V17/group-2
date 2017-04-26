@@ -1,11 +1,6 @@
 import threading
-import time
 import serial
 import pynmea2
-import socket
-import boltons.socketutils
-from random import randrange, uniform
-from GpsAngle import calculateBearing, calculateDistance
 
 # serials
 serial_GPS = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
