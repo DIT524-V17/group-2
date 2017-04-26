@@ -1,7 +1,7 @@
 import threading
 import time
 import serial
-from GpsAngle import calculateBearing, calculateDistance
+from GpsAngle import calculateBearing, distance
 
 # serials
 # serial_arduino = serial.Serial('/dev/ttyACM0', 9600)
@@ -176,7 +176,7 @@ def drive_smartcar(threadName):
         global phone_longitude
 
         #The distance, in meters, between the positions
-        distance = calculateDistance(smartcar_latitude, phone_latitude, smartcar_longitude,
+        distance = distance(smartcar_latitude, phone_latitude, smartcar_longitude,
                                      phone_longitude) * 1000  # Multiplied with 1000 to get m from km
         #The angle, in degrees, between the two different positions
         angle = calculateBearing(smartcar_latitude, smartcar_longitude, phone_latitude, phone_latitude)

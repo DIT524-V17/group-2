@@ -43,4 +43,4 @@ def distance(smartCarLa, externalControllerLa, smartCarLo, externalControllerLo)
 
 if __name__ == '__main__':
     calculateBearing()
-    calculateDistance()
+    distance()
