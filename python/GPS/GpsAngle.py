@@ -6,10 +6,13 @@ from math import *
 ##method is based on math theory
 def calculateBearing(smartCarLa, smartCarLo, externalControllerLa, externalControllerLo) :
 
-    longDiff= externalControllerLo-smartCarLo
-    y = sin(longDiff)*cos(externalControllerLa)
-    x = cos(smartCarLa)*sin(externalControllerLa)-sin(smartCarLa)*cos(externalControllerLa)*cos(longDiff)
-    return degrees((atan2(y, x))+360)%360
+     longDiff= externalControllerLo-smartCarLo
+     x = sin(longDiff) * cos(externalControllerLa)
+     y = cos(smartCarLa) * sin(externalControllerLa) - (sin(smartCarLa)*cos(externalControllerLa)*cos(longDiff))
+     initial_bearing = atan2(x, y)
+     initial_bearing = degrees(initial_bearing)
+     compass_bearing = (initial_bearing + 360) % 360
+     return compass_bearing
 
 ##method for process raw gps data
 ##it will return only longtitude and latitude
