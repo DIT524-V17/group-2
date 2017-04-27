@@ -14,8 +14,21 @@ smartcar_longitude, smartcar_latitude, smartcar_pdop, smartcar_fix = 0, 0, 0, 0
 
 # helper variables
 old_angle, exitFlag = 0, 0
-no_fix_bol = True
-update_frequency = 2
+no_fix_bol_phone, no_fix_bol_SmartCar = True, True
+update_frequency = 0.5
+
+
+def isfloat(value):
+    """
+    Checks if the value in the brackets is a float
+    :param value: string that is going be checked
+    :return: True if float
+    """
+    try:
+        float(value)
+        return True
+    except:
+        return False
 
 
 def exit(device):
@@ -33,7 +46,10 @@ def no_fix(device):
     When GPS accuracy is too poor, this function is called and the SmartCar stops until the accuracy becomes suffice again
     :param device: the unit that has too poor GPS accuracy
     """
+
+    no_fix_bol = 'no_fix_bol' + device
     global no_fix_bol
+
     if not (no_fix_bol):
         send_speed(0)
         no_fix_bol = True
@@ -70,9 +86,9 @@ def get_phone_coordinates(threadName):
                 exit('phone - exit command (0)')
             elif (phone_latitudes == '1'):  # '1' codes for that the phone has insufficient GPS signal
                 no_fix('phone')
-            else:
-                global no_fix_phone_bol
-                no_fix_phone_bol = False
+            elif isfloat(phone_latitudes):
+                global no_fix_bol_phone
+                no_fix_bol_phone = False
 
             global phone_latitude
             global phone_longitude
@@ -119,6 +135,9 @@ def get_smartcar_coordinates(threadName):
             if (smartcar_latitudes == '1'):  # '1' codes for that the SmartCar has insufficient GPS signal
                 no_fix('SmartCar')
                 continue
+            elif isfloat(smartcar_latitudes):
+                global no_fix_bol_SmartCar
+                no_fix_bol_SmartCar = False
 
             global smartcar_latitude
             global smartcar_longitude
@@ -132,9 +151,6 @@ def get_smartcar_coordinates(threadName):
 
             if smartcar_pdop > 6 or smartcar_fix not in [1, 2, 3]:  # if PDOP, position dilution of precision, is > 6
                 no_fix('SmartCar')  # or there is no fix, the GPS signal is insufficient
-            else:
-                global no_fix_smartcar_bol
-                no_fix_smartcar_bol = False
 
             time.sleep(0.1)
         except ValueError:
@@ -171,9 +187,11 @@ def drive_smartcar(threadName):
     while not exitFlag:
         # print ("%s: %s" % (threadName, time.ctime(time.time())))
 
-        global no_fix_bol
-        if (no_fix_bol): # if insufficient GPS signal, returns to top of function
-            time.sleep(0.01)
+        global no_fix_bol_phone
+        global no_fix_bol_SmartCar
+        if no_fix_bol_phone or no_fix_bol_SmartCar: # if insufficient GPS signal, returns to top of function
+            time.sleep(0.5)
+            print('no_fix_bol')
             continue
 
         global old_angle
@@ -183,24 +201,26 @@ def drive_smartcar(threadName):
         global phone_longitude
 
         #The distance, in meters, between the positions
-        distance = distance(smartcar_latitude, phone_latitude, smartcar_longitude,
+        distance_between = distance(smartcar_latitude, phone_latitude, smartcar_longitude,
                                      phone_longitude) * 1000  # Multiplied with 1000 to get m from km
         #The angle, in degrees, between the two different positions
         angle = calculateBearing(smartcar_latitude, smartcar_longitude, phone_latitude, phone_latitude)
 
-        # print('distance in m: ' + str(distance))
-        # print('angle: ' + str(angle))
+        print('distance in m: ' + str(distance_between))
+        print('angle: ' + str(angle))
 
         # disregard minor changes in angle (5 degrees) for better fluency
         if abs(angle - old_angle) < 5:
+            print('disregard minor changes in angle')
+            time.sleep(1)
             continue
         else:
             old_angle = angle
 
         # sets speed depending on distance to traveler
-        if distance > 15:
+        if distance_between > 15:
             speed = 70
-        elif distance < 15 and distance > 3:
+        elif distance_between < 15 and distance_between > 3:
             speed = 40
         else:
             speed = 0
@@ -217,10 +237,10 @@ def drive_smartcar(threadName):
         # sends speed
         send_speed(speed)
 
-        """
+
         # determines the update frequency
         time.sleep(update_frequency)
-        """
+
 
 
 def send_angle(angle):
@@ -264,7 +284,7 @@ thread_drive = drive(3, "Thread-drive")
 # Start new Threads
 thread_phone_coordinates.start()
 thread_smartcar_coordinates.start()
-#time.sleep(1)
+time.sleep(1)
 thread_drive.start()
 
 # Awaits all threads to terminate
