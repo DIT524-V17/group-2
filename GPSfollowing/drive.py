@@ -168,6 +168,7 @@ def drive_smartcar(threadName):
 
         global no_fix_bol
         if (no_fix_bol): # if insufficient GPS signal, returns to top of function
+            time.sleep(0.01)
             continue
 
         global old_angle
