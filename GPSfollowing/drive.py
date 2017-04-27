@@ -3,13 +3,18 @@ import time
 import serial
 from GpsAngle import calculateBearing, distance
 
-# serials
 """
+* Script that handles the logic behind the SmartCar autonomously following the traveler (phone application)
+* @author Erik Laurin
+* @version 1.0
+"""
+
+# serial for SmartCar
 try:
     serial_arduino = serial.Serial('/dev/ttyACM0', 9600)
 except Exception:
     serial_arduino = serial.Serial('/dev/ttyACM1', 9600)
-"""
+
 
 # Phone GPS coordinates
 phone_longitude, phone_latitude = 0, 0
@@ -25,7 +30,7 @@ update_frequency = 0.5
 
 def isfloat(value):
     """
-    Checks if the value in the brackets is a float
+    Checks if the value in the brackets qualifies as a float
     :param value: string that is going be checked
     :return: True if float
     """
@@ -99,7 +104,7 @@ def get_phone_coordinates(threadName):
                 exit('phone - exit command (0)')
             elif (phone_latitudes == '1'):  # '1' codes for that the phone has insufficient GPS signal
                 no_fix('phone')
-            elif isfloat(phone_latitudes):
+            elif isfloat(phone_latitudes):  # if float, the value is regarded as a valid coordinate
                 global no_fix_bol_phone
                 no_fix_bol_phone = False
 
@@ -109,7 +114,8 @@ def get_phone_coordinates(threadName):
             phone_latitude = float(phone_latitudes)
             phone_longitude = float(phone_longitudes)
             time.sleep(0.1)
-        except ValueError:
+
+        except ValueError:# happens when the file is modified while reading
             pass
         except Exception as e:
             print("", e)
@@ -145,10 +151,10 @@ def get_smartcar_coordinates(threadName):
             coords = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "r", -1)
             smartcar_latitudes, smartcar_longitudes, smartcar_pdops, smartcar_fixs = coords.read().split()
 
-            if (smartcar_latitudes == '1'):  # '1' codes for that the SmartCar has insufficient GPS signal
+            if (smartcar_latitudes == '1'): # '1' codes for that the SmartCar has insufficient GPS signal
                 no_fix('SmartCar')
                 continue
-            elif isfloat(smartcar_latitudes):
+            elif isfloat(smartcar_latitudes): # if float, the value is regarded as a valid coordinate
                 global no_fix_bol_SmartCar
                 no_fix_bol_SmartCar = False
 
@@ -163,10 +169,10 @@ def get_smartcar_coordinates(threadName):
             smartcar_fix = float(smartcar_fixs)
 
             if smartcar_pdop > 6 or smartcar_fix not in [1, 2, 3]:  # if PDOP, position dilution of precision, is > 6
-                no_fix('SmartCar')  # or there is no fix, the GPS signal is insufficient
+                no_fix('SmartCar')                                  # or there is no fix, the GPS signal is regarded insufficient
 
             time.sleep(0.1)
-        except ValueError:
+        except ValueError: # happens when the file is modified while reading
             pass
         except Exception as e:
             print("", e)
@@ -251,10 +257,8 @@ def drive_smartcar(threadName):
         # sends speed
         send_speed(speed)
 
-
         # determines the update frequency
         time.sleep(update_frequency)
-
 
 
 def send_angle(angle):
@@ -264,7 +268,7 @@ def send_angle(angle):
     """
     a = 'A'
     byte_angle = str.encode(a + str(angle) + '\n')
-    #serial_arduino.write(byte_angle)
+    serial_arduino.write(byte_angle)
     print("Sent to SmartCar: " + byte_angle)
 
 
@@ -275,11 +279,11 @@ def send_speed(speed):
     """
     s = 'S'
     byte_speed = str.encode(s + str(speed) + '\n')
-    #serial_arduino.write(byte_speed)
+    serial_arduino.write(byte_speed)
     print("Sent to SmartCar: " + s + str(speed))
 
 
-# Overwrite old GPS coordinates
+# Overwrite old GPS coordinates on start of script
 try:
     coords_phone = open('/home/pi/repo/group-2/GPSfollowing/coords_phone.txt', "w", -1)
     coords_smartcar = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "w", -1)
@@ -301,12 +305,13 @@ thread_smartcar_coordinates.start()
 time.sleep(1)
 thread_drive.start()
 
-# Awaits all threads to terminate
+# Awaits all threads to terminate before execution continues
 thread_phone_coordinates.join()
 thread_smartcar_coordinates.join()
 thread_drive.join()
 
-print("Sending stop command to SmartCar") # makes sure that the car stops when the script terminates
+# Makes sure that the car stops when the script terminates
+print("Sending stop command to SmartCar")
 send_speed(0)
 time.sleep(2)
 print("Bye")
