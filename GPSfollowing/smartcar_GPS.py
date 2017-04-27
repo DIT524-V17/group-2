@@ -70,6 +70,7 @@ class smartcar_GPS():
                     else:
                         print("Waiting for fix..")
                         print(nmea_raw_data)
+                        time.sleep(1)
 
                 elif isinstance(nmea_data, pynmea2.types.talker.GSA):
                     pdop = nmea_data.pdop
