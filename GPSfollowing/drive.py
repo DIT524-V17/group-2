@@ -4,7 +4,12 @@ import serial
 from GpsAngle import calculateBearing, distance
 
 # serials
-# serial_arduino = serial.Serial('/dev/ttyACM0', 9600)
+"""
+try:
+    serial_arduino = serial.Serial('/dev/ttyACM0', 9600)
+except Exception:
+    serial_arduino = serial.Serial('/dev/ttyACM1', 9600)
+"""
 
 # Phone GPS coordinates
 phone_longitude, phone_latitude = 0, 0
@@ -46,17 +51,25 @@ def no_fix(device):
     When GPS accuracy is too poor, this function is called and the SmartCar stops until the accuracy becomes suffice again
     :param device: the unit that has too poor GPS accuracy
     """
+    global no_fix_bol_phone
+    global no_fix_bol_SmartCar
 
-    no_fix_bol = 'no_fix_bol' + device
-    global no_fix_bol
-
-    if not (no_fix_bol):
-        send_speed(0)
-        no_fix_bol = True
-        print(device + ' - no fix (1). Setting speed to 0 and waiting for fix..')
-    else:
-        print('waiting for ' + device + ' fix..')
-        time.sleep(1)
+    if device == 'phone':
+        if not (no_fix_bol_phone):
+            send_speed(0)
+            no_fix_bol_phone = True
+            print(device + ' - no fix (1). Setting speed to 0 and waiting for fix..')
+        else:
+            print('waiting for ' + device + ' fix..')
+            time.sleep(1)
+    elif device == 'SmartCar':
+        if not (no_fix_bol_SmartCar):
+            send_speed(0)
+            no_fix_bol_SmartCar = True
+            print(device + ' - no fix (1). Setting speed to 0 and waiting for fix..')
+        else:
+            print('waiting for ' + device + ' fix..')
+            time.sleep(1)
 
 
 class phone_coordinates(threading.Thread):
@@ -189,6 +202,7 @@ def drive_smartcar(threadName):
 
         global no_fix_bol_phone
         global no_fix_bol_SmartCar
+
         if no_fix_bol_phone or no_fix_bol_SmartCar: # if insufficient GPS signal, returns to top of function
             time.sleep(0.5)
             print('no_fix_bol')
@@ -250,7 +264,7 @@ def send_angle(angle):
     """
     a = 'A'
     byte_angle = str.encode(a + str(angle) + '\n')
-    # serial_arduino.write(byte_angle)
+    #serial_arduino.write(byte_angle)
     print("Sent to SmartCar: " + byte_angle)
 
 
@@ -261,7 +275,7 @@ def send_speed(speed):
     """
     s = 'S'
     byte_speed = str.encode(s + str(speed) + '\n')
-    # serial_arduino.write(byte_speed)
+    #serial_arduino.write(byte_speed)
     print("Sent to SmartCar: " + s + str(speed))
 
 
