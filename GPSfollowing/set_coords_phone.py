@@ -16,10 +16,14 @@ import sys
 """
 
 def write_to_file(argv):
+    """
+    Writes the coordinates (arguments) of the phone to the coords_phone.txt file
+    :param argv: the arguments (if any) provided when calling the script
+    """
     try:
 
         coords = open('/home/pi/repo/group-2/GPSfollowing/coords_phone.txt', "w", -1 )
-        
+
         if len(argv) == 3:
             phone_latitude = argv[1]
             phone_longitude = argv[2]

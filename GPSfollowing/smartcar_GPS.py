@@ -3,13 +3,19 @@ import serial
 import pynmea2
 import time
 
+"""
+* Script that receives the SmartCar's GPS data and write it to a text file
+* @author Erik Laurin
+* @version 1.0
+"""
+
 serial_bol = False
 
 # SmartCar GPS variables
 smartcar_latitude, smartcar_longitude, pdop, fix = 0, 0, 0, 0
 
 
-# serials
+# Sets the serial for the GPS device. Blocks execution of the script until a serial is assigned
 while not serial_bol:
     try:
         serial_GPS = serial.Serial(port='/dev/ttyUSB0', baudrate=4800, timeout=None)
@@ -27,6 +33,11 @@ while not serial_bol:
 class smartcar_GPS():
 
     def write_to_file(self):
+        """
+         When fix available, writes the coordinates, PDOP and fix type of the SmartCar's GPS device 
+         to the coords_smartcar.txt file
+         """
+
         try:
             coords = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "w", -1 )
             message = str(smartcar_latitude) + ' ' + str(smartcar_longitude) + ' ' + str(pdop) + ' ' + str(fix)
@@ -34,6 +45,8 @@ class smartcar_GPS():
             coords.close()
         except:
             pass
+
+
     def __init__(self):
         """ Constructor """
 
@@ -54,7 +67,7 @@ class smartcar_GPS():
                 nmea_raw_data = serial_GPS.readline()
                 nmea_data = pynmea2.parse(nmea_raw_data)   # Parses into pynmea object ('nmea_raw_data, check=False' to disable checksum)
 
-                if isinstance(nmea_data, pynmea2.types.talker.GGA):
+                if isinstance(nmea_data, pynmea2.types.talker.GGA): # GGA sentences contain coordinates and fix type
                     fix = nmea_data.gps_qual
 
                     if fix != 0:    # If GPS has a fix
@@ -73,8 +86,8 @@ class smartcar_GPS():
                         print(nmea_raw_data)
                         time.sleep(1)
 
-                elif isinstance(nmea_data, pynmea2.types.talker.GSA):
-                    pdop = nmea_data.pdop
+                elif isinstance(nmea_data, pynmea2.types.talker.GSA):   # GSA sentences contain PDOP
+                    pdop = nmea_data.pdop                               #(positional dilution of precision, '3D' uncertainty)
 
                 elif nmea_raw_data.startswith(' '):
                     print("No data from GPS device")
