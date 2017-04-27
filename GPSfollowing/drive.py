@@ -79,7 +79,9 @@ def get_phone_coordinates(threadName):
 
             phone_latitude = float(phone_latitudes)
             phone_longitude = float(phone_longitudes)
-
+            time.sleep(0.1)
+        except ValueError:
+            pass
         except Exception as e:
             print("", e)
         """
@@ -134,6 +136,9 @@ def get_smartcar_coordinates(threadName):
                 global no_fix_smartcar_bol
                 no_fix_smartcar_bol = False
 
+            time.sleep(0.1)
+        except ValueError:
+            pass
         except Exception as e:
             print("", e)
         """
