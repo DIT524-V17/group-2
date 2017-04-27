@@ -116,6 +116,7 @@ def get_smartcar_coordinates(threadName):
 
             if (smartcar_latitudes == '1'):  # '1' codes for that the SmartCar has insufficient GPS signal
                 no_fix('SmartCar')
+                continue
 
             global smartcar_latitude
             global smartcar_longitude
@@ -128,7 +129,7 @@ def get_smartcar_coordinates(threadName):
             smartcar_fix = float(smartcar_fixs)
 
             if smartcar_pdop > 6 or smartcar_fix not in [1, 2, 3]:  # if PDOP, position dilution of precision, is > 6
-                no_fix('smartcar')  # or there is no fix, the GPS signal is insufficient
+                no_fix('SmartCar')  # or there is no fix, the GPS signal is insufficient
             else:
                 global no_fix_smartcar_bol
                 no_fix_smartcar_bol = False
