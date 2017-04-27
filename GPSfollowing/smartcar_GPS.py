@@ -31,6 +31,7 @@ class smartcar_GPS():
             coords = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "w", -1 )
             message = str(smartcar_latitude) + ' ' + str(smartcar_longitude) + ' ' + str(pdop) + ' ' + str(fix)
             coords.write(message)
+            coords.close()
         except:
             pass
     def __init__(self):
