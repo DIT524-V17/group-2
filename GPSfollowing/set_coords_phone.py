@@ -11,6 +11,7 @@ def write_to_file(argv):
 
             message = str(phone_latitude) + ' ' + str(phone_longitude)
             coords.write(message)
+            coords.close()
 
             confirm_message = 'phone_latitude set to: ' + str(phone_latitude) + '\n' + 'phone_longitude set to: ' + str(phone_longitude)
             print(confirm_message)
@@ -21,11 +22,21 @@ def write_to_file(argv):
 
             message = str(phone_latitude) + ' ' + str(phone_longitude)
             coords.write(message)
+            coords.close()
 
             confirm_message = 'phone_latitude set to: ' + str(phone_latitude) + '\n' + 'phone_longitude set to: ' + str(phone_longitude)
             print(confirm_message)
         else:
-            print('Wrong amount of arguments. 2 (lat long) or 1 (error code) required')
+
+            phone_latitude = '1'
+            phone_longitude = '0'
+
+            message = str(phone_latitude) + ' ' + str(phone_longitude)
+            coords.write(message)
+
+            coords.close()
+            print('Wrong amount of arguments. 2 (lat long) or 1 (command code) required')
+            print('\n' + 'Phone coordinates set to "no fix" (1 0)')
             return
     except:
         pass
