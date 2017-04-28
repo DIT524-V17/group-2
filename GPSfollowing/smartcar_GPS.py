@@ -32,19 +32,28 @@ while not serial_bol:
 
 class smartcar_GPS():
 
-    def write_to_file(self):
+    def write_to_file(self, fix):
         """
-         When fix available, writes the coordinates, PDOP and fix type of the SmartCar's GPS device 
-         to the coords_smartcar.txt file
-         """
-
-        try:
-            coords = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "w", -1 )
-            message = str(smartcar_latitude) + ' ' + str(smartcar_longitude) + ' ' + str(pdop) + ' ' + str(fix)
-            coords.write(message)
-            coords.close()
-        except:
-            pass
+        When fix available (fix = 1), writes the coordinates, PDOP and fix type of the SmartCar's GPS device
+        When fix unavailable (fix = 0), writes '1 0 0 0' which codes for no fix
+        to the coords_smartcar.txt file
+        """
+        if fix == 1:
+            try:
+                coords = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "w", -1 )
+                message = str(smartcar_latitude) + ' ' + str(smartcar_longitude) + ' ' + str(pdop) + ' ' + str(fix)
+                coords.write(message)
+                coords.close()
+            except:
+                pass
+        elif fix == 0:
+            try:
+                coords = open('/home/pi/repo/group-2/GPSfollowing/coords_smartcar.txt', "w", -1 )
+                message = str('1 0 0 0')
+                coords.write(message)
+                coords.close()
+            except:
+                pass
 
 
     def __init__(self):
@@ -79,11 +88,12 @@ class smartcar_GPS():
                         print("PDOP: " + str(pdop))
                         print("Fix quality: " + str(fix) + "\n")
 
-                        self.write_to_file()
+                        self.write_to_file(1)
 
                     else:
                         print("Waiting for fix..")
                         print(nmea_raw_data)
+                        self.write_to_file(0)
                         time.sleep(1)
 
                 elif isinstance(nmea_data, pynmea2.types.talker.GSA):   # GSA sentences contain PDOP
