@@ -4,3 +4,11 @@ Shaun:
 	DataGraph.py
 	- Add comments
 	- Add try/except for initializing the serial for the Arduino
+
+Gabriel: 
+	All classes:
+	- Proper comments
+	- Fix so that the phone application is capable of handling different scenarios (close, pause, restart etc)
+
+Erik:
+	
