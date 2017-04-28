@@ -11,4 +11,17 @@ Gabriel:
 	- Fix so that the phone application is capable of handling different scenarios (close, pause, restart etc)
 
 Erik:
-	
+	smartcar_GPS.py, drive.py, send_coords_phone.py
+	- Simplify the comments
+
+Justinas:
+	asyncAddTraveler, asyncDeleteTraveler, asyncGetTraveler, asyncUpdateTraveler
+	- Add comments
+	- Refactor according to code convention
+
+Boyan:
+	kalmarFilter, GpsAngle
+	- Refactor accordint to code convention
+	- Add comments
+	- Explain algorithm in the class
+	- Add header with description, version and author
