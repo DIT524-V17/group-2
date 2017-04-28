@@ -1,0 +1,6 @@
+Refactoring:
+
+Shaun:
+	DataGraph.py
+	- Add comments
+	- Add try/except for initializing the serial for the Arduino
