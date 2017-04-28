@@ -15,7 +15,6 @@ try:
 except Exception:
     serial_arduino = serial.Serial('/dev/ttyACM1', 9600)
 
-
 # Phone GPS coordinates
 phone_longitude, phone_latitude = 0, 0
 
