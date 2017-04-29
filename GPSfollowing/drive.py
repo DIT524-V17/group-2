@@ -195,6 +195,20 @@ class drive(threading.Thread):
         print("Exiting " + self.name)
 
 
+def scale_speed(distance, min_speed, max_speed, min_distance, max_distance):
+    """
+    The speed of the SmartCar is scaled based on distance between the SmartCar and the traveler as well as the range for
+    the speed and distance
+    
+    :param distance: distance from the traveler, phone application, to the SmartCar
+    :param min_speed: the minimum speed to scale to
+    :param max_speed: the maximum speed to scale to
+    :param min_distance: the maximum distance to scale to
+    :param max_distance: the maximum distance to scale to
+    :return: a scaled value that corresponds to the two provided ranges 
+    """
+    return (min_speed - max_speed) * (distance - min_distance) / (max_distance - min_distance) + max_speed
+
 def drive_smartcar(threadName):
     """
     The logic behind the autonomous following.
@@ -231,10 +245,8 @@ def drive_smartcar(threadName):
         print('angle: ' + str(angle))
 
         # sets speed depending on distance to traveler
-        if distance_between > 15:
-            speed = 70
-        elif distance_between < 15 and distance_between > 3:
-            speed = 40
+        if distance_between <= 5:
+            speed = scale_speed(distance_between, 30, 100, 0, 5)
         else:
             speed = 0
 
@@ -251,7 +263,6 @@ def drive_smartcar(threadName):
 
             # waits until the SmartCar has had enough time to turn
             time.sleep(2)
-
 
         # sends speed
         send_speed(speed)
