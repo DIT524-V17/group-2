@@ -224,17 +224,11 @@ def drive_smartcar(threadName):
                                      phone_longitude) * 1000  # Multiplied with 1000 to get m from km
         #The angle, in degrees, between the two different positions
         angle = calculateBearing(smartcar_latitude, smartcar_longitude, phone_latitude, phone_latitude)
+        if angle > 180:
+            angle -= 360
 
         print('distance in m: ' + str(distance_between))
         print('angle: ' + str(angle))
-
-        # disregard minor changes in angle (5 degrees) for better fluency
-        if abs(angle - old_angle) < 5:
-            print('disregard minor changes in angle')
-            time.sleep(1)
-            continue
-        else:
-            old_angle = angle
 
         # sets speed depending on distance to traveler
         if distance_between > 15:
@@ -244,14 +238,20 @@ def drive_smartcar(threadName):
         else:
             speed = 0
 
-        # sends angle
-        send_angle(angle)
-
-        # waits until the SmartCar has had enough time to turn
-        if angle < 180:
-            time.sleep(2)
+        # disregard minor changes in angle (5 degrees) for better fluency
+        if abs(angle - old_angle) < 5:
+            print('disregard minor changes in angle')
+            time.sleep(1)
+            continue
         else:
-            time.sleep(4)
+            old_angle = angle
+
+            # sends angle
+            send_angle(angle)
+
+            # waits until the SmartCar has had enough time to turn
+            time.sleep(2)
+
 
         # sends speed
         send_speed(speed)
