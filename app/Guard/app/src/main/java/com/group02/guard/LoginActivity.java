@@ -17,7 +17,7 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button login, register, enterDeveloper;
+    private Button login, register;
     private EditText etEmail, etPass;
     private DbHelper db;
     private Session session;
@@ -33,7 +33,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         register = (Button) findViewById(R.id.btnReg);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
-//        enterDeveloper.setOnClickListener(this);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
 
@@ -75,34 +74,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        Traveller traveller = new Traveller();
-        Log.e("LOGINLOGINLOGIN", traveller.getPassword() + traveller.getUserId() + traveller.getAdminStatus());
-
-        GetTraveller getTraveller = new GetTraveller(this, traveller);
+        GetTraveller getTraveller = new GetTraveller(this, session);
         String url = "http://192.168.1.193:3000/guard/travellers";
-        getTraveller.execute(hashedEmail, url);
-        traveller = getTraveller.returnTravellerWithData();
-        Log.e("LOGINLOGINLOGIN", traveller.getPassword() + traveller.getUserId() + traveller.getAdminStatus());
+        getTraveller.execute(hashedEmail, url, hashedPass);
 
-        String travellerEmail = traveller.getEmail();
-        String travellerPass = traveller.getPassword();
-
-        String hashedPassDb = null;
-        try {
-            hashedPassDb = HashInformation.Hash(travellerPass, salt);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-
-        if (hashedPass.equals(hashedPassDb) && hashedEmail.equals(travellerEmail)) {
-            //|| db.getUser(hashedEmail, hashedPass)
-            //db.checkUser(travellerEmail, travellerPass, hashedEmail, hashedPass) not working
-            session.setLoggedin(true);
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        } else {
-            Toast.makeText(getApplicationContext(), "Wrong email/password", Toast.LENGTH_SHORT).show();
-        }
+//        if (hashedPass.equals(hashedPassDb) && hashedEmail.equals(travellerEmail)) {
+//            //|| db.getUser(hashedEmail, hashedPass)
+//            //db.checkUser(travellerEmail, travellerPass, hashedEmail, hashedPass) not working
+//            session.setLoggedin(true);
+//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//            finish();
+//        } else {
+//            Toast.makeText(getApplicationContext(), "Wrong email/password", Toast.LENGTH_SHORT).show();
+//        }
     }
 }

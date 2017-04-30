@@ -1,6 +1,7 @@
 package com.group02.guard;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -16,27 +18,37 @@ import java.net.URL;
  * Created by User on 27/04/2017.
  */
 
-public class GetTraveller extends AsyncTask<String, String, Integer> {
+public class GetTraveller extends AsyncTask<String, String, Traveller> {
     private Context context;
     private int responseCode;
     private Traveller traveller;
+    private Session session;
+    private String password;
+    private String email;
+
 
     //Default empty constructor
     public GetTraveller(){}
 
-    public GetTraveller(Context context, Traveller traveller){
+    public GetTraveller(Context context, Session session){
         this.context = context;
-        this.traveller = traveller;
+        this.session = session;
     }
 
+    @Override
+    protected void onPreExecute(){
+        this.traveller = new Traveller();
+    }
 
     //GET
     @Override
-    protected Integer doInBackground(String... params) {
-        String email = params[0];
+    protected Traveller doInBackground(String... params) {
+        this.email = params[0];
         String urlString = params[1]+"/"+ email;
+        this.password = params[2];
         this.traveller.setEmail(email);
         InputStreamReader inputReader;
+        StringBuilder response = new StringBuilder();
 
         try {
             URL url = new URL(urlString);
@@ -45,7 +57,6 @@ public class GetTraveller extends AsyncTask<String, String, Integer> {
             BufferedReader bufferedReader = new BufferedReader(inputReader);
 
             String inputLine;
-            StringBuilder response = new StringBuilder();
             while ((inputLine = bufferedReader.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -55,13 +66,27 @@ public class GetTraveller extends AsyncTask<String, String, Integer> {
             responseCode = connection.getResponseCode();
             connection.disconnect();
             parseJsonResponse(this.traveller, response.toString());
-            Log.e("FATALFATALFATAL", traveller.getPassword() + traveller.getUserId() + traveller.getAdminStatus());
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            Log.e("Exception", "Problem encountered while retrieving traveller");
         }
 
-        return responseCode;
+        return this.traveller;
+
+    }
+
+    @Override
+    protected void onPostExecute(Traveller result){
+        handleResponseCode(responseCode);
+        if (this.password.equals(result.getPassword())) {
+            //|| db.getUser(hashedEmail, hashedPass)
+            //db.checkUser(travellerEmail, travellerPass, hashedEmail, hashedPass) not working
+            session.setLoggedin(true);
+            Intent mainActivity = new Intent(context, MainActivity.class);
+            context.startActivity(mainActivity);
+        } else {
+            Toast.makeText(context, "Wrong email/password", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void parseJsonResponse(Traveller traveller, String response){
@@ -87,12 +112,7 @@ public class GetTraveller extends AsyncTask<String, String, Integer> {
         }
     }
 
-    public Traveller returnTravellerWithData(){
-        return this.traveller;
-    }
-
-    @Override
-    protected void onPostExecute(Integer result){
+    private void handleResponseCode(int responseCode){
         if(responseCode == 200) {
             Toast.makeText(context, "Welcome back to G.U.A.R.D.",
                     Toast.LENGTH_SHORT).show();
@@ -117,5 +137,6 @@ public class GetTraveller extends AsyncTask<String, String, Integer> {
                     Toast.LENGTH_LONG).show();
         }
     }
+
 }
 
