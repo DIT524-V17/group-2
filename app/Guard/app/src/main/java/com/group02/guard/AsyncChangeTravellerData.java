@@ -13,15 +13,15 @@ import java.net.URLEncoder;
  * Created by Ju on 25/04/2017.
  */
 
-public class AddTraveller extends AsyncTask<String, Void, Integer> {
+public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
 
     private int responseCode;
     private Context context;
 
     //Default empty constructor
-    AddTraveller(){}
+    AsyncChangeTravellerData(){}
 
-    AddTraveller (Context context){
+    AsyncChangeTravellerData(Context context){
         this.context = context;
     }
 
@@ -33,6 +33,7 @@ public class AddTraveller extends AsyncTask<String, Void, Integer> {
         String charset = "UTF-8";
         String email = params[1];
         String pass = params[2];
+        String method = params[3];
         URL url;
         HttpURLConnection connection;
         OutputStreamWriter outputWriter;
@@ -44,8 +45,14 @@ public class AddTraveller extends AsyncTask<String, Void, Integer> {
                     URLEncoder.encode(pass, charset));
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            if(method.equals("POST"))  {
+                connection.setRequestMethod("POST");
+            }else if(method.equals("PUT")){
+                connection.setRequestMethod("PUT");
+            }else if(method.equals("DELETE")){
+                connection.setRequestMethod("DELETE");
+            }
 
             outputWriter = new OutputStreamWriter(connection.getOutputStream());
             outputWriter.write(query);

@@ -100,8 +100,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (email.isEmpty() && pass.isEmpty()) {
                         displayToast("Username/password field empty");
                     } else {
-                        AddTraveller addTraveller = new AddTraveller(this);
-                        addTraveller.execute(url, hashedEmail, hashedPass);
+                        AsyncChangeTravellerData addTraveller = new AsyncChangeTravellerData(this);
+                        addTraveller.execute(url, hashedEmail, hashedPass, "POST");
                         db.addUser(hashedEmail, hashedPass);
                         finish();
                     }

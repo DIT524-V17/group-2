@@ -43,7 +43,22 @@
         android:id="@+id/logoutDebug"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Logout debug"
+        android:text="Logout (Debug only)"
         android:layout_weight="0.3" />
+
+    <Button
+        android:id="@+id/putDebug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update password (Debug Only)"
+        android:layout_weight="0.3" />
+
+    <Button
+        android:id="@+id/deleteDebug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete (Debug Only)"
+        android:layout_weight="0.3" />
+
 
 </LinearLayout>

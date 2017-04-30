@@ -2,9 +2,7 @@ package com.group02.guard;
 
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -26,6 +24,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button map = (Button) findViewById(R.id.mapsButton);
         Button gps = (Button) findViewById(R.id.gpsButton);
         Button logout = (Button) findViewById(R.id.logoutDebug);
+        Button update = (Button) findViewById(R.id.putDebug);
+        Button delete = (Button) findViewById(R.id.deleteDebug);
+
+        final Bundle travellerData = getIntent().getExtras();
+
+        final String url = "http://192.168.1.193:3000/guard/travellers";
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AsyncChangeTravellerData updateTraveller = new AsyncChangeTravellerData(MainActivity.this);
+                updateTraveller.execute(url, travellerData.getString("EMAIL"), "bahamas", "PUT");
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AsyncChangeTravellerData deleteTraveller = new AsyncChangeTravellerData(MainActivity.this);
+                deleteTraveller.execute(url, travellerData.getString("EMAIL"), travellerData.getString("PASSWORD"), "DELETE");
+            }
+        });
 
         control.setOnClickListener(this);
         map.setOnClickListener(this);

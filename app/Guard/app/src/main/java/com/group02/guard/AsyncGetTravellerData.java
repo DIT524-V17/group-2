@@ -3,6 +3,7 @@ package com.group02.guard;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 import org.json.JSONArray;
@@ -18,7 +19,7 @@ import java.net.URL;
  * Created by User on 27/04/2017.
  */
 
-public class GetTraveller extends AsyncTask<String, String, Traveller> {
+public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> {
     private Context context;
     private int responseCode;
     private Traveller traveller;
@@ -28,9 +29,9 @@ public class GetTraveller extends AsyncTask<String, String, Traveller> {
 
 
     //Default empty constructor
-    public GetTraveller(){}
+    public AsyncGetTravellerData(){}
 
-    public GetTraveller(Context context, Session session){
+    public AsyncGetTravellerData(Context context, Session session){
         this.context = context;
         this.session = session;
     }
@@ -83,7 +84,14 @@ public class GetTraveller extends AsyncTask<String, String, Traveller> {
             //db.checkUser(travellerEmail, travellerPass, hashedEmail, hashedPass) not working
             session.setLoggedin(true);
             Intent mainActivity = new Intent(context, MainActivity.class);
+            Bundle travellerData = new Bundle();    //Sends intent extras in bundle
+            travellerData.putString("EMAIL", traveller.getEmail());
+            travellerData.putString("PASSWORD", traveller.getPassword());
+            travellerData.putInt("ID", traveller.getUserId());
+            travellerData.putInt("STATUS", traveller.getAdminStatus());
+            mainActivity.putExtras(travellerData);
             context.startActivity(mainActivity);
+
         } else {
             Toast.makeText(context, "Wrong email/password", Toast.LENGTH_SHORT).show();
         }
