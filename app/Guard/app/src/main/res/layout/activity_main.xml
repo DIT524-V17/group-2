@@ -39,4 +39,11 @@
         android:drawableTint="@color/colorMutedLight"
         android:layout_weight="0.3" />
 
+    <Button
+        android:id="@+id/logoutDebug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout debug"
+        android:layout_weight="0.3" />
+
 </LinearLayout>

@@ -7,10 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+
 /**
- * The class creates an internal SQLite database for user authentication credentials
- * @author Gabriel Bulai
- * @version 1.0
+ * Creates and houses java object responsible for managing connection to DB
+ * @author Gabriel Bulai(GB), Justinas Stirbys (JS)
+ * @version 1.0.1 JS
  */
 public class DbHelper extends SQLiteOpenHelper {
     public static final String TAG = DbHelper.class.getSimpleName();
@@ -21,6 +23,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PASS = "password";
+
+    private static final String DB_CON = "G.U.A.R.D. CONNECTION";
+
 
     /*
     create table users(
@@ -81,5 +86,17 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         return false;
+    }
+
+    public boolean checkUser(String email, String password, String hashedEmail, String hashedPass){
+        String salt = "";
+        String hashedPassword = null;
+        try {
+            hashedPassword = HashInformation.Hash(password, salt);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return email.equals(hashedEmail) && hashedPassword.equals(hashedPass);
     }
 }

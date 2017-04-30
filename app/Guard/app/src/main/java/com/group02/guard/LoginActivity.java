@@ -8,6 +8,7 @@ package com.group02.guard;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +17,7 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button login, register;
-    //enterDeveloper;
+    private Button login, register, enterDeveloper;
     private EditText etEmail, etPass;
     private DbHelper db;
     private Session session;
@@ -31,10 +31,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         session = new Session(this);
         login = (Button) findViewById(R.id.btnLogin);
         register = (Button) findViewById(R.id.btnReg);
-        //enterDeveloper = (Button) findViewById(R.id.btnDev);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
-        // enterDeveloper.setOnClickListener(this);
+//        enterDeveloper.setOnClickListener(this);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
 
@@ -53,9 +52,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnReg:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
-//            case R.id.btnDev:
-//                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//                break;
             default:
 
         }
@@ -79,8 +75,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
+        Traveller traveller = new Traveller();
+        Log.e("LOGINLOGINLOGIN", traveller.getPassword() + traveller.getUserId() + traveller.getAdminStatus());
 
-        if (db.getUser(hashedEmail, hashedPass)) {
+        GetTraveller getTraveller = new GetTraveller(this, traveller);
+        String url = "http://192.168.1.193:3000/guard/travellers";
+        getTraveller.execute(hashedEmail, url);
+        traveller = getTraveller.returnTravellerWithData();
+        Log.e("LOGINLOGINLOGIN", traveller.getPassword() + traveller.getUserId() + traveller.getAdminStatus());
+
+        String travellerEmail = traveller.getEmail();
+        String travellerPass = traveller.getPassword();
+
+        String hashedPassDb = null;
+        try {
+            hashedPassDb = HashInformation.Hash(travellerPass, salt);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        if (hashedPass.equals(hashedPassDb) && hashedEmail.equals(travellerEmail)) {
+            //|| db.getUser(hashedEmail, hashedPass)
+            //db.checkUser(travellerEmail, travellerPass, hashedEmail, hashedPass) not working
             session.setLoggedin(true);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
