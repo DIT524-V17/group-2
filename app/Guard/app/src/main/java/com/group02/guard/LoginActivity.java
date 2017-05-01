@@ -78,7 +78,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 //        if (hashedPass.equals(hashedPassDb) && hashedEmail.equals(travellerEmail)) {
 //            //|| db.getUser(hashedEmail, hashedPass)
-//            //db.checkUser(travellerEmail, travellerPass, hashedEmail, hashedPass) not working
 //            session.setLoggedin(true);
 //            startActivity(new Intent(LoginActivity.this, MainActivity.class));
 //            finish();

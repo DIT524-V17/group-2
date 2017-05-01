@@ -11,12 +11,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by User on 27/04/2017.
+ * Runs in the background thread for the purpose of getting Traveller data
+ * @author Justinas Stirbys (JS)
+ * @version 1.0.0
  */
 
 public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> {
@@ -25,26 +26,39 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
     private Traveller traveller;
     private Session session;
     private String password;
-    private String email;
 
-
-    //Default empty constructor
+    /**
+     * Default empty constructor
+     */
     public AsyncGetTravellerData(){}
 
+    /**
+     * Constructor used to make object representing the class
+     * @param context Activity context used to make Toast
+     * @param session Login session
+     */
     public AsyncGetTravellerData(Context context, Session session){
         this.context = context;
         this.session = session;
     }
 
+    /**
+     * Makes a new Traveller object that is passed to doInBackground()
+     */
     @Override
     protected void onPreExecute(){
         this.traveller = new Traveller();
     }
 
-    //GET
+    /**
+     * Receives Traveller data from Database
+     * @param params  Values passed with the AsyncGetTravellerData.execute(String... params)
+     *               Required: email, url, password
+     * @return a filled Traveller object
+     */
     @Override
     protected Traveller doInBackground(String... params) {
-        this.email = params[0];
+        String email = params[0];
         String urlString = params[1]+"/"+ email;
         this.password = params[2];
         this.traveller.setEmail(email);
@@ -76,34 +90,41 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
 
     }
 
+    /**
+     * Stores Traveller data in bundle if the password from DB matches the entered one
+     * @param result Traveller object passed form doInBackground()
+     */
     @Override
     protected void onPostExecute(Traveller result){
         handleResponseCode(responseCode);
         if (this.password.equals(result.getPassword())) {
-            //|| db.getUser(hashedEmail, hashedPass)
-            //db.checkUser(travellerEmail, travellerPass, hashedEmail, hashedPass) not working
             session.setLoggedin(true);
             Intent mainActivity = new Intent(context, MainActivity.class);
-            Bundle travellerData = new Bundle();    //Sends intent extras in bundle
+            Bundle travellerData = new Bundle();
+
             travellerData.putString("EMAIL", traveller.getEmail());
             travellerData.putString("PASSWORD", traveller.getPassword());
             travellerData.putInt("ID", traveller.getUserId());
             travellerData.putInt("STATUS", traveller.getAdminStatus());
             mainActivity.putExtras(travellerData);
             context.startActivity(mainActivity);
-
         } else {
             Toast.makeText(context, "Wrong email/password", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void parseJsonResponse(Traveller traveller, String response){
+    /**
+     * Parses JSON objects and stores them in Traveller object
+     * @param traveller Traveller object with information to be stored in
+     * @param databaseResponse The complete response from the database
+     */
+    private void parseJsonResponse(Traveller traveller, String databaseResponse){
         int userId;
         String password;
         int adminStatus;
 
         try{
-            JSONObject jsonObject = new JSONObject(response);
+            JSONObject jsonObject = new JSONObject(databaseResponse);
             JSONArray travellerObject = jsonObject.getJSONArray("Traveller");
 
             for(int i=0; i< travellerObject.length(); i++) {
@@ -120,10 +141,16 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
         }
     }
 
+    /**
+     * Displays message for app user based on the response code
+     * @param responseCode Integer that is received from the HttpUrlConnection informing of the
+     *                     request's status
+     */
     private void handleResponseCode(int responseCode){
-        if(responseCode == 200) {
+        if(responseCode == 201) {
             Toast.makeText(context, "Welcome back to G.U.A.R.D.",
                     Toast.LENGTH_SHORT).show();
+
         }else if(responseCode == 400){
             Toast.makeText(context, "Error with email/password syntax!",
                     Toast.LENGTH_LONG).show();

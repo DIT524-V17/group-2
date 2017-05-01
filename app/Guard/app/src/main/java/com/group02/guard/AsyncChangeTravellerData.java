@@ -10,7 +10,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * Created by Ju on 25/04/2017.
+ * Runs in the background thread for the purpose of adding/deleting a Traveller as well as updating
+ * the Travellers password to and from the Database
+ * @author Justinas Stirbys (JS)
+ * @version 1.0.0
  */
 
 public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
@@ -18,14 +21,25 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
     private int responseCode;
     private Context context;
 
-    //Default empty constructor
+    /**
+     * Default empty constructor
+     */
     AsyncChangeTravellerData(){}
 
+    /**
+     * Constructor used to make class objects
+     * @param context Activity context used to make Toast
+     */
     AsyncChangeTravellerData(Context context){
         this.context = context;
     }
 
-    //post
+    /**
+     * Adds/updates/deletes data from the Database
+     * @param params Values passed with the AsyncChangeTravellerData.execute(String... params)
+     *               Required: url, email, password, desired method name in capitals e.g. 'POST'
+     * @return an Integer representing the response code when executing task
+     */
     @Override
     protected Integer doInBackground(String... params) {
 
@@ -67,6 +81,10 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
         return responseCode;
     }
 
+    /**
+     * Runs on UI thread used to display Toast
+     * @param result response code, which is received after the doInBackground() is finished
+     */
     @Override
     protected void onPostExecute(Integer result){
         if(responseCode == 200) {
