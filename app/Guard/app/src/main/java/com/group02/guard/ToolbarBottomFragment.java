@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import static com.group02.guard.R.color.colorMutedLight;
-
 /**
  * Creates a bottom toolbar used for navigating withing different activities
  * @author Justinas Stirbys

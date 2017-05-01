@@ -5,8 +5,6 @@ package com.group02.guard;
  * @version 1.0.0 GB
  */
 
-import android.os.Message;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,11 +14,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 
-public class ClientThread extends Thread {
+public class ClientSendThread extends Thread {
 
     String dstAddress;
     int dstPort;
-    MapsActivity.ClientHandler handler;
     Socket socket;
     PrintWriter printWriter;
     BufferedReader bufferedReader;
@@ -31,11 +28,10 @@ public class ClientThread extends Thread {
      *
      * @param addr = Ip Address, port, handler = class used to send debugging messages
      */
-    public ClientThread(String addr, int port, MapsActivity.ClientHandler handler) {
+    public ClientSendThread(String addr, int port) {
         super();
         dstAddress = addr;
         dstPort = port;
-        this.handler = handler;
     }
 
     //method to set the thread to run
@@ -43,12 +39,6 @@ public class ClientThread extends Thread {
         this.running = running;
     }
 
-    //send the message if problems are encountered(still to implement)
-    private void sendState(String state) {
-        handler.sendMessage(
-                Message.obtain(handler,
-                        MapsActivity.ClientHandler.UPDATE_STATE, state));
-    }
 
     //send the location to the outputStream
     public void txMsg(String msgToSend) {
@@ -83,11 +73,6 @@ public class ClientThread extends Thread {
 
                 //bufferedReader block the code
                 String line = bufferedReader.readLine();
-                if (line != null) {
-                    handler.sendMessage(
-                            Message.obtain(handler,
-                                    MapsActivity.ClientHandler.UPDATE_MSG, line));
-                }
             }
 
         } catch (IOException e) {
@@ -114,7 +99,5 @@ public class ClientThread extends Thread {
                 }
             }
         }
-        //send a message(future debugging purposes
-        handler.sendEmptyMessage(MapsActivity.ClientHandler.UPDATE_END);
     }
 }
