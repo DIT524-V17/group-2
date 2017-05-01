@@ -270,6 +270,20 @@ def drive_smartcar(threadName):
         # determines the update frequency
         time.sleep(update_frequency)
 
+        """
+        Approach with setAngle() instead of rotate()/rotateOnSpot()
+         
+        # sends angle
+        send_angle(angle)
+
+        # waits until the SmartCar has had enough time to turn
+        time.sleep(0.01)
+
+        # sends speed
+        send_speed(speed)
+
+        """
+
 
 def send_angle(angle):
     """
