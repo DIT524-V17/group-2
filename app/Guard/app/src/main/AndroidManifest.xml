@@ -52,6 +52,7 @@
             android:name=".ControllerActivity"
             android:label="@string/title_activity_controller"
             android:launchMode="singleInstance"
+            android:screenOrientation="landscape"
             android:theme="@style/GuardBasic" />
 
         <activity android:name=".BatteryActivity"

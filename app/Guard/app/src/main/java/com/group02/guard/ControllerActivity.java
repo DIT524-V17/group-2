@@ -2,8 +2,11 @@ package com.group02.guard;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.NotificationCompat;
@@ -33,6 +36,8 @@ public class ControllerActivity extends AppCompatActivity {
     private Control analogue;
     private TextView showMoveEvent;
 
+    private final static int REQUEST_ENABLE_BT = 1;
+
     String address = "20:15:10:20:11:37";
 
     // The thread that does all the work
@@ -52,9 +57,33 @@ public class ControllerActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
+        // Initialize the Bluetooth thread, passing in a MAC address
+        // and a Handler that will receive incoming messages
+
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+
+        if (!adapter.isEnabled()) {
+            //Set a filter to only receive bluetooth state changed events.
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent , 0);
+        }
+
+
+        btt = new BluetoothThread(address, new Handler() {
+
+            @Override
+            public void handleMessage(Message message) {
+                String s = (String) message.obj;
+                readInput(s);
+            }
+        });
+        // Get the handler that is used to send messages
+        writeHandler = btt.getWriteHandler();
+        // Run the thread
+        btt.start();
 
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
@@ -66,24 +95,6 @@ public class ControllerActivity extends AppCompatActivity {
         slImage = (Sensor) findViewById(R.id.sensor_left);
         srImage = (Sensor) findViewById(R.id.sensor_right);
         sbImage = (Sensor) findViewById(R.id.sensor_back);
-
-         // Initialize the Bluetooth thread, passing in a MAC address
-        // and a Handler that will receive incoming messages
-        btt = new BluetoothThread(address, new Handler() {
-
-            @Override
-            public void handleMessage(Message message) {
-
-            String s = (String) message.obj;
-            readInput(s);
-            }
-        });
-
-        // Get the handler that is used to send messages
-        writeHandler = btt.getWriteHandler();
-
-        // Run the thread
-        btt.start();
 
         analogue.setOnMoveListener(new Control.OnMoveListener() {
             public void onMoveInDirection(final double polarAngle) {
@@ -114,6 +125,18 @@ public class ControllerActivity extends AppCompatActivity {
                 .findFragmentById(R.id.bottomBarr);
         fragment.buttonChecked("control");
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            recreate();
+        }
+        if (resultCode == RESULT_CANCELED) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent , 0);
+        }
     }
 
 
@@ -224,7 +247,7 @@ public class ControllerActivity extends AppCompatActivity {
 
         switch (inputString.charAt(0) + inputString.charAt(1)) {
             case 'B' + 'B':
-                analogReadValue = Integer.parseInt(inputString.substring(1).trim());
+                analogReadValue = Integer.parseInt(inputString.substring(2).trim());
                 topFragment.setAnalogReadValue(analogReadValue);
                 setBatteryLevel();
                 break;
