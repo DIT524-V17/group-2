@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         final Bundle travellerData = getIntent().getExtras();
 
-        final String url = "http://192.168.1.193:3000/guard/travellers";
+        final String url = "http://129.16.155.11:3000/guard/travellers";
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

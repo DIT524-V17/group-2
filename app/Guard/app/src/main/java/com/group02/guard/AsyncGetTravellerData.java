@@ -108,6 +108,7 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
             travellerData.putInt("STATUS", traveller.getAdminStatus());
             mainActivity.putExtras(travellerData);
             context.startActivity(mainActivity);
+            Log.e("Print" , password+ " entered: " + result.getPassword());
         } else {
             Toast.makeText(context, "Wrong email/password", Toast.LENGTH_SHORT).show();
         }
@@ -147,7 +148,7 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
      *                     request's status
      */
     private void handleResponseCode(int responseCode){
-        if(responseCode == 201) {
+        if(responseCode == 200) {
             Toast.makeText(context, "Welcome back to G.U.A.R.D.",
                     Toast.LENGTH_SHORT).show();
 

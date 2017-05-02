@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         AsyncGetTravellerData getTraveller = new AsyncGetTravellerData(this, session);
-        String url = "http://192.168.1.193:3000/guard/travellers";
+        String url = "http://129.16.155.11:3000/guard/travellers";
         getTraveller.execute(hashedEmail, url, hashedPass);
 
 //        if (hashedPass.equals(hashedPassDb) && hashedEmail.equals(travellerEmail)) {
