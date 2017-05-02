@@ -4,91 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="247dp"
-            tools:context="com.group02.guard.MapsActivity" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/latitude"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="latitude" />
-
-        <EditText
-            android:id="@+id/longitude"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/latitude"
-            android:ems="10"
-            android:hint="longitude" />
-
-        <Button
-            android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="11dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
-            android:onClick="parse"
-            android:text="parse" />
-    </RelativeLayout>
-
-    <RelativeLayout
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/linearLayout"
-        android:layout_toEndOf="@+id/linearLayout2"
-        android:layout_toRightOf="@+id/linearLayout2"
-        android:orientation="vertical">
+        tools:context="com.group02.guard.MapsActivity" />
 
-        <EditText
-            android:id="@+id/curLat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="CurrentLat" />
-
-        <EditText
-            android:id="@+id/curLong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/curLat"
-            android:ems="10"
-            android:hint="CurrentLng" />
-    </RelativeLayout>
 
 </RelativeLayout>
 

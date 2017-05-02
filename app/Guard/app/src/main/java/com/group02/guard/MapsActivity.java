@@ -2,22 +2,19 @@ package com.group02.guard;
 /**
  * @author Gabriel Bulai
  * This class implements the google API and uses it to retreive current location of the phone
- * @version 1.0.0 GB
+ * @version 2.0.0 GB
  */
+
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -32,10 +29,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import static com.group02.guard.Coordinates.parserino;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -45,12 +43,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 102;
     public static Double currentLatitude = 0.0;
     public static Double currentLongitude = 0.0;
-    TextView curLat;
-    TextView curLng;
-    ClientHandler clientHandler;
-    ClientThread clientThread;
+
+    ClientSendThread clientSendThread;
+    ClientReceiveThread clientReceiveThread;
+    //String address = "192.168.1.101";
     String address = "129.16.155.11";
     int port = 8000;
+    Marker phoneMarker = null;
+    Marker carMarker = null;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
@@ -83,30 +83,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(this, "Map Not Connected!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            setContentView(R.layout.activity_maps);
+            setContentView(R.layout.activity_main);
         }
-        curLat = (TextView) findViewById(R.id.curLat);
-        curLng = (TextView) findViewById(R.id.curLong);
-        clientHandler = new ClientHandler(this);
-        clientThread = new ClientThread(
-                address,
-                port,
-                clientHandler);
-        clientThread.start();
-        Toast.makeText(getApplicationContext(), "Thread has been started", Toast.LENGTH_LONG).show();
-    }
-
-    public void parse(View view) {
-        EditText latitude = (EditText) findViewById(R.id.latitude);
-        EditText longitude = (EditText) findViewById(R.id.longitude);
-
-        String lat = String.valueOf(parserino(latitude.getText().toString()));
-        String lng = String.valueOf(parserino(longitude.getText().toString()));
-
-        double newLat = Double.parseDouble(lat);
-        double newLong = Double.parseDouble(lng);
-        gotoLocation(newLat, newLong, 15);
-
     }
 
     public boolean servicesOK() {
@@ -131,7 +109,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
                     mMap = googleMap;
-                    gotoLocation(currentLatitude, currentLongitude, 5);
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
@@ -140,6 +117,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.getUiSettings().setAllGesturesEnabled(true);
                     mMap.getUiSettings().setMyLocationButtonEnabled(true);
                     mMap.getUiSettings().setCompassEnabled(true);
+                    MapStyleOptions retroMap = MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.maps_retro);
+                    MapStyleOptions nightMap = MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.maps_night);
+                    try {
+                        // Customise the styling of the base map using a JSON object defined
+                        // in a raw resource file.
+                        mMap.setMapStyle(retroMap);
+
+                    } catch (Resources.NotFoundException e) {
+                    }
                 }
             });
         }
@@ -148,13 +134,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
     }
-    private void gotoLocation(double lat, double lng, float zoom) {
-        LatLng latlng = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latlng, zoom);
-        mMap.addMarker(new MarkerOptions().position(latlng).title("Location"));
+
+    private void gotoLocation(double lat, double lng, int zoom) {
+        if (phoneMarker != null) {
+            phoneMarker.remove();
+        }
+        LatLng phoneLatLng = new LatLng(lat, lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(phoneLatLng, zoom);
+        MarkerOptions phoneMarkerOptions = new MarkerOptions()
+                .position(phoneLatLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+                .title("Current Location");
+        phoneMarker = mMap.addMarker(phoneMarkerOptions);
+        phoneMarker.showInfoWindow();
         mMap.animateCamera(update);
+        if (serverOK()) {
+            LatLng carLatLng = new LatLng(Double.parseDouble(getCarCoords()[0]), Double.parseDouble(getCarCoords()[1]));
+            if (carMarker != null) {
+                carMarker.remove();
+            }
+            MarkerOptions carMarkerOptions = new MarkerOptions()
+                    .position(carLatLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    .title("SmartCar");
+            carMarker = mMap.addMarker(carMarkerOptions);
+            carMarker.showInfoWindow();
+        }
     }
 
     @Override
@@ -190,18 +196,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
-        curLat.setText(String.valueOf(currentLatitude));
-        curLng.setText(String.valueOf(currentLongitude));
-        //navigate to the current location
-        gotoLocation(currentLatitude, currentLongitude, 20);
-        //send coordinates to the server using a thread
-        clientThread.txMsg(currentLatitude.toString() + " " + currentLongitude.toString());
+        gotoLocation(currentLatitude, currentLongitude, 15);
+        if (location.hasAccuracy()) {
+            clientSendThread.txMsg(currentLatitude.toString() + " " + currentLongitude.toString());
+        } else {
+            clientSendThread.txMsg("1");
+        }
+    }
+
+    public boolean serverOK() {
+        if (clientReceiveThread.otherLine != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public String[] getCarCoords() {
+        String[] splitted = new String[2];
+        if (serverOK()) {
+            String abc = clientReceiveThread.otherLine;
+            splitted = abc.split(" ");
+        }
+        return splitted;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+
+        clientSendThread = new ClientSendThread(
+                address,
+                port);
+        clientSendThread.start();
+        clientReceiveThread = new ClientReceiveThread(
+                address,
+                port);
+        clientReceiveThread.start();
+        Toast.makeText(getApplicationContext(), "Threads have been started", Toast.LENGTH_LONG).show();
+        if (!serverOK()) {
+            Toast.makeText(getApplicationContext(), "Connection with the server lost", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -227,8 +262,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onStop();
         if (permissionIsGranted) {
             mGoogleApiClient.disconnect();
-        } else if (clientThread != null) {
-            clientThread.setRunning(false);
         }
     }
 
@@ -254,39 +287,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
     }
-
-    private void clientEnd() {
-        clientThread = null;
-    }
-
-    /**
-     * The class implements some variables that can be manipulated to discover the different
-     * states the communication
-     */
-    public static class ClientHandler extends Handler {
-        public static final int UPDATE_STATE = 0;
-        public static final int UPDATE_MSG = 1;
-        public static final int UPDATE_END = 2;
-        private MapsActivity parent;
-
-        public ClientHandler(MapsActivity parent) {
-            super();
-            this.parent = parent;
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-                case UPDATE_END:
-                    parent.clientEnd();
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-
-        }
-
-    }
-
 }
