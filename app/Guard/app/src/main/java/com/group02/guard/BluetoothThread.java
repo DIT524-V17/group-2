@@ -12,6 +12,7 @@ import android.bluetooth.BluetoothSocket;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 
@@ -247,11 +248,8 @@ public class BluetoothThread extends Thread {
         // Attempt to connect and exit the thread if it failed
         try {
             connect();
-            //sendToReadHandler("CONNECTED");
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect!", e);
-
-            //sendToReadHandler("CONNECTION FAILED");
             disconnect();
             return;
         }
