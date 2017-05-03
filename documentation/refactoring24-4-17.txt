@@ -19,7 +19,7 @@ Justinas:								DONE 2/5/17
 	- Add comments
 	- Refactor according to code convention
 
-Boyan:
+Boyan:									DONE 2/5/17
 	kalmarFilter, GpsAngle
 	- Refactor accordint to code convention
 	- Add comments
