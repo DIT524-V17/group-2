@@ -1,110 +1,133 @@
 //Script responsible for interaction with MySQL Database
-//If changed the newest version should be uploaded to /etc/guardserver on skip server
-//And run with the command 'pm2 start server.js'
 var mysql = require("mysql");
+var Auth = require('./authentication.js');
 
-function REST_ROUTER(router, connection) {
+function REST_ROUTER(router, pool) {
     var self = this;
-    self.handleRoutes(router, connection);
+    self.handleRoutes(router, pool);
 }
 
-REST_ROUTER.prototype.handleRoutes = function(router, connection) {
+REST_ROUTER.prototype.handleRoutes = function(router, pool) {
 	
 	//Command 'POST'
 	//Adds new Traveller to DB
-    router.post("/travellers", function(req, res){
+    router.post("/travellers", Auth.BasicAuthentication, function(req, res){
         var query = "INSERT INTO travellers (email, password, admin_status) VALUES (?, ?, 0)";
         var table = [req.body.email, req.body.password];
         query = mysql.format(query, table);
 
-        //JSON response
-        connection.query(query, function(err, rows){
-            if(err) {
-                res.json({"Error" : true, 
-                    "Message" : "MySQL Error while adding new Traveller"});
-            } else {
-                res.json({"Error" : false, 
+        //Getting a connection from the pool
+        pool.getConnection(function(err, connection){
+            connection.query(query, function(err, rows){
+                //Putting the connection back in the pool for later reuse
+                connection.release();
+                //JSON response
+                if(err) {
+                    res.json({"Error" : true, 
+                    "Message" : "Error while adding new Traveller"});
+                } else {
+                    res.status(201).json({"Error" : false, 
                     "Message" : "Traveller Registered!"});
-            }
+                }
+            });
         });
     });
 
     //Command 'GET'
     //Gets all Travellers from DB
-    router.get("/travellers", function(req, res){
+    router.get("/travellers", Auth.BasicAuthentication, function(req, res){
         var query = "SELECT * FROM travellers";
         query = mysql.format(query);
 
-        //JSON response
-        connection.query(query, function(err, rows){
-            if(err) {
-                res.json({"Error" : true, 
-                	"Message" : "MySQLError while getting all travellers"});
-            } else {
-                res.json({"Error" : false, 
-                	"Message" : "Success",
-                	 "Travellers" : rows});
-            }
+        //Getting a connection from the pool
+        pool.getConnection(function(err, connection){
+            connection.query(query, function(err, rows){
+                //Putting the connection back in the pool for later reuse
+                connection.release();
+                //JSON response
+                if(err) {
+                    res.json({"Error" : true, 
+                    "Message" : "Error while getting all Traveller"});
+                } else {
+                    res.json({"Error" : false, 
+                    "Message" : "Traveller received",
+                    "Travellers" : rows});
+                }
+            });
         });
     });
 
     //Command 'GET'
     //Gets specific Traveller from DB	
-    //Email must be included in route, because GET calls don't have a body,
-    // and only email and password are known when users are signing in
-    router.get("/travellers/:email", function(req, res){
+    router.get("/travellers/:email", Auth.BasicAuthentication, function(req, res){
         var query = "SELECT * FROM travellers WHERE email = ?";
         var table = [req.params.email];
         query = mysql.format(query, table);
 
-        //JSON response
-        connection.query(query,function(err, rows){
-            if(err) {
-                res.json({"Error" : true, 
-                	"Message" : "MySQL Error while getting specific traveler"});
-            } else {
-                res.json({"Error" : false, 
-                	"Message" : "Success", 
-                	"Traveller" : rows});
-            }
+        //Getting a connection from the pool
+        pool.getConnection(function(err, connection){
+            connection.query(query, function(err, rows){
+                //Putting the connection back in the pool for later reuse
+                connection.release();
+                //JSON response                
+                if(err) {
+                    res.json({"Error" : true, 
+                    "Message" : "Error while getting a Traveller"});
+                } else {
+                    res.json({"Error" : false, 
+                    "Message" : "Traveller Receiced",
+                    "Travellers" : rows});
+                }
+            });
         });
     });
 
     //Command 'PUT'
     //Updates Traveler's password for specific email
-    router.put("/travellers", function(req, res){
+    router.put("/travellers", Auth.BasicAuthentication, function(req, res){
         var query = "UPDATE travellers SET password = ? WHERE email = ?";
         var table = [req.body.password, req.body.email];
         query = mysql.format(query, table);
 
-        //JSON response
-        connection.query(query,function(err, rows){
-            if(err) {
-                res.json({"Error" : true,
-                 "Message" : "MySQL Error while updating traveller"});
-            } else {
-                res.json({"Error" : false,
-                 "Message" : "Updated password for user: " + req.body.email});
-            }
+        //Getting a connection from the pool
+        pool.getConnection(function(err, connection){
+            connection.query(query, function(err, rows){
+                //Putting the connection back in the pool for later reuse
+                connection.release();
+                //JSON response
+                if(err) {
+                    res.json({"Error" : true, 
+                    "Message" : "Error while updating password"});
+                } else {
+                    res.json({"Error" : false, 
+                    "Message" : "Password updated"});
+                }
+            });
         });
     });
 
     //Command 'DELETE'
 	//Deletes specific Traveller based on email
-    router.delete("/travellers", function(req, res){
+    router.delete("/travellers", Auth.BasicAuthentication, function(req, res){
         var query = "DELETE FROM travellers WHERE email = ?";
         var table = [req.body.email];
         query = mysql.format(query, table);
 
-        //JSON response
-        connection.query(query, function(err, rows){
-            if(err) {
-                res.json({"Error" : true,
-                 "Message" : "MySQL Error while deleting traveller"});
-            } else {
-                res.json({"Error" : false,
-                 "Message" : "Deleted user " + req.body.email});
-            }
+        //Getting a connection from the pool
+        pool.getConnection(function(err, connection){
+            //Putting the connection back in the pool for later reuse
+            connection.query(query, function(err, rows){
+                //Putting the connection back in the pool for later reuse
+                connection.release();
+                //JSON response
+                if(err) {
+                    res.json({"Error" : true, 
+                    "Message" : "Error while deleting a Traveller"});
+                } else {
+                    res.json({"Error" : false, 
+                    "Message" : "Traveller deleted!"});
+                }
+            });
         });
     });
 }

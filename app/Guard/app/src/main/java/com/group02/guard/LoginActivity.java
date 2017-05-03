@@ -1,18 +1,21 @@
 package com.group02.guard;
-/**
- * The class creates an activity that handles database and session and allows the user to log in
- *
- * @author Gabriel Bulai
- * @version 1.0
- */
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
+
+/**
+ * The class creates an activity that handles database and session and allows the user to log in
+ * @author Gabriel Bulai
+ * @version 1.0.0
+ */
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Button login, register;
@@ -72,17 +75,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        AsyncGetTravellerData getTraveller = new AsyncGetTravellerData(this, session);
-        String url = "http://129.16.155.11:3000/guard/travellers";
-        getTraveller.execute(hashedEmail, url, hashedPass);
-
-//        if (hashedPass.equals(hashedPassDb) && hashedEmail.equals(travellerEmail)) {
-//            //|| db.getUser(hashedEmail, hashedPass)
-//            session.setLoggedin(true);
-//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//            finish();
-//        } else {
-//            Toast.makeText(getApplicationContext(), "Wrong email/password", Toast.LENGTH_SHORT).show();
-//        }
+        if (etEmail.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "e-mail is empty",
+                    Toast.LENGTH_SHORT).show();
+        }else if(etPass.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "password is empty",
+                    Toast.LENGTH_SHORT).show();
+        }else{
+            AsyncGetTravellerData getTraveller = new AsyncGetTravellerData(this, session);
+            String url = "http://192.168.1.193:4040/guard/travellers";
+//            String url = "http://129.16.155.11:3000/guard/travellers";
+            getTraveller.execute(url, hashedEmail, hashedPass);
+        }
     }
 }

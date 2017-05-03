@@ -69,14 +69,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     //check password1 == password2
     private boolean checkPassword2(String pass, String pass2) {
         if (pass.equals(pass2)) {
-//            displayToast(pass + " " + pass2);
             return true;
         }
+        displayToast("Passwords don't match");
         return false;
     }
 
     private void register() {
-        String url = "http://129.16.155.11:3000/guard/travellers";
+//        String url = "http://129.16.155.11:3000/guard/travellers";
+        String url = "http://192.168.1.193:4040/guard/travellers";
         String email = etEmail.getText().toString();
         String pass = etPass.getText().toString();
         String pass2 = etPass2.getText().toString();
@@ -103,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         AsyncChangeTravellerData addTraveller = new AsyncChangeTravellerData(this);
                         addTraveller.execute(url, hashedEmail, hashedPass, "POST");
                         db.addUser(hashedEmail, hashedPass);
+//                        displayToast("Traveller Registered!");
                         finish();
                     }
                 } else

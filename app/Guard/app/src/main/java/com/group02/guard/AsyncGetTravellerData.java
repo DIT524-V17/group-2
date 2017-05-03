@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 import org.json.JSONArray;
@@ -43,14 +44,6 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
     }
 
     /**
-     * Makes a new Traveller object that is passed to doInBackground()
-     */
-    @Override
-    protected void onPreExecute(){
-        this.traveller = new Traveller();
-    }
-
-    /**
      * Receives Traveller data from Database
      * @param params  Values passed with the AsyncGetTravellerData.execute(String... params)
      *               Required: email, url, password
@@ -58,24 +51,40 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
      */
     @Override
     protected Traveller doInBackground(String... params) {
-        String email = params[0];
-        String urlString = params[1]+"/"+ email;
+        //Receiving values from the execute method
+        String urlString = params[0];
+        String email = params[1];
         this.password = params[2];
+
+        //Making a traveller object
+        this.traveller = new Traveller();
         this.traveller.setEmail(email);
+
+        //Creating readers to get data
         InputStreamReader inputReader;
         StringBuilder response = new StringBuilder();
 
+        //Required to get passed authentication
+        String guardUser = "GeorgeWBushIsThe" ;
+        String guardPass = "PerpetratorOf911";
+        String auth = guardUser + ":" + guardPass;
+        String encoded = Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP);
+
         try {
-            URL url = new URL(urlString);
+            //Opening a connection
+            URL url = new URL(urlString + "/" + email);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", "Basic " + encoded);
             inputReader = new InputStreamReader(connection.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(inputReader);
 
+            //Building the response into a String
             String inputLine;
             while ((inputLine = bufferedReader.readLine()) != null) {
                 response.append(inputLine);
             }
 
+            //Closing the connection
             inputReader.close();
             bufferedReader.close();
             responseCode = connection.getResponseCode();
@@ -87,7 +96,6 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
         }
 
         return this.traveller;
-
     }
 
     /**
@@ -96,20 +104,20 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
      */
     @Override
     protected void onPostExecute(Traveller result){
-        handleResponseCode(responseCode);
         if (this.password.equals(result.getPassword())) {
             session.setLoggedin(true);
             Intent mainActivity = new Intent(context, MainActivity.class);
-            Bundle travellerData = new Bundle();
 
+            //Making a Bundle filled with Traveler Data
+            Bundle travellerData = new Bundle();
             travellerData.putString("EMAIL", traveller.getEmail());
             travellerData.putString("PASSWORD", traveller.getPassword());
             travellerData.putInt("ID", traveller.getUserId());
             travellerData.putInt("STATUS", traveller.getAdminStatus());
             mainActivity.putExtras(travellerData);
+            handleResponseCode(responseCode);
             context.startActivity(mainActivity);
-            Log.e("Print" , password+ " entered: " + result.getPassword());
-        } else {
+        }else{
             Toast.makeText(context, "Wrong email/password", Toast.LENGTH_SHORT).show();
         }
     }
@@ -123,11 +131,11 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
         int userId;
         String password;
         int adminStatus;
-
         try{
             JSONObject jsonObject = new JSONObject(databaseResponse);
-            JSONArray travellerObject = jsonObject.getJSONArray("Traveller");
+            JSONArray travellerObject = jsonObject.getJSONArray("Travellers");
 
+            //Going through the JSON array to find the fields needed
             for(int i=0; i< travellerObject.length(); i++) {
                 userId = travellerObject.getJSONObject(i).getInt("user_id");
                 password = travellerObject.getJSONObject(i).getString("password");
@@ -148,29 +156,36 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
      *                     request's status
      */
     private void handleResponseCode(int responseCode){
+        String messageToDisplay;
         if(responseCode == 200) {
-            Toast.makeText(context, "Welcome back to G.U.A.R.D.",
-                    Toast.LENGTH_SHORT).show();
+            messageToDisplay = "Welcome back to G.U.A.R.D.!";
+            Log.e("GetTraveller", messageToDisplay);
+            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else if(responseCode == 400){
-            Toast.makeText(context, "Error with email/password syntax!",
-                    Toast.LENGTH_LONG).show();
+            messageToDisplay = "Error with email/password syntax! Try different email/password";
+            Log.e("GetTraveller", messageToDisplay);
+            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else if(responseCode == 404){
-            Toast.makeText(context, "Page not found. Database has been moved, try again later",
-                    Toast.LENGTH_LONG).show();
-
-        }else if (responseCode == 422){
-            Toast.makeText(context, "Unable to process request! Please try again later",
-                    Toast.LENGTH_LONG).show();
+            messageToDisplay = "Page not found. Database has been moved, try again later";
+            Log.e("GetTraveller", messageToDisplay);
+            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else if(responseCode == 500){
-            Toast.makeText(context, "Server error. Try again later ",
-                    Toast.LENGTH_LONG).show();
+            messageToDisplay = "Server error. Try again later ";
+            Log.e("GetTraveller", messageToDisplay);
+            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
+
+        }else if(responseCode == 503){
+            messageToDisplay = "Connection error. Check your Internet connection";
+            Log.e("GetTraveller", messageToDisplay);
+            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else{
-            Toast.makeText(context, "Error while registering. Please try again",
-                    Toast.LENGTH_LONG).show();
+            messageToDisplay = "Error while registering. Error code: " + responseCode;
+            Log.e("AddTraveller", messageToDisplay);
+            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
         }
     }
 
