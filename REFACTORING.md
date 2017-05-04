@@ -1,4 +1,4 @@
-# Refractoring rules
+# Refactoring rules
 
 ## Installing
     Install SourceMonitor
@@ -14,7 +14,7 @@ Cyclomatic complexity - 15
 
 Block Depth - 7
 
-If any of these thresholds are met add the Class to trello for critical refractoring, also add as issue on github.
+If any of these thresholds are met add the Class to trello for critical refactoring, also add as issue on github.
 
 #### Who does what?
 
