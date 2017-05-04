@@ -77,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void register() {
 //        String url = "http://129.16.155.11:3000/guard/travellers";
-        String url = "http://192.168.1.193:4040/guard/travellers";
+        final String url = "http://129.16.229.198:3030/guard/travellers";
         String email = etEmail.getText().toString();
         String pass = etPass.getText().toString();
         String pass2 = etPass2.getText().toString();

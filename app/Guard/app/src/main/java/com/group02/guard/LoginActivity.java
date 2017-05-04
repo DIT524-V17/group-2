@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.LENGTH_SHORT).show();
         }else{
             AsyncGetTravellerData getTraveller = new AsyncGetTravellerData(this, session);
-            String url = "http://192.168.1.193:4040/guard/travellers";
+            final String url = "http://129.16.229.198:3030/guard/travellers";
 //            String url = "http://129.16.155.11:3000/guard/travellers";
             getTraveller.execute(url, hashedEmail, hashedPass);
         }

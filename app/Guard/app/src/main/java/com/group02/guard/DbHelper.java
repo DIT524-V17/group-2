@@ -24,9 +24,6 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PASS = "password";
 
-    private static final String DB_CON = "G.U.A.R.D. CONNECTION";
-
-
     /*
     create table users(
         id integer primary key autoincrement,
