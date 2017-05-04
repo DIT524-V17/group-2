@@ -239,8 +239,8 @@ public class ControllerActivity extends AppCompatActivity {
 
     /**
      * The method takes and decodes the strings received via Bluetooth from the SmartCar.
-     * Depending on type of string (its first letter decides its use),
-     * various actions executes (@author Erik Laurin and partly Axel Granli)
+     * Depending on type of string (its first two letter decides its use),
+     * various actions executes
      * @param inputString String received from the SmartCar containing data
      */
     private void readInput(String inputString){

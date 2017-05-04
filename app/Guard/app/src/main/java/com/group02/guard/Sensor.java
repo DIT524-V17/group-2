@@ -18,8 +18,17 @@ import java.util.Set;
 
 
 /**
- * Created by jeberlen on 2017-04-12.
+ *
+ * The logics for a sensor on the car, includes a map of all the colors, and the drawing of
+ * the actual sensor.
+ *
+ * setDistance() Changes the color and where the sensor gets drawn and this is the only method
+ * that should be called.
+ *
+ * @author Joacim Eberlen
+ * @version 1.0.0 JE
  */
+
 
 public class Sensor extends View {
 
@@ -28,6 +37,11 @@ public class Sensor extends View {
     Paint mFilled = new Paint();
     Paint mTransparent = new Paint();
 
+    /**
+     * The basic contructor for a sensor
+     * @param context Context
+     * @param attrs AttributeSet
+     */
     public Sensor(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -38,6 +52,11 @@ public class Sensor extends View {
 
     }
 
+    /**
+     * Draw the sensor, using the drawSensor() then it postInvalidates()
+     * (Update even if not on the UI thread)
+     * @param canvas The canvas for drawing
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -45,6 +64,10 @@ public class Sensor extends View {
         postInvalidate();
     }
 
+    /**
+     * Draw the sensors, do not call this method.
+     * @param canvas Canvas
+     */
     private void drawSensor(final Canvas canvas) {
 
         int yPos = getHeight()/3;
@@ -64,6 +87,10 @@ public class Sensor extends View {
 
     }
 
+    /**
+     * Changes color, and position of the sensors in the GUI.
+     * @param distance The distance to objects from the physical sensors
+     */
     public void setDistance(int distance) {
         this.distance = distance;
         if (distance <= 31){
@@ -72,6 +99,9 @@ public class Sensor extends View {
         postInvalidate();
     }
 
+    /**
+     * The creation of a map of colors from green to red
+     */
     public void createColorMap(){
         colorMap = new HashMap<>();
         colorMap.put(31, "#00CC00");
