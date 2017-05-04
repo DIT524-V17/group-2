@@ -38,6 +38,7 @@ ShieldMotors motors;
 int motorSpeedRight;
 int motorSpeedLeft;
 String input;
+String inputRPi;
 int distanceRightFront = 0;    //distance to obstacle for the right sensor
 int distanceLeftFront = 0;    //distance to obstacle for the left sensor
 int distanceMidFront = 0;
@@ -59,9 +60,8 @@ int speedGPS;
 
 void setup() {
   Serial3.begin(9600);
+  Serial.begin(9600);
   car.begin();
-  gyro.attach();
-  gyro.begin(50);
   timer.setInterval(5000, sendVoltage); //Sets the interval to send the voltage every 5 second
   sensorTimer.setInterval(500, sendSensorValues);
 }
@@ -72,6 +72,7 @@ void loop() {
   sendSensorValues();
   ///in the future, add "else if" statements in case there are more then 2 modes
   if(mode == 1) {
+    handleInputRPi();
     moveGPS();
   }else{
     moveManual();
@@ -109,10 +110,6 @@ void handleInput() {
       motorSpeedRight = input.substring(1).toInt(); //Sets the motorspeed value for the right engines
     }else if(input.startsWith("L")){
       motorSpeedLeft = input.substring(1).toInt();
-    }else if(input.startsWith("A")){
-      angleGPS = input.substring(1).toInt();           //Eriks Value
-    }else if(input.startsWith("S")){
-      speedGPS = input.substring(1).toInt();           //Eriks Value
     }else if(input.startsWith("G")){                  //Set int mode, based on the selected mode in the app
       mode = 1;
     }else if(input.startsWith("M")){
@@ -120,6 +117,17 @@ void handleInput() {
     }
   }
   Serial3.println(mode);
+}
+
+void handleInputRPi(){
+  if (Serial.available()) {                        //Handle serial input if there is any
+    inputRPi = Serial.readStringUntil('\n');
+    if(inputRPi.startsWith("A")){
+      angleGPS = input.substring(1).toInt();           //Eriks Value
+    }else if(inputRPi.startsWith("S")){
+      speedGPS = input.substring(1).toInt();           //Eriks Value
+      }
+  }
 }
 
 void sendVoltage() {
