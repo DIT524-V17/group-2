@@ -2,18 +2,15 @@ package com.group02.guard;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +24,8 @@ import android.util.Log;
  */
 public class ControllerActivity extends AppCompatActivity {
 
+    private final String TAG = "ControllerActivity";
+
     // Following variables is used by the batteryImageButton function
     private double analogReadValue;
     private double arduinoVoltage;
@@ -36,12 +35,10 @@ public class ControllerActivity extends AppCompatActivity {
     private Control analogue;
     private TextView showMoveEvent;
 
-    private final static int REQUEST_ENABLE_BT = 1;
-
-    String address = "20:15:10:20:11:37";
-
     // The thread that does all the work
     BluetoothThread btt;
+
+    ConnectionFragment connectionFragment;
 
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
@@ -59,31 +56,21 @@ public class ControllerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
-        // Initialize the Bluetooth thread, passing in a MAC address
-        // and a Handler that will receive incoming messages
 
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        connectionFragment = (ConnectionFragment) fm.findFragmentByTag(MainActivity.BTFRAGTAG);
 
-
-        if (!adapter.isEnabled()) {
-            //Set a filter to only receive bluetooth state changed events.
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent , 0);
+        if (getSupportFragmentManager().findFragmentByTag(MainActivity.BTFRAGTAG) == null)
+        {
+            Log.d(TAG, this + ": Existing fragment not found.");
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(new ConnectionFragment(), MainActivity.BTFRAGTAG).commit();
         }
-
-
-        btt = new BluetoothThread(address, new Handler() {
-
-            @Override
-            public void handleMessage(Message message) {
-                String s = (String) message.obj;
-                readInput(s);
-            }
-        });
-        // Get the handler that is used to send messages
-        writeHandler = btt.getWriteHandler();
-        // Run the thread
-        btt.start();
+        else
+        {
+            Log.d(TAG, this + ": Existing fragment found.");
+            btt = connectionFragment.btt;
+        }
 
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
@@ -127,17 +114,7 @@ public class ControllerActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            recreate();
-        }
-        if (resultCode == RESULT_CANCELED) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent , 0);
-        }
-    }
+
 
 
     /**
@@ -239,7 +216,7 @@ public class ControllerActivity extends AppCompatActivity {
 
     /**
      * The method takes and decodes the strings received via Bluetooth from the SmartCar.
-     * Depending on type of string (its first two letter decides its use),
+     * Depending on type of string (its first letter decides its use),
      * various actions executes
      * @param inputString String received from the SmartCar containing data
      */

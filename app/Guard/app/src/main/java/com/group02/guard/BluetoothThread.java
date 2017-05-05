@@ -71,6 +71,8 @@ public class BluetoothThread extends Thread {
     // Buffer used to parse messages
     private String rx_buffer = "";
 
+    public static boolean threadStarted = false;
+
     /**
      *
      * Constructor, takes in the MAC address of the remote Bluetooth device
@@ -247,9 +249,11 @@ public class BluetoothThread extends Thread {
 
         // Attempt to connect and exit the thread if it failed
         try {
+            threadStarted = true;
             connect();
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect!", e);
+            threadStarted = false;
             disconnect();
             return;
         }
