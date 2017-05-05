@@ -22,7 +22,7 @@ public class ConnectionFragment extends Fragment {
     BluetoothThread btt;
 
     // MAC address to the SmartCar
-    private String address = "20:15:10:20:11:37";
+    private String address = SmartCar.getAddress();
     // Handler for writing messages to the Bluetooth connection
     private Handler writeHandler;
 
