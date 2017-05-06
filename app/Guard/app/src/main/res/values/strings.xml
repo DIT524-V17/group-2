@@ -64,4 +64,7 @@
     <string name="batteryIconDesc">Battery Icon</string>
     <string name="menuIconDesc">Menu Icon</string>
 
+    <!-- Facebook-->
+    <string name="facebook_app_id">234147937061811</string>
+
 </resources>

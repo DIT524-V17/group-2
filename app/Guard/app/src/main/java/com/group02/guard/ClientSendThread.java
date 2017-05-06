@@ -34,12 +34,6 @@ public class ClientSendThread extends Thread {
         dstPort = port;
     }
 
-    //method to set the thread to run
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
-
-
     //send the location to the outputStream
     public void txMsg(String msgToSend) {
         if (printWriter != null) {
