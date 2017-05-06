@@ -11,7 +11,7 @@ import android.widget.Button;
  * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
  * @version 1.0.1 EL
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Session session;
 
@@ -23,17 +23,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button control = (Button) findViewById(R.id.controlButton);
         Button map = (Button) findViewById(R.id.mapsButton);
         Button gps = (Button) findViewById(R.id.gpsButton);
+        Button logout = (Button) findViewById(R.id.logoutDebug);
 
         control.setOnClickListener(this);
         map.setOnClickListener(this);
         gps.setOnClickListener(this);
+
+        session = new Session(this);
+        if (!session.loggedin()) {
+            logout();
+        }
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
     }
 
-//    private void logout() {
-//        session.setLoggedin(false);
-//        finish();
-//        startActivity(new Intent(this, LoginActivity.class));
-//    }
+    private void logout() {
+        session.setLoggedin(false);
+        finish();
+        startActivity(new Intent(this, LoginActivity.class));
+    }
 
     /**
      * Starts new activities and saves booleans when buttons in the MainScreen are clicked.

@@ -1,11 +1,5 @@
 package com.group02.guard;
-/**
- * The class implements the registration process for the user, saving the credentials
- * in the databases
- *
- * @author Gabriel Bulai
- * @version 1.0
- */
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button reg;
-    private TextView tvLogin;
     private EditText etEmail, etPass, etPass2;
     private DbHelper db;
 
@@ -31,8 +23,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
 
         db = new DbHelper(this);
-        reg = (Button) findViewById(R.id.btnReg);
-        tvLogin = (TextView) findViewById(R.id.tvLogin);
+        Button reg = (Button) findViewById(R.id.btnReg);
+        TextView tvLogin = (TextView) findViewById(R.id.tvLogin);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
         etPass2 = (EditText) findViewById(R.id.etPass2);
@@ -67,7 +59,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     //check password's validity
     private boolean checkPassword(String pass) {
         if (pass.length() > 7) {
-
             return true;
         } else
             return false;
@@ -76,17 +67,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     //check password1 == password2
     private boolean checkPassword2(String pass, String pass2) {
         if (pass.equals(pass2)) {
-            displayToast(pass + " " + pass2);
             return true;
-        } else
-            return false;
+        }
+        displayToast("Passwords don't match");
+        return false;
     }
 
     private void register() {
+        String url = "http://129.16.155.11:3000/guard/travellers";
         String email = etEmail.getText().toString();
         String pass = etPass.getText().toString();
         String pass2 = etPass2.getText().toString();
-        //System.out.println(pass + " + " + pass2);
         if (checkPassword(pass)) {
             if (checkPassword2(pass, pass2)) {
                 if (isEmailValid(email)) {
@@ -107,8 +98,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (email.isEmpty() && pass.isEmpty()) {
                         displayToast("Username/password field empty");
                     } else {
+                        AsyncChangeTravellerData addTraveller = new AsyncChangeTravellerData(this);
+                        addTraveller.execute(url, hashedEmail, hashedPass, "POST", "");
                         db.addUser(hashedEmail, hashedPass);
-                        displayToast("User registered");
                         finish();
                     }
                 } else
