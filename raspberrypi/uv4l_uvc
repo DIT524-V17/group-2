@@ -1,0 +1,39 @@
+#!/bin/bash
+
+CONFIGFILE="/etc/uv4l/uv4l-uvc.conf"
+
+NAME=uv4l_uvc
+UV4L=/usr/bin/uv4l
+FIND_PID="ps -eo pid,args | grep uv4l | grep '\--device-id $2' | awk '{print \$1}'"
+
+RET=0
+
+kill_pid () {
+    PID=$(eval $FIND_PID)
+    if [ ! -z $PID ]; then
+	kill $PID
+        sleep 3
+        PID=$(eval $FIND_PID)
+        if [ ! -z $PID ]; then
+	    kill -9 $PID
+        fi
+    fi
+}
+
+case "$1" in
+  start|add)
+    kill_pid
+    $UV4L -k --sched-rr --mem-lock --config-file=$CONFIGFILE --driver uvc --driver-config-file=$CONFIGFILE --server-option=--editable-config-file=$CONFIGFILE --device-id $2
+    RET=$?
+    ;;
+  stop|remove)
+    kill_pid
+    RET=$?
+    ;;
+  *)
+    echo "Usage: /etc/init.d/$NAME {add|remove} vid:pid"
+    RET=1
+    ;;
+esac
+
+exit $RET
