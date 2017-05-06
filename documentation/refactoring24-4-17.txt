@@ -1,27 +1,31 @@
 Refactoring:
 
-Shaun:
+Shaun:									DONE 2/5/17
 	DataGraph.py
 	- Add comments
 	- Add try/except for initializing the serial for the Arduino
 
-Gabriel: 
+Gabriel:								DONE 2/5/17
 	All classes:
 	- Proper comments
 	- Fix so that the phone application is capable of handling different scenarios (close, pause, restart etc)
 
-Erik:
+Erik:									DONE 2/5/17
 	smartcar_GPS.py, drive.py, send_coords_phone.py
 	- Simplify the comments
 
-Justinas:
+Justinas:								DONE 2/5/17
 	asyncAddTraveler, asyncDeleteTraveler, asyncGetTraveler, asyncUpdateTraveler
 	- Add comments
 	- Refactor according to code convention
 
-Boyan:
+Boyan:									DONE 2/5/17
 	kalmarFilter, GpsAngle
 	- Refactor accordint to code convention
 	- Add comments
 	- Explain algorithm in the class
 	- Add header with description, version and author
+
+Joacim:
+	sensor.java
+	- Fix comments in accordance with code convention		DONE 4/5/17

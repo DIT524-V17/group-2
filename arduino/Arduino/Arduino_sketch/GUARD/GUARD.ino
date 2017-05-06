@@ -34,11 +34,11 @@ Car car;
 SimpleTimer timer;
 SimpleTimer sensorTimer;
 ShieldMotors motors;
-Gyroscope gyro;
 
 int motorSpeedRight;
 int motorSpeedLeft;
 String input;
+String inputRPi;
 int distanceRightFront = 0;    //distance to obstacle for the right sensor
 int distanceLeftFront = 0;    //distance to obstacle for the left sensor
 int distanceMidFront = 0;
@@ -60,9 +60,8 @@ int speedGPS;
 
 void setup() {
   Serial3.begin(9600);
+  Serial.begin(9600);
   car.begin();
-  gyro.attach();
-  gyro.begin(50);
   timer.setInterval(5000, sendVoltage); //Sets the interval to send the voltage every 5 second
   sensorTimer.setInterval(500, sendSensorValues);
 }
@@ -73,6 +72,7 @@ void loop() {
   sendSensorValues();
   ///in the future, add "else if" statements in case there are more then 2 modes
   if(mode == 1) {
+    handleInputRPi();
     moveGPS();
   }else{
     moveManual();
@@ -110,16 +110,24 @@ void handleInput() {
       motorSpeedRight = input.substring(1).toInt(); //Sets the motorspeed value for the right engines
     }else if(input.startsWith("L")){
       motorSpeedLeft = input.substring(1).toInt();
-    }else if(input.startsWith("A")){
-      angleGPS = input.substring(1).toInt();           //Eriks Value
-    }else if(input.startsWith("S")){
-      speedGPS = input.substring(1).toInt();           //Eriks Value
     }else if(input.startsWith("G")){                  //Set int mode, based on the selected mode in the app
       mode = 1;
+    }else if(input.startsWith("M")){
+      mode = 0;
     }
-    mode = 0;
   }
   Serial3.println(mode);
+}
+
+void handleInputRPi(){
+  if (Serial.available()) {                        //Handle serial input if there is any
+    inputRPi = Serial.readStringUntil('\n');
+    if(inputRPi.startsWith("A")){
+      angleGPS = input.substring(1).toInt();           //Eriks Value
+    }else if(inputRPi.startsWith("S")){
+      speedGPS = input.substring(1).toInt();           //Eriks Value
+      }
+  }
 }
 
 void sendVoltage() {
@@ -188,43 +196,3 @@ boolean obstacleDetectionRear(){
   }
   return false;
 }
-
-void gyroCalculation(){
-    gyro.update(); //update the readings of the gyroscope, you should have this method being freely executed within your main loop
-    Serial.println(gyro.getAngularDisplacement());
-}
-
-void gyroSteering() {
-  if (Serial.available()) { //handle serial input if there is any
-    input = Serial.readStringUntil('\n');
-    if (input.startsWith("A")){
-      int inputAsInt = input.substring(1).toInt();
-    
-      if(inputAsInt == 0){
-        return;
-      } else if(inputAsInt > 0) {
-        car.setMotorSpeed(motorSpeedLeft, -motorSpeedRight); // left motors spin forward, right motors spin backward
-      } else if(inputAsInt < 0){
-        car.setMotorSpeed(-motorSpeedLeft, motorSpeedRight); // left motors spin backward, right motors spin forward
-      }
-      int initialPosition = gyro.getAngularDisplacement();
-      int degreesTurnedSoFar = 0; //this variable will hold the absolute displacement from the beginning of the rotation
-      while (abs(degreesTurnedSoFar) < abs(inputAsInt)) { //while absolute displacement hasn't reached the (absolute) target, keep turning
-        gyro.update(); //update to integrate the latest heading sensor readings
-        int currentHeading = gyro.getAngularDisplacement(); //in the scale of 0 to 360
-        if ((inputAsInt < 0) && (currentHeading > initialPosition)) { //if we are turning left and the current heading is larger than the
-          //initial one (e.g. started at 10 degrees and now we are at 350), we need to substract 360, so to eventually get a signed
-          currentHeading -= 360; //displacement from the initial heading (-20)
-        } else if ((inputAsInt > 0) && (currentHeading < initialPosition)) { //if we are turning right and the heading is smaller than the
-          //initial one (e.g. started at 350 degrees and now we are at 20), so to get a signed displacement (+30)
-          currentHeading += 360;    
-        }
-        degreesTurnedSoFar = initialPosition - currentHeading; //degrees turned so far is initial heading minus current (initial heading
-        //is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360 to currentHeading)
-      }
-      car.stop(); //we have reached the target, so stop the car
-    }
-  }
- 
-}
-

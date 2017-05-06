@@ -1,0 +1,16 @@
+Group 02
+G.U.A.R.D.
+Sprint Review Presentations
+
+
+This section contains brief presentations of what has been done throughout the individual Sprints
+
+
+The presentations' format:	
+*Title card 		- contains Group name/number, participating team memebers
+*Plan			- contains the initial plan for this sprint in the form of goals/objectives to be achieved
+*Acomplishments		- a list of goals/objectives that were managed to be achieved
+*Next Sprint		- describes what will be worked on the following sprint
+*Areas of improvment	- states some of the problems or areas that could be improved in the future. Code/communication/work proccess are taken into account
+
+

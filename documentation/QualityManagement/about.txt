@@ -1,0 +1,12 @@
+Group 02
+G.U.A.R.D.
+Quality Management 
+
+
+This section is dedicated to the maitanace and attainment of quality for project G.U.A.R.D.
+
+
+Section contains:
+*QualityManagement	- a document going into detail about Quality Planing and Quality Assurance for this project as well as the established threshold for quality
+*guard.smproj		- a SourceMonitor project used to measure Cyclomatic Complexity (CC) and Block Depth(BD)
+*GuardResults		- a file containing a list of actions taken after the examination of the gruad.smproj

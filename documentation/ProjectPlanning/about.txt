@@ -1,0 +1,14 @@
+Group 02
+G.U.A.R.D.
+Project Planning
+
+
+This section focuses on providing clearity for the project planing that occured
+
+
+Section Contains:
+*ProjectPlan 		   - contains information of the initial project plan
+*ProjectProposal	   - describes on a high-level the inital desired features for the project
+*ProjectProposalSummary    - a brief slideshow of the ProjectProposal
+*RequirementSpecification  - file listing the initial project requirements, initial user stories as well as the first domain models of the system
+
