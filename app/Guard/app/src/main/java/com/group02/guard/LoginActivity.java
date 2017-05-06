@@ -1,6 +1,9 @@
 package com.group02.guard;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,13 +16,13 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * The class creates an activity that handles database and session and allows the user to log in
- * @author Gabriel Bulai
- * @version 1.0.0
+ * @author Gabriel Bulai(GB), Justinas Stirbys (JS)
+ * @version 1.0.1 JS
  */
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button login, register;
-    private EditText etEmail, etPass;
+    private EditText etEmail;
+    private EditText etPass;
     private DbHelper db;
     private Session session;
 
@@ -30,8 +33,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         db = new DbHelper(this);
         session = new Session(this);
-        login = (Button) findViewById(R.id.btnLogin);
-        register = (Button) findViewById(R.id.btnReg);
+        Button login = (Button) findViewById(R.id.btnLogin);
+        Button register = (Button) findViewById(R.id.btnReg);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
         login.setOnClickListener(this);
@@ -43,6 +46,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Listens and responds to button clicks that happen in the LoginActivity
+     * @param v View belonging to a button
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -53,21 +60,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
             default:
-
         }
     }
 
+    /**
+     * Responsible for signing into the Traveller account
+     */
     private void login() {
         String email = etEmail.getText().toString();
         String pass = etPass.getText().toString();
         String salt = "";
 
+        //Hashing password
         String hashedPass = null;
         try {
             hashedPass = HashInformation.Hash(pass, salt);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        //Hashing email
         String hashedEmail = null;
         try {
             hashedEmail = HashInformation.Hash(email, salt);
@@ -75,17 +87,51 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        if (etEmail.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "e-mail is empty",
+        //Checking if something is entered in both fields
+        if (etEmail.getText().toString().isEmpty() || etPass.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Email/password is empty",
                     Toast.LENGTH_SHORT).show();
-        }else if(etPass.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "password is empty",
-                    Toast.LENGTH_SHORT).show();
-        }else{
+        }
+
+        //Check to see if internet connection is available to get information from DB
+        if (hasConnection()){
             AsyncGetTravellerData getTraveller = new AsyncGetTravellerData(this, session);
-            final String url = "http://129.16.229.198:3030/guard/travellers";
+            final String url = "http://192.168.1.193:3030/guard/travellers";
 //            String url = "http://129.16.155.11:3000/guard/travellers";
             getTraveller.execute(url, hashedEmail, hashedPass);
+
+        //Unavailable connection get data from SQL DB inside phone
+        }else{
+            loginSql(hashedEmail, hashedPass);
         }
+    }
+
+    /**
+     * Uses SQLDatabase to login with the param values
+     * @param email The hashed emailed entered when login in
+     * @param password The hashed password entered when login in
+     */
+    public void loginSql(String email, String password){
+        if(db.getUser(email, password)){
+            session.setLoggedin(true);
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }else{
+            Toast.makeText(this, "Wrong email/password", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Checks to see if WiFi connection exist
+     * @return True if WiFi connection available
+     */
+    public boolean hasConnection(){
+        //Used to check connection state
+        ConnectivityManager conn = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo info = conn.getActiveNetworkInfo();
+
+        return (info != null && info.isConnected() &&
+                info.getType() == ConnectivityManager.TYPE_WIFI);
+
     }
 }

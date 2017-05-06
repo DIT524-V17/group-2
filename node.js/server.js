@@ -45,7 +45,7 @@ GuardRest.prototype.startServer = function() {
       });
 }
 
-//Stops he server
+//Stops the server
 GuardRest.prototype.stop = function(err) {
     console.log("Issue while connecting. ERROR: " + err);
     process.exit(1);

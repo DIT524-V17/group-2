@@ -184,7 +184,7 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
 
         }else{
             messageToDisplay = "Error while registering. Error code: " + responseCode;
-            Log.e("AddTraveller", messageToDisplay);
+            Log.e("GetTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
         }
     }

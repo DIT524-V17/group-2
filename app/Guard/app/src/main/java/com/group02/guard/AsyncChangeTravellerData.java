@@ -10,9 +10,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Runs in the background thread for the purpose of adding/deleting a Traveller as well as updating
@@ -39,7 +36,7 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
     /**
      * Adds/updates/deletes data from the Database
      * @param params Values passed with the AsyncChangeTravellerData.execute(String... params)
-     *               Required: url, email, password, desired method name in capitals e.g. 'POST'
+     *               Required: url, email, password, desired method name and user_id
      * @return an Integer representing the response code when executing task
      */
     @Override
@@ -50,18 +47,24 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
         String email = params[1];
         String pass = params[2];
         this.method = params[3];
+        String userId = params[4];
         URL url;
         HttpURLConnection connection;
         OutputStreamWriter outputWriter;
 
-        //Required to get passed authentication
-        String guardUser = "GeorgeWBushIsThe" ;
+        //Adding required credentials to get passed authentication
+        String guardUser = "GeorgeWBushIsThe";
         String guardPass = "PerpetratorOf911";
         String auth = guardUser + ":" + guardPass;
         String encoded = Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP);
 
         try {
-            url = new URL(urlString);
+            //Making url
+            if(method.equals("PUTemail")){
+                url = new URL(urlString + "/" + userId);
+            }else{
+                url = new URL(urlString);
+            }
 
             //Encoding the hashed email and password to be able to POST
             String query = String.format("email=%s&password=%s",
@@ -77,7 +80,7 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
             //Setting the requested method based on received method string
             if(method.equals("POST"))  {
                 connection.setRequestMethod("POST");
-            }else if(method.equals("PUT")){
+            }else if(method.equals("PUTpass") || method.equals("PUTemail")){
                 connection.setRequestMethod("PUT");
             }else if(method.equals("DELETE")){
                 connection.setRequestMethod("DELETE");
@@ -104,24 +107,26 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
     @Override
     protected void onPostExecute(Integer result){
         String messageToDisplay;
-        handleMethodResponse(result);
 
-        if(responseCode == 400){
+        if(result == 200 || result == 201)  {
+            handleMethodResponse(result);
+
+        } else if(result == 400){
             messageToDisplay = "Error with email/password syntax! Try different email/password";
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
-        }else if(responseCode == 404){
+        }else if(result == 404){
             messageToDisplay = "Page not found. Database has been moved, try again later";
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
-        }else if(responseCode == 500){
+        }else if(result == 500){
             messageToDisplay = "Server error. Try again later ";
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
-        }else if(responseCode == 503){
+        }else if(result == 503){
             messageToDisplay = "Connection error. Check your Internet connection";
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
@@ -129,14 +134,18 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
         }else{
             messageToDisplay = "Error while registering. Error code: " + result;
             Log.e("AddTraveller", messageToDisplay);
-            //Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
         }
     }
 
+    /**
+     * Displays messages based on requested method when the connection returns a successful code
+     * @param responseCode A code received form the HTTP connection
+     */
     private void handleMethodResponse(Integer responseCode){
         String messageToDisplay;
         if(responseCode == 200 && this.method.equals("POST")) {
-            messageToDisplay = "e-mail already in use";
+            messageToDisplay = "Email already in use";
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
@@ -145,7 +154,12 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
-        }else if(responseCode == 200 && this.method.equals("PUT")){
+        }else if(responseCode == 200 && this.method.equals("PUTpass")){
+            messageToDisplay = "Password updated";
+            Log.e("AddTraveller", messageToDisplay);
+            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
+
+        }else if(responseCode == 200 && this.method.equals("PUTemail")){
             messageToDisplay = "Password updated";
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();

@@ -106,6 +106,30 @@ REST_ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
+    //Command 'PUT'
+    //Updates Traveler's email based on password
+    router.put("/travellers/:user_id", Auth.BasicAuthentication, function(req, res){
+        var query = "UPDATE travellers SET email = ? WHERE user_id = ?";
+        var table = [req.body.email, req.params.user_id];
+        query = mysql.format(query, table);
+
+        //Getting a connection from the pool
+        pool.getConnection(function(err, connection){
+            connection.query(query, function(err, rows){
+                //Putting the connection back in the pool for later reuse
+                connection.release();
+                //JSON response
+                if(err) {
+                    res.json({"Error" : true, 
+                    "Message" : "Error while updating email"});
+                } else {
+                    res.json({"Error" : false, 
+                    "Message" : "Email updated"});
+                }
+            });
+        });
+    });
+
     //Command 'DELETE'
 	//Deletes specific Traveller based on email
     router.delete("/travellers", Auth.BasicAuthentication, function(req, res){

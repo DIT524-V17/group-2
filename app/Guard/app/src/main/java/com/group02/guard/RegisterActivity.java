@@ -14,8 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button reg;
-    private TextView tvLogin;
     private EditText etEmail, etPass, etPass2;
     private DbHelper db;
 
@@ -25,8 +23,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
 
         db = new DbHelper(this);
-        reg = (Button) findViewById(R.id.btnReg);
-        tvLogin = (TextView) findViewById(R.id.tvLogin);
+        Button reg = (Button) findViewById(R.id.btnReg);
+        TextView tvLogin = (TextView) findViewById(R.id.tvLogin);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
         etPass2 = (EditText) findViewById(R.id.etPass2);
@@ -77,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void register() {
 //        String url = "http://129.16.155.11:3000/guard/travellers";
-        final String url = "http://129.16.229.198:3030/guard/travellers";
+        final String url = "http://192.168.1.193:3030/guard/travellers";
         String email = etEmail.getText().toString();
         String pass = etPass.getText().toString();
         String pass2 = etPass2.getText().toString();
@@ -102,9 +100,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         displayToast("Username/password field empty");
                     } else {
                         AsyncChangeTravellerData addTraveller = new AsyncChangeTravellerData(this);
-                        addTraveller.execute(url, hashedEmail, hashedPass, "POST");
+                        addTraveller.execute(url, hashedEmail, hashedPass, "POST", "");
                         db.addUser(hashedEmail, hashedPass);
-//                        displayToast("Traveller Registered!");
                         finish();
                     }
                 } else

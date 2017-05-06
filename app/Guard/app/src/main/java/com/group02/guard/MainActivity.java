@@ -11,7 +11,7 @@ import android.widget.Button;
  * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
  * @version 1.0.1 EL
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Session session;
 
@@ -24,27 +24,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button map = (Button) findViewById(R.id.mapsButton);
         Button gps = (Button) findViewById(R.id.gpsButton);
         Button logout = (Button) findViewById(R.id.logoutDebug);
-        Button update = (Button) findViewById(R.id.putDebug);
-        Button delete = (Button) findViewById(R.id.deleteDebug);
-
-        final Bundle travellerData = getIntent().getExtras();
-
-//        final String url = "http://129.16.155.11:3000/guard/travellers";
-        final String url = "http://129.16.229.198:3030/guard/travellers";
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AsyncChangeTravellerData updateTraveller = new AsyncChangeTravellerData(MainActivity.this);
-                updateTraveller.execute(url, travellerData.getString("EMAIL"), "bahamas", "PUT");
-            }
-        });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AsyncChangeTravellerData deleteTraveller = new AsyncChangeTravellerData(MainActivity.this);
-                deleteTraveller.execute(url, travellerData.getString("EMAIL"), travellerData.getString("PASSWORD"), "DELETE");
-            }
-        });
 
         control.setOnClickListener(this);
         map.setOnClickListener(this);

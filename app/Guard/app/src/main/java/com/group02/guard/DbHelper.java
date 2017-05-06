@@ -11,9 +11,10 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Creates and houses java object responsible for managing connection to DB
- * @author Gabriel Bulai(GB), Justinas Stirbys (JS)
- * @version 1.0.1 JS
+ * @author Gabriel Bulai(GB)
+ * @version 1.0.0
  */
+
 public class DbHelper extends SQLiteOpenHelper {
     public static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "G.U.A.R.D.db";
@@ -76,24 +77,11 @@ public class DbHelper extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-
             return true;
         }
         cursor.close();
         db.close();
 
         return false;
-    }
-
-    public boolean checkUser(String email, String password, String hashedEmail, String hashedPass){
-        String salt = "";
-        String hashedPassword = null;
-        try {
-            hashedPassword = HashInformation.Hash(password, salt);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return email.equals(hashedEmail) && hashedPassword.equals(hashedPass);
     }
 }
