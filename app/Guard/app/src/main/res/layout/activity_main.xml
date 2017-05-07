@@ -22,21 +22,21 @@
 
             <Button
                 android:id="@+id/controlButton"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_controller"
                 android:text="@string/controllerActivity"
                 android:drawableTint="@color/colorMutedLight"
-                android:layout_weight="0.3"/>
+                android:layout_weight="0.5"/>
 
             <Button
                 android:id="@+id/mapsButton"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_map"
                 android:text="@string/mapActivity"
                 android:drawableTint="@color/colorMutedLight"
-                android:layout_weight="0.3"/>
+                android:layout_weight="0.5"/>
 
         </TableRow>
 
