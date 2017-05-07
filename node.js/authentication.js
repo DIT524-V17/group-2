@@ -3,6 +3,7 @@ var basicAuth = require('basic-auth');
  
 exports.BasicAuthentication = function(req, res, next) {
  
+ 	//Prompts GUI to be displayed, requesting credentials
     function unauthorized(res) {
         res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
         return res.sendStatus(401);
