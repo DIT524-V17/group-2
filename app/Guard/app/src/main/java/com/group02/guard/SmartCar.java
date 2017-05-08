@@ -14,6 +14,8 @@ public class SmartCar {
     // UUID that specifies a protocol for generic bluetooth serial communication
     private static final UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+    private static final String ip = "192.168.0.1";
+
     public SmartCar(){
     }
 
@@ -28,6 +30,10 @@ public class SmartCar {
     // Method for modularity
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public static String getIp() {
+        return ip;
     }
 
 }

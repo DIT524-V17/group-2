@@ -60,16 +60,19 @@ public class ControllerActivity extends AppCompatActivity {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         connectionFragment = (ConnectionFragment) fm.findFragmentByTag(MainActivity.BTFRAGTAG);
 
-        if (getSupportFragmentManager().findFragmentByTag(MainActivity.BTFRAGTAG) == null)
-        {
-            Log.d(TAG, this + ": Existing fragment not found.");
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(new ConnectionFragment(), MainActivity.BTFRAGTAG).commit();
-        }
-        else
-        {
-            Log.d(TAG, this + ": Existing fragment found.");
-            btt = connectionFragment.btt;
+        if(!BluetoothThread.threadStarted){
+            if (getSupportFragmentManager().findFragmentByTag(MainActivity.BTFRAGTAG) == null)
+            {
+                Log.d(TAG, this + ": Existing fragment not found.");
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.add(new ConnectionFragment(), MainActivity.BTFRAGTAG).commit();
+            }
+            else
+            {
+                Log.d(TAG, this + ": Existing fragment found.");
+                btt = connectionFragment.btt;
+            }
+
         }
 
         showMoveEvent = (TextView) findViewById(R.id.coords);
