@@ -12,37 +12,61 @@
         android:layout_height="wrap_content"
         tools:layout="@layout/toolbar_top"/>
 
-    <Button
-        android:id="@+id/controlButton"
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_controller"
-        android:text="@string/controllerActivity"
-        android:drawableTint="@color/colorMutedLight"
-        android:layout_weight="0.3"/>
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/mapsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_map"
-        android:text="@string/mapActivity"
-        android:drawableTint="@color/colorMutedLight"
-        android:layout_weight="0.3"/>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/gpsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_gps"
-        android:text="@string/gpsActivity"
-        android:drawableTint="@color/colorMutedLight"
-        android:layout_weight="0.25" />
+            <Button
+                android:id="@+id/controlButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_controller"
+                android:text="@string/controllerActivity"
+                android:drawableTint="@color/colorMutedLight"
+                android:layout_weight="0.5"/>
 
-    <Button
-        android:id="@+id/logoutDebug"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Logout"/>
+            <Button
+                android:id="@+id/mapsButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_map"
+                android:text="@string/mapActivity"
+                android:drawableTint="@color/colorMutedLight"
+                android:layout_weight="0.5"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/gpsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_gps"
+                android:text="@string/gpsActivity"
+                android:drawableTint="@color/colorMutedLight"
+                android:layout_weight="0.25" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/logoutDebug"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="Logout"/>
+        </TableRow>
+
+    </TableLayout>
 
 </LinearLayout>
