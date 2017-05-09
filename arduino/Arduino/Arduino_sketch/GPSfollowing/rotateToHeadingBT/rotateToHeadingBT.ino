@@ -11,6 +11,8 @@ int turn = 0;
 String input = "";
 boolean stopCar = false;
 String s = "s";
+int forward = 70;
+int backward = -45;
 
 void setup() {
   car.begin();
@@ -28,27 +30,27 @@ void setup() {
   compass.m_min = (LSM303::vector<int16_t>){-32767, -32767, -32767};
   compass.m_max = (LSM303::vector<int16_t>){+32767, +32767, +32767};
 
-  delay(1000);
+  //delay(1000);
   //rotateOnSpot(90); //rotate clockwise 90 degrees on spot
   //car.setMotorSpeed(motorSpeed, motorSpeed);
-  delay(1000);
+  //delay(1000);
   //rotateOnSpot(270); //rotate counter clockwise 90 degrees on spot
 }
 
 void loop() {
+  getHeading();
   handleInput();
 }
 
-float getHeading(){
+void getHeading(){
   compass.read();
-  float heading = compass.heading((LSM303::vector<int>){0, 0, 1});
+  heading = compass.heading((LSM303::vector<int>){0, 0, 1});
   Serial.print("Heading: "); Serial.println(heading);
   Serial3.print("Heading: "); Serial3.println(heading);
-  return heading;
+  delay(100);
 }
 
 void rotateOnSpot(int targetDegrees) {
-  heading = getHeading();
   tempHeading = heading; //used to calculate what way to turn for shortest angle
   
   if(tempHeading < targetDegrees){
@@ -58,14 +60,14 @@ void rotateOnSpot(int targetDegrees) {
   turn = tempHeading - targetDegrees;
   
   if (turn < 180) {
-    car.setMotorSpeed(-45, 70); // left motors spin backward, right motors spin forward
+    car.setMotorSpeed(backward, forward); // left motors spin backward, right motors spin forward
   } else { //rotate counter clockwise
-    car.setMotorSpeed(70, -45); // left motors spin forward, right motors spin backward
+    car.setMotorSpeed(forward, backward); // left motors spin forward, right motors spin backward
   }
   
   while (!(heading < (targetDegrees + 1) && heading > (targetDegrees - 1)) && stopCar) {
     handleInput();
-    heading = getHeading();
+    getHeading();
   }
   Serial.print("Stopped on heading: "); Serial.println(heading);
   Serial3.print("Stopped on heading: "); Serial3.println(heading);
@@ -74,14 +76,19 @@ void rotateOnSpot(int targetDegrees) {
 
 void handleInput() { 
   if (Serial3.available()) { //handle serial input if there is any
-    input = Serial3.readStringUntil(" ");
+    input = Serial3.readStringUntil('\n');
     if (input == s){
-      Serial3.print("Stops");
+      Serial3.println("Stops ");
       stopCar = false;
       //car.stop();
-    }
-    else{
-      Serial3.print("rotates to " + input);
+    }else if(input.startsWith("f")){
+      Serial3.println("Setting forward speed to: " + input.substring(1));
+      forward = input.substring(1).toInt();    
+    }else if(input.startsWith("b")){
+      Serial3.println("Setting backward speed to: " + input.substring(1));
+      backward = input.substring(1).toInt();
+    }else{
+      Serial3.println("rotates to " + input);
       stopCar = true;
       rotateOnSpot(input.toInt());
     }
