@@ -17,7 +17,6 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final String BTFRAGTAG = "BLUETOOTH_FRAGMENT";
 
     Button control;
     Button gps;
@@ -39,20 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Set a filter to only receive bluetooth state changed events.
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent , REQUEST_ENABLE_BT);
-        }
-
-        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        ConnectionFragment connectionFragment = (ConnectionFragment) fm.findFragmentByTag(MainActivity.BTFRAGTAG);
-
-        if (getSupportFragmentManager().findFragmentByTag(BTFRAGTAG) == null)
-        {
-            Log.d(TAG, this + ": Existing fragment not found.");
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(new ConnectionFragment(), BTFRAGTAG).commit();
-        }
-        else
-        {
-            Log.d(TAG, this + ": Existing fragment found.");
         }
 
         control = (Button) findViewById(R.id.controlButton);

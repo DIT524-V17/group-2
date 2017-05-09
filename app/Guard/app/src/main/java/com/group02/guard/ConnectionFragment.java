@@ -58,6 +58,7 @@ public class ConnectionFragment extends Fragment {
         Log.d(TAG, this + ": onCreate()");
         setRetainInstance(true);
         startThread();
+
     }
 
     /*

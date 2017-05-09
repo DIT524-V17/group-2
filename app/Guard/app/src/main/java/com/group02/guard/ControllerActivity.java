@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.util.Log;
 public class ControllerActivity extends AppCompatActivity {
 
     private final String TAG = "ControllerActivity";
+    public final String BTFRAGTAG = "BLUETOOTH_FRAGMENT";
 
     // Following variables is used by the batteryImageButton function
     private double analogReadValue;
@@ -34,11 +36,6 @@ public class ControllerActivity extends AppCompatActivity {
     private Sensor sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
     private Control analogue;
     private TextView showMoveEvent;
-
-    // The thread that does all the work
-    BluetoothThread btt;
-
-    ConnectionFragment connectionFragment;
 
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
@@ -58,22 +55,23 @@ public class ControllerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_controller);
 
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        connectionFragment = (ConnectionFragment) fm.findFragmentByTag(MainActivity.BTFRAGTAG);
+        ConnectionFragment connectionFragment = (ConnectionFragment) fm.findFragmentByTag(BTFRAGTAG);
 
-        if(!BluetoothThread.threadStarted){
-            if (getSupportFragmentManager().findFragmentByTag(MainActivity.BTFRAGTAG) == null)
-            {
-                Log.d(TAG, this + ": Existing fragment not found.");
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(new ConnectionFragment(), MainActivity.BTFRAGTAG).commit();
-            }
-            else
-            {
-                Log.d(TAG, this + ": Existing fragment found.");
-                btt = connectionFragment.btt;
-            }
-
+        if (getSupportFragmentManager().findFragmentByTag(BTFRAGTAG) == null)
+        {
+            Log.d(TAG, this + ": Existing fragment not found.");
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(new ConnectionFragment(), BTFRAGTAG).commit();
         }
+        else
+        {
+            Log.d(TAG, this + ": Existing fragment found.");
+        }
+
+        Message msg = connectionFragment.btt.getWriteHandler().obtainMessage();
+        //TODO: Check if this works. ASYNC TASK?
+        String recievedMsg = msg.toString();
+        readInput(recievedMsg);
 
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
@@ -114,6 +112,7 @@ public class ControllerActivity extends AppCompatActivity {
         ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.bottomBarr);
         fragment.buttonChecked("control");
+
 
     }
 
@@ -224,6 +223,8 @@ public class ControllerActivity extends AppCompatActivity {
      * @param inputString String received from the SmartCar containing data
      */
     private void readInput(String inputString){
+
+        Log.d(TAG, inputString);
 
         switch (inputString.charAt(0) + inputString.charAt(1)) {
             case 'B' + 'B':
