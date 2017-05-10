@@ -6,7 +6,7 @@ from GpsAngle import calculateBearing, distance
 """
 * Script that handles the logic behind the SmartCar autonomously following the traveler (phone application)
 * @author Erik Laurin
-* @version 1.0
+* @version 1.0.1
 """
 
 # serial for SmartCar
