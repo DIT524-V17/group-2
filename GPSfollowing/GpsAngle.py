@@ -1,5 +1,9 @@
 from math import *
-
+/**
+ * calculating the bearing and distance based on two gps coordinates and a filter to process the data
+ * @author Boyan Dai
+ * @version 1.1.0
+ */
 
 
 ##method for calculating angle by having smartCar gps location and externalController gps location
@@ -42,5 +46,4 @@ def distance(smartCarLa, externalControllerLa, smartCarLo, externalControllerLo)
 
 
 if __name__ == '__main__':
-    calculateBearing()
-    distance()
+    calculateAngle()
