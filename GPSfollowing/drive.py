@@ -24,7 +24,7 @@ smartcar_longitude, smartcar_latitude, smartcar_pdop, smartcar_fix = 0, 0, 0, 0
 # helper variables
 old_angle, exitFlag = 0, 0
 no_fix_bol_phone, no_fix_bol_SmartCar = True, True
-update_frequency = 0.5
+update_frequency = 0.2
 
 
 def isfloat(value):
@@ -118,13 +118,6 @@ def get_phone_coordinates(threadName):
             pass
         except Exception as e:
             print("", e)
-        """
-        print('phone_lat: ' + str(phone_latitude) + '\n')
-        print('phone_long: '+ str(phone_longitude) + '\n')
-        print('phone_pdop: ' + str(phone_pdop) + '\n')
-        print('phone_fix: ' + str(phone_fix) + '\n')
-        time.sleep(1)
-        """
 
 
 class smartcar_coordinates(threading.Thread):
