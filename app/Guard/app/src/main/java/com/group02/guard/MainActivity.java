@@ -1,13 +1,19 @@
 package com.group02.guard;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.List;
 
 /**
  * Creates the "MainScreen" of the G.U.A.R.D. app. Layout used is activity_main.xml
@@ -38,6 +44,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Set a filter to only receive bluetooth state changed events.
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent , REQUEST_ENABLE_BT);
+        }
+
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        if (!wifi.isWifiEnabled()){
+            turnOnWifi(wifi);
+        } else {
+            connectToGuard(wifi);
         }
 
         control = (Button) findViewById(R.id.controlButton);
@@ -96,17 +109,72 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             recreate();
         }
         if (resultCode == RESULT_CANCELED) {
-            control.setClickable(false);
-            control.setAlpha(0.5f);
-            /*
-            map.setClickable(false);
-            map.setAlpha(0.5f);
-            gps.setClickable(false);
-            gps.setAlpha(0.5f);
-            */
-            reconnnect.setVisibility(View.VISIBLE);
+            disableFunctions();
+        }
+    }
 
+    private void turnOnWifi(final WifiManager wifi){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        alertDialogBuilder.setTitle("Wifi Settings");
 
+        alertDialogBuilder
+                .setMessage("Do you want to enable WIFI ?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        //enable wifi
+                        wifi.setWifiEnabled(true);
+                        Toast.makeText(MainActivity.this, "WiFi turned on", Toast.LENGTH_LONG);
+                        connectToGuard(wifi);
+                    }
+                })
+                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //disable wifi
+                        wifi.setWifiEnabled(false);
+
+                        disableFunctions();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void disableFunctions(){
+        control.setClickable(false);
+        control.setAlpha(0.5f);
+        map.setClickable(false);
+        map.setAlpha(0.5f);
+        gps.setClickable(false);
+        gps.setAlpha(0.5f);
+
+        reconnnect.setVisibility(View.VISIBLE);
+    }
+
+    public void connectToGuard(WifiManager wifi){
+        String networkSSID = "GUARD";
+
+        //TODO: PASSPHRASE FROM DB
+        String networkPass = "group2group2";
+
+        wifi.disconnect();
+
+        WifiConfiguration conf = new WifiConfiguration();
+        conf.SSID = "\"" + networkSSID + "\"";   // Please note the quotes. String should contain ssid in quotes
+        conf.preSharedKey = "\""+ networkPass +"\"";
+
+        wifi.addNetwork(conf);
+
+        List<WifiConfiguration> list = wifi.getConfiguredNetworks();
+        for( WifiConfiguration i : list ) {
+            if(i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                wifi.disconnect();
+                wifi.enableNetwork(i.networkId, true);
+                wifi.reconnect();
+
+                break;
+            }
         }
     }
 

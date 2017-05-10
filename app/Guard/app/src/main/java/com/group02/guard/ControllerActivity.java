@@ -37,8 +37,12 @@ public class ControllerActivity extends AppCompatActivity {
     private Control analogue;
     private TextView showMoveEvent;
 
+    // The thread that does all the work
+    BluetoothThread btt;
+    // MAC address to the SmartCar
+    private String address = SmartCar.getAddress();
     // Handler for writing messages to the Bluetooth connection
-    Handler writeHandler;
+    private Handler writeHandler;
 
     ToolbarTopFragment topFragment;
 
@@ -54,24 +58,21 @@ public class ControllerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
 
-        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        ConnectionFragment connectionFragment = (ConnectionFragment) fm.findFragmentByTag(BTFRAGTAG);
-
-        if (getSupportFragmentManager().findFragmentByTag(BTFRAGTAG) == null)
-        {
-            Log.d(TAG, this + ": Existing fragment not found.");
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(new ConnectionFragment(), BTFRAGTAG).commit();
-        }
-        else
-        {
-            Log.d(TAG, this + ": Existing fragment found.");
-        }
-
-        Message msg = connectionFragment.btt.getWriteHandler().obtainMessage();
-        //TODO: Check if this works. ASYNC TASK?
-        String recievedMsg = msg.toString();
-        readInput(recievedMsg);
+        Log.d(TAG, "Start Thread: startThread initiated.");
+        // Initialize the Bluetooth thread, passing in a MAC address
+        // and a Handler that will receive incoming messages
+        btt = new BluetoothThread(address, new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                sendMessage(message);
+                String input = message.toString();
+                readInput(input);
+            }
+        });
+        // Get the handler that is used to send messages
+        writeHandler = btt.getWriteHandler();
+        // Run the thread
+        btt.start();
 
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
@@ -115,10 +116,6 @@ public class ControllerActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
     /**
      *   Writing to the Arduino for motor control.
      *   @param right Right motor
