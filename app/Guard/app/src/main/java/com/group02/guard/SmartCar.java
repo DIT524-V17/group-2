@@ -9,31 +9,47 @@ import java.util.UUID;
 public class SmartCar {
 
     // MAC address for the SmartCar
-    private static String address = "20:15:10:20:11:37";
-
+    private String address = "20:15:10:20:11:37";
     // UUID that specifies a protocol for generic bluetooth serial communication
-    private static final UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private final UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    private static final String ip = "192.168.0.1";
+    private String ip = "192.168.0.1";
+    private String ssid = "GUARD";
+    //TODO: REMOVE HARDCODED NETWORK PASS WHEN DB IS DONE.
+    private String networkPass = "group2group2";
 
     public SmartCar(){
     }
 
-    public static UUID getUuid() {
-        return uuid;
+    public SmartCar(String address, String ip, String ssid, String networkPass){
+        this.address = address;
+        this.ip = ip;
+        this.ssid = ssid;
+        this.networkPass = networkPass;
     }
 
-    public static String getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    // Method for modularity
     public void setAddress(String address) {
         this.address = address;
     }
 
-    public static String getIp() {
+    public String getIp() {
         return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getSsid() {
+        return ssid;
+    }
+
+    public String getNetworkPass() {
+        return networkPass;
     }
 
 }

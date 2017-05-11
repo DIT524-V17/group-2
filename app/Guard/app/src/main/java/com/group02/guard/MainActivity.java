@@ -1,10 +1,13 @@
 package com.group02.guard;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -22,14 +25,12 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     Button control;
     Button gps;
     Button map;
     Button reconnnect;
 
-    private Session session;
+    SmartCar smartCar;
 
     // final check number for bluetooth prompt
     private final static int REQUEST_ENABLE_BT = 1;
@@ -52,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             connectToGuard(wifi);
         }
+
+        // TODO: ADD PARAMS FROM JUSTINAS DB METHODS
+        //smartCar = new SmartCar(address, ip, ssid, networkPass);
+
+        smartCar = new SmartCar();
 
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
@@ -99,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
                 return;
            default:
-                return;
+
         }
     }
     @Override
@@ -121,7 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setMessage("Do you want to enable WIFI ?")
                 .setCancelable(false)
                 .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                    @SuppressLint("ShowToast")
+                    public void onClick(DialogInterface dialog, int id) {
                         //enable wifi
                         wifi.setWifiEnabled(true);
                         Toast.makeText(MainActivity.this, "WiFi turned on", Toast.LENGTH_LONG);
@@ -152,11 +159,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reconnnect.setVisibility(View.VISIBLE);
     }
 
+    @SuppressLint("ShowToast")
     public void connectToGuard(WifiManager wifi){
-        String networkSSID = "GUARD";
 
-        //TODO: PASSPHRASE FROM DB
-        String networkPass = "group2group2";
+        String networkSSID = smartCar.getSsid();
+        String networkPass = smartCar.getNetworkPass();
 
         wifi.disconnect();
 
@@ -165,17 +172,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         conf.preSharedKey = "\""+ networkPass +"\"";
 
         wifi.addNetwork(conf);
-
         List<WifiConfiguration> list = wifi.getConfiguredNetworks();
         for( WifiConfiguration i : list ) {
             if(i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
                 wifi.disconnect();
                 wifi.enableNetwork(i.networkId, true);
                 wifi.reconnect();
-
                 break;
             }
         }
+
+        WifiInfo wifiInfo = wifi.getConnectionInfo();
+
+        if(WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState()) ==
+            NetworkInfo.DetailedState.CONNECTED &&
+            wifiInfo.getSSID().equals(smartCar.getSsid())){
+
+            Toast.makeText(MainActivity.this, "Connected to GUARD", Toast.LENGTH_SHORT);
+
+        }
+
     }
 
 
