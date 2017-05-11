@@ -7,11 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+
 /**
- * The class creates an internal SQLite database for user authentication credentials
- * @author Gabriel Bulai
- * @version 1.0
+ * Creates and houses java object responsible for managing connection to DB
+ * @author Gabriel Bulai(GB)
+ * @version 1.0.0
  */
+
 public class DbHelper extends SQLiteOpenHelper {
     public static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "G.U.A.R.D.db";
@@ -74,7 +77,6 @@ public class DbHelper extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-
             return true;
         }
         cursor.close();

@@ -2,25 +2,20 @@
 #include <Smartcar.h>
 #include <NewPing.h>
 #include <SoftwareSerial.h>
+#include <LSM303.h>
 
 #define TRIGGER_PIN_RIGHT_FRONT  51  // Arduino pin tied to trigger pin on the ultrasonic sensor
 #define ECHO_PIN_RIGHT_FRONT     50  // Arduino pin tied to echo pin on the right ultrasonic sensor
-
 #define TRIGGER_PIN_LEFT_FRONT  43 
 #define ECHO_PIN_LEFT_FRONT     42  
-
 #define TRIGGER_PIN_MID_FRONT  49 
 #define ECHO_PIN_MID_FRONT     48
- 
 #define TRIGGER_PIN_SIDE_LEFT  35
 #define ECHO_PIN_SIDE_LEFT     34
- 
 #define TRIGGER_PIN_SIDE_RIGHT  33 
 #define ECHO_PIN_SIDE_RIGHT     32 
-
 #define TRIGGER_PIN_BACK  23 
 #define ECHO_PIN_BACK     22 
-
 #define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters)
 
 NewPing sonarRightFront(TRIGGER_PIN_RIGHT_FRONT, ECHO_PIN_RIGHT_FRONT, MAX_DISTANCE);
@@ -31,22 +26,29 @@ NewPing sonarSideRight(TRIGGER_PIN_SIDE_RIGHT, ECHO_PIN_SIDE_RIGHT, MAX_DISTANCE
 NewPing sonarBack(TRIGGER_PIN_BACK, ECHO_PIN_BACK, MAX_DISTANCE);
 
 Car car;
-SimpleTimer timer;
+LSM303 compass;
+SimpleTimer batteryTimer;
 SimpleTimer sensorTimer;
 ShieldMotors motors;
-Gyroscope gyro;
 
 int motorSpeedRight;
 int motorSpeedLeft;
-String input;
-int distanceRightFront = 0;    //distance to obstacle for the right sensor
-int distanceLeftFront = 0;    //distance to obstacle for the left sensor
+String input; //input from Bluetooth module (from phone application) 
+String inputRPi; //input from USB (from Raspberry Pi)
+
+//distance to obstacle for particular sensor
+int distanceRightFront = 0;    
+int distanceLeftFront = 0;
 int distanceMidFront = 0;
 int distanceSideLeft = 0;
 int distanceSideRight = 0;
 int distanceBack = 0;
+
+//Variables for looping sensors
 int i = 0;
 int j = 0;
+
+//Prefix for sensor value
 String b = "BB";
 String sfm = "FM";
 String sfr = "FR";
@@ -54,27 +56,39 @@ String sfl = "FL";
 String sr = "SR";
 String sl = "SL";
 String sb = "SB";
+
 int mode;
 int angleGPS;
 int speedGPS;
 
+//Compass variables
+float heading = 0;
+float tempHeading = 0;
+int turn = 0;
+
 void setup() {
   Serial3.begin(9600);
+  Serial.begin(9600);
   car.begin();
-  gyro.attach();
-  gyro.begin(50);
-  timer.setInterval(5000, sendVoltage); //Sets the interval to send the voltage every 5 second
+ 
+  Wire.begin();
+  compass.init();
+  compass.enableDefault();
+  compass.m_min = (LSM303::vector<int16_t>){-32767, -32767, -32767}; //Compass calibration values
+  compass.m_max = (LSM303::vector<int16_t>){+32767, +32767, +32767};
+  
+  batteryTimer.setInterval(5000, sendVoltage); //Sets the interval to send the voltage every 5 second
   sensorTimer.setInterval(500, sendSensorValues);
 }
 
 void loop() {
-  timer.run();
+  batteryTimer.run();
   handleInput();
   sendSensorValues();
-  ///in the future, add "else if" statements in case there are more then 2 modes
-  if(mode == 1) {
-    moveGPS();
-  }else{
+  if(mode == 1) { //GPS following mode
+    getHeading();
+    handleInputRPi();
+  }else{  //Manual control mode
     moveManual();
   }
 }
@@ -98,28 +112,60 @@ void moveManual() {
   }
 }
 
-void moveGPS() {
-    motors.setAngle(angleGPS);  //Eriks Values
-    motors.setSpeed(speedGPS);  //Eriks Values
-} 
-
 void handleInput() { 
-  if (Serial3.available()) {                        //Handle serial input if there is any
+  if (Serial3.available()) {  //Handle serial input if there is any
     input = Serial3.readStringUntil('\n');
     if(input.startsWith("R")){
       motorSpeedRight = input.substring(1).toInt(); //Sets the motorspeed value for the right engines
     }else if(input.startsWith("L")){
       motorSpeedLeft = input.substring(1).toInt();
-    }else if(input.startsWith("A")){
-      angleGPS = input.substring(1).toInt();           //Eriks Value
-    }else if(input.startsWith("S")){
-      speedGPS = input.substring(1).toInt();           //Eriks Value
-    }else if(input.startsWith("G")){                  //Set int mode, based on the selected mode in the app
+    }else if(input.startsWith("G")){  //Set mode, based on the selected mode in the app
       mode = 1;
+    }else if(input.startsWith("M")){
+      mode = 0;
     }
-    mode = 0;
   }
-  Serial3.println(mode);
+}
+
+void handleInputRPi(){
+  if (Serial.available()) { //Handle serial input from Raspberry Pi
+    inputRPi = Serial.readStringUntil('\n');
+    if(inputRPi.startsWith("A")){
+      angleGPS = input.substring(1).toInt();
+      rotateOnSpot(angleGPS); //Turn to specific degree
+    }
+    /*else if(inputRPi.startsWith("S")){
+      speedGPS = input.substring(1).toInt();
+      motors.setSpeed(speedGPS);  //Set speed
+    }**/
+  }
+}
+
+void getHeading(){ //Gets heading from compass
+  compass.read();
+  heading = compass.heading((LSM303::vector<int>){0, 0, 1});
+}
+
+void rotateOnSpot(int targetDegrees) {
+  tempHeading = heading; //used to calculate what way to turn for shortest angle
+  
+  if(tempHeading < targetDegrees){
+    tempHeading += 360;
+  }
+  turn = tempHeading - targetDegrees;
+
+  if (turn < 180) { //If turn is less than 180, rotate counter clockwise
+    car.setMotorSpeed(-50, 80); // left motors spin backward, right motors spin forward
+  }else {
+    car.setMotorSpeed(80, -50); // left motors spin forward, right motors spin backward
+  }
+
+  //The car will stop rotating when targetDegrees is between the current heading -/+ 1 degree
+  while (!(heading < (targetDegrees + 1) && heading > (targetDegrees - 1))) {
+    getHeading();
+  }
+  Serial.print("Stopped on heading: "); Serial.println(heading);
+  car.stop(); //we have reached the target, so stop the car
 }
 
 void sendVoltage() {
@@ -131,8 +177,8 @@ void sendVoltage() {
 void sendSensorValues() {
   if(j == 0){
     distanceMidFront = sonarMidFront.ping_in();
-    Serial3.println(sfm + distanceMidFront);
-    j++;
+    Serial3.println(sfm + distanceMidFront); //Send distance with prefix via BT to mobile phone
+    j++; //Increment the loop variable
   }else if (j == 1){
     distanceLeftFront = sonarLeftFront.ping_in();
     Serial3.println(sfl + distanceLeftFront);
@@ -162,21 +208,20 @@ boolean obstacleDetectionFront(){ //Loops through the sensors in front of the ca
     if(distanceMidFront < 18 && distanceMidFront > 0){                                                                                                         
       return true;  //Obstacle detected within 18 inches
     }
-    i++;
+  i++;
   }
   else if (i == 1){
     distanceRightFront = sonarRightFront.ping_in(); //updates the distance according to the right ultrasonic sensor
     if(distanceRightFront < 9 && distanceRightFront > 0){                                                                                                                                    
       return true;
     }
-    i++;
-    }
-  else if (i == 2){
+  i++;
+  }else if (i == 2){
     distanceLeftFront = sonarLeftFront.ping_in();  
     if(distanceLeftFront < 9 && distanceLeftFront > 0){                                                                                                                                    
       return true;
     }
-     i = 0;
+  i = 0;
   }
   return false;
 }
@@ -188,43 +233,3 @@ boolean obstacleDetectionRear(){
   }
   return false;
 }
-
-void gyroCalculation(){
-    gyro.update(); //update the readings of the gyroscope, you should have this method being freely executed within your main loop
-    Serial.println(gyro.getAngularDisplacement());
-}
-
-void gyroSteering() {
-  if (Serial.available()) { //handle serial input if there is any
-    input = Serial.readStringUntil('\n');
-    if (input.startsWith("A")){
-      int inputAsInt = input.substring(1).toInt();
-    
-      if(inputAsInt == 0){
-        return;
-      } else if(inputAsInt > 0) {
-        car.setMotorSpeed(motorSpeedLeft, -motorSpeedRight); // left motors spin forward, right motors spin backward
-      } else if(inputAsInt < 0){
-        car.setMotorSpeed(-motorSpeedLeft, motorSpeedRight); // left motors spin backward, right motors spin forward
-      }
-      int initialPosition = gyro.getAngularDisplacement();
-      int degreesTurnedSoFar = 0; //this variable will hold the absolute displacement from the beginning of the rotation
-      while (abs(degreesTurnedSoFar) < abs(inputAsInt)) { //while absolute displacement hasn't reached the (absolute) target, keep turning
-        gyro.update(); //update to integrate the latest heading sensor readings
-        int currentHeading = gyro.getAngularDisplacement(); //in the scale of 0 to 360
-        if ((inputAsInt < 0) && (currentHeading > initialPosition)) { //if we are turning left and the current heading is larger than the
-          //initial one (e.g. started at 10 degrees and now we are at 350), we need to substract 360, so to eventually get a signed
-          currentHeading -= 360; //displacement from the initial heading (-20)
-        } else if ((inputAsInt > 0) && (currentHeading < initialPosition)) { //if we are turning right and the heading is smaller than the
-          //initial one (e.g. started at 350 degrees and now we are at 20), so to get a signed displacement (+30)
-          currentHeading += 360;    
-        }
-        degreesTurnedSoFar = initialPosition - currentHeading; //degrees turned so far is initial heading minus current (initial heading
-        //is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360 to currentHeading)
-      }
-      car.stop(); //we have reached the target, so stop the car
-    }
-  }
- 
-}
-

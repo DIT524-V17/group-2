@@ -2,8 +2,11 @@ package com.group02.guard;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.NotificationCompat;
@@ -20,7 +23,7 @@ import android.util.Log;
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
  * @author Joacim Eberlen, Erik Laurin, Axel Granli
- * @version 1.0.4 JE
+ * @version 1.1.0 JE
  */
 public class ControllerActivity extends AppCompatActivity {
 
@@ -32,6 +35,8 @@ public class ControllerActivity extends AppCompatActivity {
     private Sensor sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
     private Control analogue;
     private TextView showMoveEvent;
+
+    private final static int REQUEST_ENABLE_BT = 1;
 
     String address = "20:15:10:20:11:37";
 
@@ -52,9 +57,33 @@ public class ControllerActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
+        // Initialize the Bluetooth thread, passing in a MAC address
+        // and a Handler that will receive incoming messages
+
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+
+        if (!adapter.isEnabled()) {
+            //Set a filter to only receive bluetooth state changed events.
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent , 0);
+        }
+
+
+        btt = new BluetoothThread(address, new Handler() {
+
+            @Override
+            public void handleMessage(Message message) {
+                String s = (String) message.obj;
+                readInput(s);
+            }
+        });
+        // Get the handler that is used to send messages
+        writeHandler = btt.getWriteHandler();
+        // Run the thread
+        btt.start();
 
         showMoveEvent = (TextView) findViewById(R.id.coords);
 
@@ -67,24 +96,6 @@ public class ControllerActivity extends AppCompatActivity {
         srImage = (Sensor) findViewById(R.id.sensor_right);
         sbImage = (Sensor) findViewById(R.id.sensor_back);
 
-         // Initialize the Bluetooth thread, passing in a MAC address
-        // and a Handler that will receive incoming messages
-        btt = new BluetoothThread(address, new Handler() {
-
-            @Override
-            public void handleMessage(Message message) {
-
-            String s = (String) message.obj;
-            readInput(s);
-            }
-        });
-
-        // Get the handler that is used to send messages
-        writeHandler = btt.getWriteHandler();
-
-        // Run the thread
-        btt.start();
-
         analogue.setOnMoveListener(new Control.OnMoveListener() {
             public void onMoveInDirection(final double polarAngle) {
                 double speed = analogue.getSpeed(MAX_SPEED);
@@ -94,7 +105,6 @@ public class ControllerActivity extends AppCompatActivity {
                 showMoveEvent.setText("Angle: " + analogue.nAngle()
                         + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
                         + "\nSpeed: " + speed);
-
                 write(motors[0], motors[1]);
             }
 
@@ -114,7 +124,21 @@ public class ControllerActivity extends AppCompatActivity {
         ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.bottomBarr);
         fragment.buttonChecked("control");
+
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            recreate();
+        }
+        if (resultCode == RESULT_CANCELED) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent , 0);
+        }
+    }
+
 
     /**
      *   Writing to the Arduino for motor control.
@@ -215,15 +239,15 @@ public class ControllerActivity extends AppCompatActivity {
 
     /**
      * The method takes and decodes the strings received via Bluetooth from the SmartCar.
-     * Depending on type of string (its first letter decides its use),
-     * various actions executes (@author Erik Laurin and partly Axel Granli)
+     * Depending on type of string (its first two letter decides its use),
+     * various actions executes
      * @param inputString String received from the SmartCar containing data
      */
     private void readInput(String inputString){
 
         switch (inputString.charAt(0) + inputString.charAt(1)) {
-            case 'B' + ' ':
-                analogReadValue = Integer.parseInt(inputString.substring(1).trim());
+            case 'B' + 'B':
+                analogReadValue = Integer.parseInt(inputString.substring(2).trim());
                 topFragment.setAnalogReadValue(analogReadValue);
                 setBatteryLevel();
                 break;
@@ -246,7 +270,7 @@ public class ControllerActivity extends AppCompatActivity {
                 sbImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             default:
-                return;
+                break;
 
         }
     }

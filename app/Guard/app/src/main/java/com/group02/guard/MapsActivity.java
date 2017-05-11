@@ -2,11 +2,19 @@ package com.group02.guard;
 /**
  * @author Gabriel Bulai
  * This class implements the google API and uses it to retreive current location of the phone
- * @version 1.0.0 GB
+ * @version 2.0.0 GB
  */
+
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,27 +23,33 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import static com.group02.guard.Coordinates.parserino;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -43,19 +57,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 101;
     private static final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 102;
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private static final String BROADCAST_ACTION = "android.location.PROVIDERS_CHANGED";
     public static Double currentLatitude = 0.0;
     public static Double currentLongitude = 0.0;
-    TextView curLat;
-    TextView curLng;
-    ClientHandler clientHandler;
-    ClientThread clientThread;
+    public static Handler handler;
+    ClientSendThread clientSendThread;
+    ClientReceiveThread clientReceiveThread;
+    //String address = "192.168.1.101";
     String address = "129.16.155.11";
     int port = 8000;
+    Marker phoneMarker = null;
+    Marker carMarker = null;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
     private LocationRequest locationRequest;
     private boolean permissionIsGranted = false;
+    /* Broadcast receiver to check status of GPS */
+    private BroadcastReceiver gpsLocationReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            //If Action is Location
+            if (intent.getAction().matches(BROADCAST_ACTION)) {
+                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                //Check if GPS is turned ON or OFF
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    Toast.makeText(getApplicationContext(), "GPS is Enabled in your device", Toast.LENGTH_SHORT).show();
+                    Log.e("About GPS", "GPS is Enabled in your device");
+                } else {
+                    //If GPS turned OFF show Location Dialog
+                    //new Handler().postDelayed(new MyRunnable(), 10);
+                    // showSettingDialog();
+                    Toast.makeText(getApplicationContext(), "GPS is Disabled in your device", Toast.LENGTH_SHORT).show();
+                    Log.e("About GPS", "GPS is Disabled in your device");
+                }
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,45 +110,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             //initMap();
             if (initMap()) {
-                Toast.makeText(this, "Map Connected", Toast.LENGTH_SHORT).show();
-                mGoogleApiClient = new GoogleApiClient.Builder(this)
-                        .addApi(LocationServices.API)
-                        .addConnectionCallbacks(this)
-                        .addOnConnectionFailedListener(this)
-                        .build();
-                locationRequest = new LocationRequest();
-                locationRequest.setInterval(5 * 1000);
-                locationRequest.setFastestInterval(1 * 1000);
-                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                // locationRequest.getSmallestDisplacement(10);
+                initGoogleAPIClient();
             } else {
                 Toast.makeText(this, "Map Not Connected!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            setContentView(R.layout.activity_maps);
+            setContentView(R.layout.activity_main);
         }
-        curLat = (TextView) findViewById(R.id.curLat);
-        curLng = (TextView) findViewById(R.id.curLong);
-        clientHandler = new ClientHandler(this);
-        clientThread = new ClientThread(
-                address,
-                port,
-                clientHandler);
-        clientThread.start();
-        Toast.makeText(getApplicationContext(), "Thread has been started", Toast.LENGTH_LONG).show();
     }
 
-    public void parse(View view) {
-        EditText latitude = (EditText) findViewById(R.id.latitude);
-        EditText longitude = (EditText) findViewById(R.id.longitude);
-
-        String lat = String.valueOf(parserino(latitude.getText().toString()));
-        String lng = String.valueOf(parserino(longitude.getText().toString()));
-
-        double newLat = Double.parseDouble(lat);
-        double newLong = Double.parseDouble(lng);
-        gotoLocation(newLat, newLong, 15);
-
+    private void initGoogleAPIClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        Toast.makeText(this, "Map Connected", Toast.LENGTH_SHORT).show();
+        showSettingDialog();
     }
 
     public boolean servicesOK() {
@@ -131,7 +151,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
                     mMap = googleMap;
-                    gotoLocation(currentLatitude, currentLongitude, 5);
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
@@ -140,6 +159,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.getUiSettings().setAllGesturesEnabled(true);
                     mMap.getUiSettings().setMyLocationButtonEnabled(true);
                     mMap.getUiSettings().setCompassEnabled(true);
+                    MapStyleOptions retroMap = MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.maps_retro);
+                    MapStyleOptions nightMap = MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.maps_night);
+                    try {
+                        // Customise the styling of the base map using a JSON object defined
+                        // in a raw resource file.
+                        mMap.setMapStyle(retroMap);
+
+                    } catch (Resources.NotFoundException e) {
+                    }
                 }
             });
         }
@@ -148,13 +176,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
     }
-    private void gotoLocation(double lat, double lng, float zoom) {
-        LatLng latlng = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latlng, zoom);
-        mMap.addMarker(new MarkerOptions().position(latlng).title("Location"));
+
+    private void gotoLocation(double lat, double lng, int zoom) {
+        if (phoneMarker != null) {
+            phoneMarker.remove();
+        }
+        LatLng phoneLatLng = new LatLng(lat, lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(phoneLatLng, zoom);
+        MarkerOptions phoneMarkerOptions = new MarkerOptions()
+                .position(phoneLatLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+                .title("Current Location");
+        phoneMarker = mMap.addMarker(phoneMarkerOptions);
+        phoneMarker.showInfoWindow();
         mMap.animateCamera(update);
+        if (serverOK()) {
+            LatLng carLatLng = new LatLng(Double.parseDouble(getCarCoords()[0]), Double.parseDouble(getCarCoords()[1]));
+            if (carMarker != null) {
+                carMarker.remove();
+            }
+            MarkerOptions carMarkerOptions = new MarkerOptions()
+                    .position(carLatLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    .title("SmartCar");
+            carMarker = mMap.addMarker(carMarkerOptions);
+            carMarker.showInfoWindow();
+        }
     }
 
     @Override
@@ -169,11 +217,78 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             } else {
                 //ensures we can run the app below api 23
-                permissionIsGranted = true;
+                showSettingDialog();
+//                permissionIsGranted = true;
             }
             return;
         }
         locationProvider.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+    }
+
+    private void showSettingDialog() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(5 * 1000);
+        locationRequest.setFastestInterval(1 * 1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        // locationRequest.getSmallestDisplacement(10);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        //show dialog always when GPS is off
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                        Toast.makeText(getApplicationContext(), "GPS is Enabled in your device", Toast.LENGTH_LONG).show();
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case RESULT_OK:
+                        Log.e("Settings", "Result OK");
+                        Toast.makeText(getApplicationContext(), "GPS is Enabled in your device", Toast.LENGTH_LONG).show();
+                        //startLocationUpdates();
+                        break;
+                    case RESULT_CANCELED:
+                        Log.e("Settings", "Result Cancel");
+                        Toast.makeText(getApplicationContext(), "GPS is Disabled in your device", Toast.LENGTH_LONG).show();
+                        break;
+                }
+                break;
+        }
     }
 
     @Override
@@ -190,18 +305,54 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
-        curLat.setText(String.valueOf(currentLatitude));
-        curLng.setText(String.valueOf(currentLongitude));
-        //navigate to the current location
-        gotoLocation(currentLatitude, currentLongitude, 20);
-        //send coordinates to the server using a thread
-        clientThread.txMsg(currentLatitude.toString() + " " + currentLongitude.toString());
+        gotoLocation(currentLatitude, currentLongitude, 15);
+        if (location.hasAccuracy()) {
+            clientSendThread.txMsg(currentLatitude.toString() + " " + currentLongitude.toString());
+        } else {
+            clientSendThread.txMsg("1");
+        }
+    }
+
+    public boolean serverOK() {
+        if (clientReceiveThread.otherLine != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public String[] getCarCoords() {
+        String[] splitted = new String[2];
+        if (serverOK()) {
+            String abc = clientReceiveThread.otherLine;
+            splitted = abc.split(" ");
+        }
+        return splitted;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                String message = (String) msg.obj;
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+            }
+        };
+        clientSendThread = new ClientSendThread(
+                address,
+                port);
+        clientSendThread.start();
+        clientReceiveThread = new ClientReceiveThread(
+                address,
+                port);
+        clientReceiveThread.start();
+//        Toast.makeText(getApplicationContext(), "Threads have been started", Toast.LENGTH_LONG).show();
+//        if (!serverOK()) {
+//            Toast.makeText(getApplicationContext(), "Connection with the server lost", Toast.LENGTH_SHORT).show();
+        //}
     }
 
     @Override
@@ -212,6 +363,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestLocationUpdates();
             }
         }
+        registerReceiver(gpsLocationReceiver, new IntentFilter(BROADCAST_ACTION));//Register broadcast receiver to check the status of GPS
+
     }
 
     @Override
@@ -221,15 +374,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             locationProvider.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
+    //Run on UI
+//    private Runnable sendUpdatesToUI = new Runnable() {
+//        public void run() {
+//            showSettingDialog();
+//        }
+//    };
 
     @Override
     protected void onStop() {
         super.onStop();
         if (permissionIsGranted) {
             mGoogleApiClient.disconnect();
-        } else if (clientThread != null) {
-            clientThread.setRunning(false);
-        }
+            //Unregister receiver on destroy
+        } else if (gpsLocationReceiver != null)
+            unregisterReceiver(gpsLocationReceiver);
     }
 
     @Override
@@ -254,39 +413,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
     }
-
-    private void clientEnd() {
-        clientThread = null;
-    }
-
-    /**
-     * The class implements some variables that can be manipulated to discover the different
-     * states the communication
-     */
-    public static class ClientHandler extends Handler {
-        public static final int UPDATE_STATE = 0;
-        public static final int UPDATE_MSG = 1;
-        public static final int UPDATE_END = 2;
-        private MapsActivity parent;
-
-        public ClientHandler(MapsActivity parent) {
-            super();
-            this.parent = parent;
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-                case UPDATE_END:
-                    parent.clientEnd();
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-
-        }
-
-    }
-
 }
