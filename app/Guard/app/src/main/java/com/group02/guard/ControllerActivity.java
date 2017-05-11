@@ -3,22 +3,19 @@ package com.group02.guard;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.v7.app.NotificationCompat;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
@@ -27,29 +24,22 @@ import android.util.Log;
  */
 public class ControllerActivity extends AppCompatActivity {
 
+    private final static int REQUEST_ENABLE_BT = 1;
+    //Set MAX_SPEED for motors
+    final int MAX_SPEED = 70;
+    String address = "20:15:10:20:11:37";
+    // The thread that does all the work
+    BluetoothThread btt;
+    // Handler for writing messages to the Bluetooth connection
+    Handler writeHandler;
+    ToolbarTopFragment topFragment;
     // Following variables is used by the batteryImageButton function
     private double analogReadValue;
     private double arduinoVoltage;
     private boolean criticalLevel = false;
-
     private Sensor sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
     private Control analogue;
     private TextView showMoveEvent;
-
-    private final static int REQUEST_ENABLE_BT = 1;
-
-    String address = "20:15:10:20:11:37";
-
-    // The thread that does all the work
-    BluetoothThread btt;
-
-    // Handler for writing messages to the Bluetooth connection
-    Handler writeHandler;
-
-    ToolbarTopFragment topFragment;
-
-    //Set MAX_SPEED for motors
-    final int MAX_SPEED = 70;
 
     /**
      * Creates UI elements and initializes the BluetoothThread.
@@ -59,7 +49,7 @@ public class ControllerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
-        // Initialize the Bluetooth thread, passing in a MAC address
+        // Initialize the Bluetooth thread, passing in a MAC serverAddress
         // and a Handler that will receive incoming messages
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
