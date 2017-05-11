@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Session session;
 
+    private boolean btCon = false;
+    private boolean wifiCon = false;
+
     // final check number for bluetooth prompt
     private final static int REQUEST_ENABLE_BT = 1;
 
@@ -43,12 +46,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // TODO: ADD PARAMS FROM JUSTINAS DB METHODS
+        //smartCar = new SmartCar(address, ip, ssid, networkPass);
+
+        smartCar = new SmartCar();
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (!adapter.isEnabled()) {
             //Set a filter to only receive bluetooth state changed events.
+            btCon = false;
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent , REQUEST_ENABLE_BT);
+        } else {
+            btCon = true;
         }
 
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -56,12 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             turnOnWifi(wifi);
         } else {
             connectToGuard(wifi);
+            wifiCon = true;
         }
-
-        // TODO: ADD PARAMS FROM JUSTINAS DB METHODS
-        //smartCar = new SmartCar(address, ip, ssid, networkPass);
-
-        smartCar = new SmartCar();
 
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
@@ -108,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         controlIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         controlIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         controlIntent.putExtra("address", smartCar.getAddress());
+        controlIntent.putExtra("btCon", btCon);
+        controlIntent.putExtra("wifiCon", wifiCon);
         Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -141,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             recreate();
         }
         if (resultCode == RESULT_CANCELED) {
+            btCon = false;
             disableFunctions();
         }
     }
@@ -157,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onClick(DialogInterface dialog, int id) {
                         //enable wifi
                         wifi.setWifiEnabled(true);
+                        wifiCon = true;
                         Toast.makeText(MainActivity.this, "WiFi turned on", Toast.LENGTH_LONG);
                         connectToGuard(wifi);
                     }
@@ -165,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onClick(DialogInterface dialog, int id) {
                         //disable wifi
                         wifi.setWifiEnabled(false);
-
+                        wifiCon = false;
                         disableFunctions();
                     }
                 });
@@ -175,13 +185,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void disableFunctions(){
-        control.setClickable(false);
-        control.setAlpha(0.5f);
-        map.setClickable(false);
-        map.setAlpha(0.5f);
-        gps.setClickable(false);
-        gps.setAlpha(0.5f);
 
+        if(!btCon && !wifiCon){
+            map.setClickable(false);
+            map.setAlpha(0.5f);
+            gps.setClickable(false);
+            gps.setAlpha(0.5f);
+            control.setClickable(false);
+            control.setAlpha(0.5f);
+        }
         reconnnect.setVisibility(View.VISIBLE);
     }
 

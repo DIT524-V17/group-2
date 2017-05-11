@@ -34,6 +34,8 @@ public class ControllerActivity extends AppCompatActivity {
     final int MAX_SPEED = 70;
 
     private String address;
+    private boolean btCon;
+    private boolean wifiCon;
 
     ToolbarTopFragment topFragment;
     // Following variables is used by the batteryImageButton function
@@ -57,53 +59,69 @@ public class ControllerActivity extends AppCompatActivity {
         if(bundle.getString("address") != null)
         {
             address = bundle.getString("address");
+            btCon = bundle.getBoolean("btCon");
+            wifiCon = bundle.getBoolean("wifiCon");
         }
 
-        Log.d(TAG, "Start Thread: startThread initiated.");
-        // Initialize the Bluetooth thread, passing in a MAC address
-        // and a Handler that will receive incoming messages
-        btt = new BluetoothThread(address, new Handler() {
-            @Override
-            public void handleMessage(Message message) {
-                sendMessage(message);
-                String input = message.toString();
-                readInput(input);
-            }
-        });
-        // Get the handler that is used to send messages
-        writeHandler = btt.getWriteHandler();
-        // Run the thread
-        btt.start();
-
-        showMoveEvent = (TextView) findViewById(R.id.coords);
         analogue = (Control) findViewById(R.id.controlView);
-        sfmImage = (Sensor) findViewById(R.id.sensor_front_middle);
-        sfrImage = (Sensor) findViewById(R.id.sensor_front_right);
-        sflImage = (Sensor) findViewById(R.id.sensor_front_left);
-        slImage = (Sensor) findViewById(R.id.sensor_left);
-        srImage = (Sensor) findViewById(R.id.sensor_right);
-        sbImage = (Sensor) findViewById(R.id.sensor_back);
 
-        analogue.setOnMoveListener(new Control.OnMoveListener() {
-            public void onMoveInDirection(final double polarAngle) {
-                double speed = analogue.getSpeed(MAX_SPEED);
-                Log.e("", "" + speed);
-                // [0] is left, [1] is right
-                int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
-                showMoveEvent.setText("Angle: " + analogue.nAngle()
-                        + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
-                        + "\nSpeed: " + speed);
-                write(motors[0], motors[1]);
-            }
+        if(btCon) {
+            Log.d(TAG, "Start Thread: startThread initiated.");
+            // Initialize the Bluetooth thread, passing in a MAC address
+            // and a Handler that will receive incoming messages
+            btt = new BluetoothThread(address, new Handler() {
+                @Override
+                public void handleMessage(Message message) {
+                    readInput(message);
+                }
+            });
+            // Get the handler that is used to send messages
+            writeHandler = btt.getWriteHandler();
+            // Run the thread
+            btt.start();
 
-            @Override
-            public void onMoveStopped() {
-                showMoveEvent.setText("Angle: " + analogue.nAngle()
-                        + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
-                        + "\nSpeed: " + 0);
-                write(0, 0);
-            }
-        });
+            showMoveEvent = (TextView) findViewById(R.id.coords);
+            sfmImage = (Sensor) findViewById(R.id.sensor_front_middle);
+            sfrImage = (Sensor) findViewById(R.id.sensor_front_right);
+            sflImage = (Sensor) findViewById(R.id.sensor_front_left);
+            slImage = (Sensor) findViewById(R.id.sensor_left);
+            srImage = (Sensor) findViewById(R.id.sensor_right);
+            sbImage = (Sensor) findViewById(R.id.sensor_back);
+
+            analogue.setOnMoveListener(new Control.OnMoveListener() {
+                public void onMoveInDirection(final double polarAngle) {
+                    double speed = analogue.getSpeed(MAX_SPEED);
+                    Log.e("", "" + speed);
+                    // [0] is left, [1] is right
+                    int[] motors = analogue.motorSpeed((int) speed, (int) analogue.nAngle());
+                    showMoveEvent.setText("Angle: " + analogue.nAngle()
+                            + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
+                            + "\nSpeed: " + speed);
+                    write(motors[0], motors[1]);
+                }
+
+                @Override
+                public void onMoveStopped() {
+                    showMoveEvent.setText("Angle: " + analogue.nAngle()
+                            + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
+                            + "\nSpeed: " + 0);
+                    write(0, 0);
+                }
+            });
+
+        } else {
+            analogue.setAlpha(0.5f);
+            analogue.setClickable();
+            analogue.setOnMoveListener(new Control.OnMoveListener() {
+                @Override
+                public void onMoveInDirection(final double polarAngle) {
+                }
+                @Override
+                public void onMoveStopped() {
+
+                }
+            });
+        }
 
         topFragment = (ToolbarTopFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.topBar);
@@ -218,33 +236,34 @@ public class ControllerActivity extends AppCompatActivity {
      * various actions executes
      * @param inputString String received from the SmartCar containing data
      */
-    private void readInput(String inputString){
+    private void readInput(Message inputString){
 
-        Log.d(TAG, inputString);
+        String input = inputString.toString();
+        Log.d(TAG, input);
 
-        switch (inputString.charAt(0) + inputString.charAt(1)) {
+        switch (input.charAt(0) + input.charAt(1)) {
             case 'B' + 'B':
-                analogReadValue = Integer.parseInt(inputString.substring(2).trim());
+                analogReadValue = Integer.parseInt(input.substring(2).trim());
                 topFragment.setAnalogReadValue(analogReadValue);
                 setBatteryLevel();
                 break;
             case 'F' + 'M':
-                sfmImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                sfmImage.setDistance(Integer.parseInt(input.substring(2).trim()));
                 break;
             case 'F' + 'L':
-                sflImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                sflImage.setDistance(Integer.parseInt(input.substring(2).trim()));
                 break;
             case 'F' + 'R':
-                sfrImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                sfrImage.setDistance(Integer.parseInt(input.substring(2).trim()));
                 break;
             case 'S' + 'L':
-                slImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                slImage.setDistance(Integer.parseInt(input.substring(2).trim()));
                 break;
             case 'S' + 'R':
-                srImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                srImage.setDistance(Integer.parseInt(input.substring(2).trim()));
                 break;
             case 'S' + 'B':
-                sbImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                sbImage.setDistance(Integer.parseInt(input.substring(2).trim()));
                 break;
             default:
                 break;
