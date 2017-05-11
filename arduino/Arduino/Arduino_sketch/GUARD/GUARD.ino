@@ -16,7 +16,7 @@
 #define ECHO_PIN_SIDE_RIGHT     32 
 #define TRIGGER_PIN_BACK  23 
 #define ECHO_PIN_BACK     22 
-#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters)
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for
 
 NewPing sonarRightFront(TRIGGER_PIN_RIGHT_FRONT, ECHO_PIN_RIGHT_FRONT, MAX_DISTANCE);
 NewPing sonarLeftFront(TRIGGER_PIN_LEFT_FRONT, ECHO_PIN_LEFT_FRONT, MAX_DISTANCE);
@@ -70,12 +70,14 @@ void setup() {
   Serial3.begin(9600);
   Serial.begin(9600);
   car.begin();
- 
   Wire.begin();
+
+  /*
   compass.init();
   compass.enableDefault();
   compass.m_min = (LSM303::vector<int16_t>){-32767, -32767, -32767}; //Compass calibration values
   compass.m_max = (LSM303::vector<int16_t>){+32767, +32767, +32767};
+  **/
   
   batteryTimer.setInterval(5000, sendVoltage); //Sets the interval to send the voltage every 5 second
   sensorTimer.setInterval(500, sendSensorValues);
@@ -84,10 +86,10 @@ void setup() {
 void loop() {
   batteryTimer.run();
   handleInput();
+  //handleInputRpi();
   sendSensorValues();
   if(mode == 1) { //GPS following mode
-    getHeading();
-    handleInputRPi();
+    GPSfollowing();
   }else{  //Manual control mode
     moveManual();
   }
@@ -119,8 +121,6 @@ void handleInput() {
       motorSpeedRight = input.substring(1).toInt(); //Sets the motorspeed value for the right engines
     }else if(input.startsWith("L")){
       motorSpeedLeft = input.substring(1).toInt();
-    }else if(input.startsWith("G")){  //Set mode, based on the selected mode in the app
-      mode = 1;
     }else if(input.startsWith("M")){
       mode = 0;
     }
@@ -130,14 +130,28 @@ void handleInput() {
 void handleInputRPi(){
   if (Serial.available()) { //Handle serial input from Raspberry Pi
     inputRPi = Serial.readStringUntil('\n');
-    if(inputRPi.startsWith("A")){
-      angleGPS = input.substring(1).toInt();
-      rotateOnSpot(angleGPS); //Turn to specific degree
+    if(inputRPi.startsWith("G")){ //Activates GPS mode 
+      mode = 1;
     }
-    /*else if(inputRPi.startsWith("S")){
-      speedGPS = input.substring(1).toInt();
-      motors.setSpeed(speedGPS);  //Set speed
-    }**/
+    else if(input.startsWith("M")){
+      mode = 0;
+    }
+  }
+}
+
+void GPSfollowing(){ //Execute the maneuvering commands send by the RPi
+  getHeading(); //Gets heading from compass
+
+  if (Serial.available()) { //Handle serial input from Raspberry Pi
+    inputRPi = Serial.readStringUntil('\n');
+  }
+  if (inputRPi.startsWith("A")){
+    angleGPS = inputRPi.substring(1).toInt();
+    rotateOnSpot(angleGPS); //Turn to specific degree
+  }
+  else if (inputRPi.startsWith("S")){
+    speedGPS = inputRPi.substring(1).toInt();
+    motors.setSpeed(speedGPS);  //Set speed
   }
 }
 
@@ -146,7 +160,7 @@ void getHeading(){ //Gets heading from compass
   heading = compass.heading((LSM303::vector<int>){0, 0, 1});
 }
 
-void rotateOnSpot(int targetDegrees) {
+void rotateOnSpot(int targetDegrees) { //Method rotates the car to a certain heading, targetDegrees, and stops
   tempHeading = heading; //used to calculate what way to turn for shortest angle
   
   if(tempHeading < targetDegrees){
@@ -174,10 +188,10 @@ void sendVoltage() {
   }
 }
 
-void sendSensorValues() {
+void sendSensorValues() { //Loops through the sensors and sends their distance with prefix via BT to mobile phone
   if(j == 0){
-    distanceMidFront = sonarMidFront.ping_in();
-    Serial3.println(sfm + distanceMidFront); //Send distance with prefix via BT to mobile phone
+    distanceMidFront = sonarMidFront.ping_in(); 
+    Serial3.println(sfm + distanceMidFront); 
     j++; //Increment the loop variable
   }else if (j == 1){
     distanceLeftFront = sonarLeftFront.ping_in();
@@ -206,12 +220,12 @@ boolean obstacleDetectionFront(){ //Loops through the sensors in front of the ca
   if(i == 0){
     distanceMidFront = sonarMidFront.ping_in(); //Receives distance to potential obstacle in front of sensor
     if(distanceMidFront < 18 && distanceMidFront > 0){                                                                                                         
-      return true;  //Obstacle detected within 18 inches
+      return true;  //Returns true if obstacle within distance 18
     }
   i++;
   }
   else if (i == 1){
-    distanceRightFront = sonarRightFront.ping_in(); //updates the distance according to the right ultrasonic sensor
+    distanceRightFront = sonarRightFront.ping_in();
     if(distanceRightFront < 9 && distanceRightFront > 0){                                                                                                                                    
       return true;
     }
@@ -226,10 +240,10 @@ boolean obstacleDetectionFront(){ //Loops through the sensors in front of the ca
   return false;
 }
 
-boolean obstacleDetectionRear(){
-  distanceBack = sonarBack.ping_in();
+boolean obstacleDetectionRear(){ 
+  distanceBack = sonarBack.ping_in(); //Gets distance to obstacle detected by rear ultrasonic sensor
   if(distanceBack < 18 && distanceBack > 0){
-    return true;
+    return true; //Returns true if obstacle within distance 18
   }
   return false;
 }
