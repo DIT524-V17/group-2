@@ -95,10 +95,10 @@ REST_ROUTER.prototype.handleRoutes = function(router, pool) {
                 connection.release();
                 //JSON response
                 if(err) {
-                    res.json({"Error" : true, 
+                    res.json({"Error" : true,
                     "Message" : "Error while getting connection info"});
                 } else {
-                    res.json({"Error" : false, 
+                    res.json({"Error" : false,
                     "Message" : "Connection info received",
                     "Info" : rows});
                 }

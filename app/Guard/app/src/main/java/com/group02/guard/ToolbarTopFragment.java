@@ -27,12 +27,8 @@ public class ToolbarTopFragment extends Fragment {
     ImageButton batteryButton;
     TextView appTitle;
 
-    private Intent batteryStats;
-    private Bundle batteryBundle;
-//    private ImageButton batteryImageButton;
     private double analogReadValue;
     private double arduinoVoltage;
-//    private boolean criticalLevel = false;
 
     /**
      * Inflates the top toolbar layout within fragments making it visible
@@ -63,6 +59,7 @@ public class ToolbarTopFragment extends Fragment {
                 displayBatteryStats(v);
             }
         });
+
         return view;
     }
 
@@ -116,8 +113,8 @@ public class ToolbarTopFragment extends Fragment {
      * @param view current view is passed to the onClick method
      */
     public void displayBatteryStats(View view) {
-        batteryStats = new Intent(getActivity(), BatteryActivity.class);
-        batteryBundle = new Bundle();    //Sends intent extras in bundle
+        Intent batteryStats = new Intent(getActivity(), BatteryActivity.class);
+        Bundle batteryBundle = new Bundle();    //Sends intent extras in bundle
         batteryBundle.putDouble("EXTRA_ANALOG", analogReadValue);
         batteryBundle.putDouble("EXTRA_ARDUINO_VOLTAGE", arduinoVoltage);
         batteryStats.putExtras(batteryBundle);

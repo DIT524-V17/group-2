@@ -8,7 +8,7 @@ import android.widget.TextView;
  * The class creates an activity that displays detailed battery data
  *
  * @author Erik Laurin
- * @version 1.0
+ * @version 1.0.0
  */
 
 public class BatteryActivity extends AppCompatActivity {

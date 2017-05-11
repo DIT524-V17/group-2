@@ -6,24 +6,43 @@ package com.group02.guard;
  */
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,21 +60,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 101;
     private static final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 102;
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private static final String BROADCAST_ACTION = "android.location.PROVIDERS_CHANGED";
     public static Double currentLatitude = 0.0;
     public static Double currentLongitude = 0.0;
-
+    public static Handler handler;
     ClientSendThread clientSendThread;
     ClientReceiveThread clientReceiveThread;
-    //String address = "192.168.1.101";
-    String address = "129.16.155.11";
+    //String serverAddress = "192.168.1.101";
+    String serverAddress = "129.16.155.11";
     int port = 8000;
     Marker phoneMarker = null;
     Marker carMarker = null;
+    BluetoothThread connectBluetooth;
+    Handler writeHandler;
+    String address = "20:15:10:20:11:37";
+    SharedPreferences preferences;
+    int clickCount = 0;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
     private LocationRequest locationRequest;
     private boolean permissionIsGranted = false;
+    private boolean gpsOn;
+    /* Broadcast receiver to check status of GPS */
+    private BroadcastReceiver gpsLocationReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            //If Action is Location
+            if (intent.getAction().matches(BROADCAST_ACTION)) {
+                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                //Check if GPS is turned ON or OFF
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    Toast.makeText(getApplicationContext(), "GPS is Enabled in your device", Toast.LENGTH_SHORT).show();
+                    Log.e("About GPS", "GPS is Enabled in your device");
+                } else {
+                    //If GPS turned OFF show Location Dialog
+                    //new Handler().postDelayed(new MyRunnable(), 10);
+                    // showSettingDialog();
+                    Toast.makeText(getApplicationContext(), "GPS is Disabled in your device", Toast.LENGTH_SHORT).show();
+                    Log.e("About GPS", "GPS is Disabled in your device");
+                }
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,23 +119,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             //initMap();
             if (initMap()) {
-                Toast.makeText(this, "Map Connected", Toast.LENGTH_SHORT).show();
-                mGoogleApiClient = new GoogleApiClient.Builder(this)
-                        .addApi(LocationServices.API)
-                        .addConnectionCallbacks(this)
-                        .addOnConnectionFailedListener(this)
-                        .build();
-                locationRequest = new LocationRequest();
-                locationRequest.setInterval(5 * 1000);
-                locationRequest.setFastestInterval(1 * 1000);
-                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                // locationRequest.getSmallestDisplacement(10);
+                initGoogleAPIClient();
             } else {
                 Toast.makeText(this, "Map Not Connected!", Toast.LENGTH_SHORT).show();
             }
         } else {
             setContentView(R.layout.activity_main);
         }
+    }
+
+
+    private void initFollowing() {
+        preferences = getPreferences(MODE_PRIVATE);
+        gpsOn = preferences.getBoolean("gpsOn", false);
+
+        // Initialize the Bluetooth thread, passing in a MAC serverAddress
+        connectBluetooth = new BluetoothThread(address, new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                write(gpsOn);
+            }
+        });
+        writeHandler = connectBluetooth.getWriteHandler();
+        connectBluetooth.start();
+//        bottom = new ToolbarBottomFragment();
+
+    }
+
+    public void write(boolean gpsMode) {
+        Message gps = Message.obtain();
+        if (gpsMode) {
+            gps.obj = "G";
+            writeHandler.sendMessage(gps);
+        } else {
+            gps.obj = "M";
+            writeHandler.sendMessage(gps);
+        }
+    }
+    private void initGoogleAPIClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        Toast.makeText(this, "Map Connected", Toast.LENGTH_SHORT).show();
+        showSettingDialog();
     }
 
     public boolean servicesOK() {
@@ -144,10 +223,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(phoneLatLng, zoom);
         MarkerOptions phoneMarkerOptions = new MarkerOptions()
                 .position(phoneLatLng)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
-                .title("Current Location");
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.guard_launcher))
+                .title("Follow me");
         phoneMarker = mMap.addMarker(phoneMarkerOptions);
         phoneMarker.showInfoWindow();
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(final Marker marker) {
+                if (marker.equals(phoneMarker)) {
+                    clickCount += 1;
+                    Toast.makeText(getApplicationContext(), "Press again to start following mode", Toast.LENGTH_SHORT).show();
+                    if (clickCount % 2 == 0) {
+                        initFollowing();
+                        write(true);
+                        startActivity(new Intent(MapsActivity.this, ControllerActivity.class));
+                        Toast.makeText(getApplicationContext(), "Manual mode activated", Toast.LENGTH_SHORT).show();
+                    }
+                    //clickCount = 0;
+                }
+                return false;
+            }
+        });
         mMap.animateCamera(update);
         if (serverOK()) {
             LatLng carLatLng = new LatLng(Double.parseDouble(getCarCoords()[0]), Double.parseDouble(getCarCoords()[1]));
@@ -156,7 +252,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             MarkerOptions carMarkerOptions = new MarkerOptions()
                     .position(carLatLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
                     .title("SmartCar");
             carMarker = mMap.addMarker(carMarkerOptions);
             carMarker.showInfoWindow();
@@ -175,11 +271,77 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             } else {
                 //ensures we can run the app below api 23
-                permissionIsGranted = true;
+                showSettingDialog();
+//                permissionIsGranted = true;
             }
             return;
         }
         locationProvider.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+    }
+
+    private void showSettingDialog() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(5 * 1000);
+        locationRequest.setFastestInterval(1 * 1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        // locationRequest.getSmallestDisplacement(10);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        //show dialog always when GPS is off
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case RESULT_OK:
+                        Log.e("Settings", "Result OK");
+                        Toast.makeText(getApplicationContext(), "GPS is Enabled in your device", Toast.LENGTH_LONG).show();
+                        //startLocationUpdates();
+                        break;
+                    case RESULT_CANCELED:
+                        Log.e("Settings", "Result Cancel");
+                        Toast.makeText(getApplicationContext(), "GPS is Disabled in your device", Toast.LENGTH_LONG).show();
+                        break;
+                }
+                break;
+        }
     }
 
     @Override
@@ -224,19 +386,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                String message = (String) msg.obj;
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
+            }
+        };
         clientSendThread = new ClientSendThread(
-                address,
+                serverAddress,
                 port);
         clientSendThread.start();
         clientReceiveThread = new ClientReceiveThread(
-                address,
+                serverAddress,
                 port);
         clientReceiveThread.start();
-        Toast.makeText(getApplicationContext(), "Threads have been started", Toast.LENGTH_LONG).show();
-        if (!serverOK()) {
-            Toast.makeText(getApplicationContext(), "Connection with the server lost", Toast.LENGTH_SHORT).show();
-        }
+//        Toast.makeText(getApplicationContext(), "Threads have been started", Toast.LENGTH_LONG).show();
+//        if (!serverOK()) {
+//            Toast.makeText(getApplicationContext(), "Connection with the server lost", Toast.LENGTH_SHORT).show();
+        //}
     }
 
     @Override
@@ -247,6 +416,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestLocationUpdates();
             }
         }
+        registerReceiver(gpsLocationReceiver, new IntentFilter(BROADCAST_ACTION));//Register broadcast receiver to check the status of GPS
+
     }
 
     @Override
@@ -256,13 +427,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             locationProvider.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
+    //Run on UI
+//    private Runnable sendUpdatesToUI = new Runnable() {
+//        public void run() {
+//            showSettingDialog();
+//        }
+//    };
 
     @Override
     protected void onStop() {
         super.onStop();
         if (permissionIsGranted) {
             mGoogleApiClient.disconnect();
-        }
+            //Unregister receiver on destroy
+        } else if (gpsLocationReceiver != null)
+            unregisterReceiver(gpsLocationReceiver);
     }
 
     @Override
@@ -286,5 +465,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // code for coarse location
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+
+        alertbox.setMessage("Exiting this view will trigger the manual mode. Continue?");
+        alertbox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+            // do something when the button is clicked
+            public void onClick(DialogInterface arg0, int arg1) {
+                initFollowing();
+                write(true);
+                //startActivity(new Intent(MapsActivity.this, ControllerActivity.class));
+                Toast.makeText(getApplicationContext(), "Manual mode activated", Toast.LENGTH_LONG).show();
+                clickCount = 0;
+                finish();
+            }
+        });
+        alertbox.setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+            // do something when the button is clicked
+            public void onClick(DialogInterface arg0, int arg1) {
+            }
+        });
+
+        AlertDialog dialog = alertbox.create();
+        dialog.show();
+
     }
 }

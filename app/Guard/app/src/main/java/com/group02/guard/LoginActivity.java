@@ -1,5 +1,10 @@
 package com.group02.guard;
-
+/**
+ * The class creates an activity that handles database and session and allows the user to log in
+ *
+ * @author Gabriel Bulai
+ * @version 1.0
+ */
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,6 +15,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
+
+/**
+ * The class creates an activity that handles database and session and allows the user to log in
+ * @author Gabriel Bulai(GB), Justinas Stirbys (JS)
+ * @version 1.0.1 JS
+ */
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText etEmail;

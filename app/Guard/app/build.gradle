@@ -23,6 +23,7 @@ android {
 }
 
 repositories {
+    mavenCentral()
     jcenter()
 }
 task clearData(type: Exec) {
@@ -51,4 +52,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     androidTestCompile 'org.mockito:mockito-android:2.7.19'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.2'
+    compile 'com.facebook.android:facebook-android-sdk:4.22.0'
 }

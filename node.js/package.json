@@ -1,0 +1,19 @@
+//If changed the newest version should be uploaded to /etc/guardserver on skip server
+//And run with the command 'pm2 start server.js'
+{
+  "name": "guard-node-package.json",
+  "version": "1.0.0",
+  "description": "creates server side for guard api",
+  "author": "justinas stirbys",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DIT524-V17/group-2"
+  },
+  "license": "",
+  "dependencies": {
+    "express": "~4.12.2",
+    "mysql": "~2.5.5",
+    "body-parser": "~1.12.0",
+    "basic-auth": "~1.1.0"
+  }
+}
