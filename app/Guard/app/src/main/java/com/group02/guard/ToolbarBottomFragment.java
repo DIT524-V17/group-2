@@ -57,7 +57,7 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
         Intent controlIntent = new Intent(getActivity(), ControllerActivity.class);
         Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
         Intent homeIntent = new Intent(getActivity(), MainActivity.class);
-        Intent gpsIntent= new Intent(getActivity(), GpsActivity.class);
+        //Intent gpsIntent= new Intent(getActivity(), GpsActivity.class);
 
 
         switch (v.getId()) {
@@ -67,9 +67,9 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
             case R.id.connectNavigation:
                 startActivity(wifiIntent);
                 return;
-            case R.id.gpsNavigation:
-                startActivity(gpsIntent);
-                return;
+//            case R.id.gpsNavigation:
+//                startActivity(gpsIntent);
+//                return;
             case R.id.controlNavigation:
                 startActivity(controlIntent);
                 return;

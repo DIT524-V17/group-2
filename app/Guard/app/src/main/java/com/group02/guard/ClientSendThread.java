@@ -34,12 +34,6 @@ public class ClientSendThread extends Thread {
         dstPort = port;
     }
 
-    //method to set the thread to run
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
-
-
     //send the location to the outputStream
     public void txMsg(String msgToSend) {
         if (printWriter != null) {
@@ -55,7 +49,7 @@ public class ClientSendThread extends Thread {
         running = true;
 
         try {
-            //creates a socket with an Ip address and a port
+            //creates a socket with an Ip serverAddress and a port
             socket = new Socket(dstAddress, dstPort);
             // sendState("connected");
 

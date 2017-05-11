@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.AsyncTask;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.TextView;
@@ -26,28 +24,25 @@ import android.util.Log;
 public class ControllerActivity extends AppCompatActivity {
 
     private final String TAG = "ControllerActivity";
-    public final String BTFRAGTAG = "BLUETOOTH_FRAGMENT";
 
+    // The thread that does all the work
+    BluetoothThread btt;
+    // Handler for writing messages to the Bluetooth connection
+    private Handler writeHandler;
+
+    //Set MAX_SPEED for motors
+    final int MAX_SPEED = 70;
+
+    private String address;
+
+    ToolbarTopFragment topFragment;
     // Following variables is used by the batteryImageButton function
     private double analogReadValue;
     private double arduinoVoltage;
     private boolean criticalLevel = false;
-
     private Sensor sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
     private Control analogue;
     private TextView showMoveEvent;
-
-    // The thread that does all the work
-    BluetoothThread btt;
-    // MAC address to the SmartCar
-    private String address = SmartCar.getAddress();
-    // Handler for writing messages to the Bluetooth connection
-    private Handler writeHandler;
-
-    ToolbarTopFragment topFragment;
-
-    //Set MAX_SPEED for motors
-    final int MAX_SPEED = 70;
 
     /**
      * Creates UI elements and initializes the BluetoothThread.
@@ -57,6 +52,12 @@ public class ControllerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.getString("address") != null)
+        {
+            address = bundle.getString("address");
+        }
 
         Log.d(TAG, "Start Thread: startThread initiated.");
         // Initialize the Bluetooth thread, passing in a MAC address
@@ -75,9 +76,7 @@ public class ControllerActivity extends AppCompatActivity {
         btt.start();
 
         showMoveEvent = (TextView) findViewById(R.id.coords);
-
         analogue = (Control) findViewById(R.id.controlView);
-
         sfmImage = (Sensor) findViewById(R.id.sensor_front_middle);
         sfrImage = (Sensor) findViewById(R.id.sensor_front_right);
         sflImage = (Sensor) findViewById(R.id.sensor_front_left);

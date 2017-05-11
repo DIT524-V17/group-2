@@ -66,5 +66,16 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Strings for Traveller profile fragment, found in fragment_traveller_profile.xml -->
+    <string name="updateButtonText">Update</string>
+    <string name="updateEmail">Change my Email:</string>
+    <string name="newEmailText">New Email</string>
+    <string name="updatePassword">Change my password:</string>
+    <string name="oldPasswordText">Enter old password</string>
+    <string name="newPasswordText">Enter new password</string>
+    <string name="confirmNewPasswordText">Confirm new password</string>
+
+    <!-- Facebook-->
+    <string name="facebook_app_id">234147937061811</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.group02.guard;
 
+import android.os.Message;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -10,7 +11,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * Created by doctorgaby on 24/04/2017.
+ * @author Gabriel Bulai
+ * A thread that allows receiving the car location in the background.
+ * @version 1.0.0 GB
  */
 
 public class ClientReceiveThread extends Thread {
@@ -21,7 +24,7 @@ public class ClientReceiveThread extends Thread {
     Socket socket;
     PrintWriter printWriter;
     BufferedReader bufferedReader;
-    private boolean running;
+    Message msg;
 
     public ClientReceiveThread(String addr, int port) {
         super();
@@ -29,19 +32,12 @@ public class ClientReceiveThread extends Thread {
         dstPort = port;
     }
 
-    //method to set the thread to run
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
 
     @Override
     public void run() {
-        //sendState("connecting...");
-
-        running = true;
 
         try {
-            //creates a socket with an Ip address and a port
+            //creates a socket with an Ip serverAddress and a port
             socket = new Socket(dstAddress, dstPort);
             // sendState("connected");
 
@@ -54,20 +50,22 @@ public class ClientReceiveThread extends Thread {
 
             while ((otherLine = bufferedReader.readLine()) != null) {
 
-                //bufferedReader block the code
-
-
-                //String [] otherLined = otherLine.split(" ");
                 Log.i(TAG, otherLine);
             }
-
+            msg = Message.obtain();
+            msg.obj = "Server disconnected";
+            MapsActivity.handler.sendMessage(msg);
         } catch (IOException e) {
             e.printStackTrace();
+            msg = Message.obtain();
+            msg.obj = "Server not connected";
+            MapsActivity.handler.sendMessage(msg);
         } finally {
             //close the buffered Reader
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
