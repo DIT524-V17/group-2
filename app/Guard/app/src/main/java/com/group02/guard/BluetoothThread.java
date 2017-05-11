@@ -4,21 +4,15 @@ package com.group02.guard;
  * Created by jeberlen on 2017-03-06.
  */
 
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
-
-import android.util.Log;
-import android.widget.Toast;
-
 import java.util.UUID;
 
 /**
@@ -54,26 +48,22 @@ public class BluetoothThread extends Thread {
     // UUID that specifies a protocol for generic bluetooth serial communication
     private static final UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    // MAC address of remote Bluetooth device
+    // MAC serverAddress of remote Bluetooth device
     private final String address;
-
-    // Bluetooth socket of active connection
-    private BluetoothSocket socket;
-
-    // Streams that we read from and write to
-    private OutputStream outStream;
-    private InputStream inStream;
-
     // Handlers used to pass data between threads
     private final Handler readHandler;
     private final Handler writeHandler;
-
+    // Bluetooth socket of active connection
+    private BluetoothSocket socket;
+    // Streams that we read from and write to
+    private OutputStream outStream;
+    private InputStream inStream;
     // Buffer used to parse messages
     private String rx_buffer = "";
 
     /**
      *
-     * Constructor, takes in the MAC address of the remote Bluetooth device
+     * Constructor, takes in the MAC serverAddress of the remote Bluetooth device
      * and a Handler for received messages.
      *
      */

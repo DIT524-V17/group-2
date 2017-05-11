@@ -37,7 +37,7 @@ public class ClientReceiveThread extends Thread {
     public void run() {
 
         try {
-            //creates a socket with an Ip address and a port
+            //creates a socket with an Ip serverAddress and a port
             socket = new Socket(dstAddress, dstPort);
             // sendState("connected");
 
