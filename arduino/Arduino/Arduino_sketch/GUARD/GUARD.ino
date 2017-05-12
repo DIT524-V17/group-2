@@ -1,7 +1,6 @@
 #include <SimpleTimer.h>
 #include <Smartcar.h>
 #include <NewPing.h>
-#include <SoftwareSerial.h>
 #include <LSM303.h>
 
 #define TRIGGER_PIN_RIGHT_FRONT  51  // Arduino pin tied to trigger pin on the ultrasonic sensor
@@ -133,7 +132,7 @@ void handleInputRPi(){
     if(inputRPi.startsWith("G")){ //Activates GPS mode 
       mode = 1;
     }
-    else if(input.startsWith("M")){
+    else if(input.startsWith("M")){ //Activates manual control mode
       mode = 0;
     }
   }
@@ -178,7 +177,6 @@ void rotateOnSpot(int targetDegrees) { //Method rotates the car to a certain hea
   while (!(heading < (targetDegrees + 1) && heading > (targetDegrees - 1))) {
     getHeading();
   }
-  Serial.print("Stopped on heading: "); Serial.println(heading);
   car.stop(); //we have reached the target, so stop the car
 }
 
