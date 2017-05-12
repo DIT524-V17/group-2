@@ -2,6 +2,7 @@
 #include <Smartcar.h>
 #include <NewPing.h>
 #include <LSM303.h>
+#include <Wire.h>
 
 #define TRIGGER_PIN_RIGHT_FRONT  51  // Arduino pin tied to trigger pin on the ultrasonic sensor
 #define ECHO_PIN_RIGHT_FRONT     50  // Arduino pin tied to echo pin on the right ultrasonic sensor
