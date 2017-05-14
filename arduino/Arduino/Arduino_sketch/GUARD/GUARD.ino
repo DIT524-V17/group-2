@@ -144,14 +144,15 @@ void GPSfollowing(){ //Execute the maneuvering commands send by the RPi
 
   if (Serial.available()) { //Handle serial input from Raspberry Pi
     inputRPi = Serial.readStringUntil('\n');
-  }
-  if (inputRPi.startsWith("A")){
-    angleGPS = inputRPi.substring(1).toInt();
-    rotateOnSpot(angleGPS); //Turn to specific degree
-  }
-  else if (inputRPi.startsWith("S")){
-    speedGPS = inputRPi.substring(1).toInt();
-    motors.setSpeed(speedGPS);  //Set speed
+  
+    if (inputRPi.startsWith("A")){
+      angleGPS = inputRPi.substring(1).toInt();
+      rotateOnSpot(angleGPS); //Turn to specific degree
+    }
+    else if (inputRPi.startsWith("S")){
+      speedGPS = inputRPi.substring(1).toInt();
+      motors.setSpeed(speedGPS);  //Set speed
+    }
   }
 }
 
