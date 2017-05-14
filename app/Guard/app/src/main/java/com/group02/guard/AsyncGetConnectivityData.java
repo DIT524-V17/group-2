@@ -1,5 +1,6 @@
 package com.group02.guard;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
@@ -21,11 +22,27 @@ import java.net.URL;
 public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer> {
 
     int responseCode;
+    private String ssid;
+    private String password;
+    private String ipAddress;
+
+    private Context context;
+    private Session session;
 
     /**
      * Default empty constructor
      */
     public AsyncGetConnectivityData(){}
+
+    /**
+     * Constructor used to make object representing the class
+     * @param context Activity context used to make Toast
+     * @param session Login session
+     */
+    public AsyncGetConnectivityData(Context context, Session session){
+        this.context = context;
+        this.session = session;
+    }
 
     /**
      * Receives connection data from Database
@@ -87,9 +104,7 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
      * @param result String of the result received from the DB
      */
     private void parseResponse(String result){
-        String ssid;
-        String password;
-        String ipAddress;
+
         try{
             JSONObject jsonObject = new JSONObject(result);
             JSONArray travellerObject = jsonObject.getJSONArray("Info");
@@ -137,4 +152,16 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
             Log.e("GetConnectivity", messageToDisplay);
         }
     }
+    public String getSsid() {
+        return ssid;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
 }

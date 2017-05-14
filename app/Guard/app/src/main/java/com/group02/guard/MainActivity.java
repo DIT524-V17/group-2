@@ -47,9 +47,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         // TODO: ADD PARAMS FROM JUSTINAS DB METHODS
-        //smartCar = new SmartCar(address, ip, ssid, networkPass);
 
-        smartCar = new SmartCar();
+        AsyncGetConnectivityData connectivityData =
+                new AsyncGetConnectivityData(getBaseContext(), session);
+
+        String address = "20:15:10:20:11:37";
+        String ssid = connectivityData.getSsid();
+        String networkPass = connectivityData.getPassword();
+        String ip = connectivityData.getIpAddress();
+
+        smartCar = new SmartCar(address, ip, ssid, networkPass);
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (!adapter.isEnabled()) {
