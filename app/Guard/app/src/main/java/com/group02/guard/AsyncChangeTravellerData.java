@@ -21,7 +21,7 @@ import java.net.URLEncoder;
 public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
 
     private int responseCode;
-    private String method;
+    String method;
     private Context context;
 
     /**
@@ -168,6 +168,18 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
             messageToDisplay = "Traveller deleted";
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
+
+        }else if(responseCode == 200 && this.method.equals("PUTcoords")){
+            messageToDisplay = "Coordinates updated";
+            Log.e("UpdateCoordinates", messageToDisplay);
         }
+    }
+
+    /**
+     * Setter for subclass to set method
+     * @param method the type of request method
+     */
+    void setMethod(String method) {
+        this.method = method;
     }
 }
