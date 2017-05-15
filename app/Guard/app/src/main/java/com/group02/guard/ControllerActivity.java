@@ -35,7 +35,6 @@ public class ControllerActivity extends AppCompatActivity {
 
     private String address;
     private boolean btCon;
-    private boolean wifiCon;
 
     ToolbarTopFragment topFragment;
     // Following variables is used by the batteryImageButton function
@@ -60,7 +59,6 @@ public class ControllerActivity extends AppCompatActivity {
         {
             address = bundle.getString("address");
             btCon = bundle.getBoolean("btCon");
-            wifiCon = bundle.getBoolean("wifiCon");
         }
 
         analogue = (Control) findViewById(R.id.controlView);
@@ -72,7 +70,8 @@ public class ControllerActivity extends AppCompatActivity {
             btt = new BluetoothThread(address, new Handler() {
                 @Override
                 public void handleMessage(Message message) {
-                    readInput(message);
+                    String s = (String) message.obj;
+                    readInput(s);
                 }
             });
             // Get the handler that is used to send messages
@@ -236,34 +235,33 @@ public class ControllerActivity extends AppCompatActivity {
      * various actions executes
      * @param inputString String received from the SmartCar containing data
      */
-    private void readInput(Message inputString){
+    private void readInput(String inputString){
 
-        String input = inputString.toString();
-        Log.d(TAG, input);
+        Log.d(TAG, inputString);
 
-        switch (input.charAt(0) + input.charAt(1)) {
+        switch (inputString.charAt(0) + inputString.charAt(1)) {
             case 'B' + 'B':
-                analogReadValue = Integer.parseInt(input.substring(2).trim());
+                analogReadValue = Integer.parseInt(inputString.substring(2).trim());
                 topFragment.setAnalogReadValue(analogReadValue);
                 setBatteryLevel();
                 break;
             case 'F' + 'M':
-                sfmImage.setDistance(Integer.parseInt(input.substring(2).trim()));
+                sfmImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             case 'F' + 'L':
-                sflImage.setDistance(Integer.parseInt(input.substring(2).trim()));
+                sflImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             case 'F' + 'R':
-                sfrImage.setDistance(Integer.parseInt(input.substring(2).trim()));
+                sfrImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             case 'S' + 'L':
-                slImage.setDistance(Integer.parseInt(input.substring(2).trim()));
+                slImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             case 'S' + 'R':
-                srImage.setDistance(Integer.parseInt(input.substring(2).trim()));
+                srImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             case 'S' + 'B':
-                sbImage.setDistance(Integer.parseInt(input.substring(2).trim()));
+                sbImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
                 break;
             default:
                 break;

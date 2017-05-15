@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button control;
     Button gps;
     Button map;
-    Button reconnnect;
+    Button reconnect;
     Button logout;
 
     SmartCar smartCar;
@@ -49,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // TODO: ADD PARAMS FROM JUSTINAS DB METHODS
 
         AsyncGetConnectivityData connectivityData =
-                new AsyncGetConnectivityData(getBaseContext(), session);
+                new AsyncGetConnectivityData();
+
+        connectivityData.execute();
 
         String address = "20:15:10:20:11:37";
         String ssid = connectivityData.getSsid();
@@ -79,13 +81,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
         gps = (Button) findViewById(R.id.gpsButton);
-        reconnnect = (Button) findViewById(R.id.reconnect);
+        reconnect = (Button) findViewById(R.id.reconnect);
         logout = (Button) findViewById(R.id.logoutDebug);
 
         control.setOnClickListener(this);
         map.setOnClickListener(this);
         gps.setOnClickListener(this);
-        reconnnect.setOnClickListener(this);
+        reconnect.setOnClickListener(this);
 
         session = new Session(this);
         if (!session.loggedin()) {
@@ -201,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             control.setClickable(false);
             control.setAlpha(0.5f);
         }
-        reconnnect.setVisibility(View.VISIBLE);
+        reconnect.setVisibility(View.VISIBLE);
     }
 
     @SuppressLint("ShowToast")

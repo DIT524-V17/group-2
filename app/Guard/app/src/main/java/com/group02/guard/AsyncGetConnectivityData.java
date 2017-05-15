@@ -26,23 +26,11 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
     private String password;
     private String ipAddress;
 
-    private Context context;
-    private Session session;
 
     /**
      * Default empty constructor
      */
     public AsyncGetConnectivityData(){}
-
-    /**
-     * Constructor used to make object representing the class
-     * @param context Activity context used to make Toast
-     * @param session Login session
-     */
-    public AsyncGetConnectivityData(Context context, Session session){
-        this.context = context;
-        this.session = session;
-    }
 
     /**
      * Receives connection data from Database
@@ -51,7 +39,7 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
      */
     @Override
     protected Integer doInBackground(String... params) {
-        String urlString = params[0];
+        String urlString = "129.16.155.11:3000/guard/connectivity";
 
         //Creating readers to get data
         InputStreamReader inputReader;
