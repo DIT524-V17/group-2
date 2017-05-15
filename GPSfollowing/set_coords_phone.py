@@ -1,18 +1,21 @@
 import sys
+import warnings
 
 """
 * Script that takes arguments and set them as the phone's coordinates
  
- Takes two args (lat & long), and sets them as coordinates for the phone 
- (in case of invalid number of arguments, lat is set to '1' (no fix)).
+* Takes two args (lat & long), and sets them as coordinates for the phone 
+  (in case of invalid number of arguments, lat is set to '1' (no fix)).
 	example: 1. ssh pi@192.168.1.105 (psw: raspberry)
 	    	 2. python home/pi/repo/group-2/GPSfollowing/set_coords_phone 54.327 11.244		 
 	
     	        when received lat = 0, terminate script (sends command to SmartCar to stop and exits)
                                     1, bad GPS signal (sends command to SmartCar to stop and await an actual coordinate 
 			                                            before continuing)
+			                        2, change to manual control mode (sends command to SmartCar)
+			                        3, change to GPSfollowing mode (sends command to SmartCar)
 * @author Erik Laurin
-* @version 1.0
+* @version 1.0.1
 """
 
 def write_to_file(argv):
@@ -61,3 +64,4 @@ def write_to_file(argv):
 
 if __name__ == "__main__":
     write_to_file(sys.argv)
+    warnings.warn("deprecated", DeprecationWarning)
