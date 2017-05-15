@@ -319,9 +319,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .title("Click twice to activate following mode");
         phoneMarker = mMap.addMarker(phoneMarkerOptions);
         phoneMarker.showInfoWindow();
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public boolean onMarkerClick(final Marker marker) {
+            public void onInfoWindowClick(Marker marker) {
                 if (marker.equals(phoneMarker)) {
                     clickCount += 1;
                     if (clickCount % 2 == 0) {
@@ -331,9 +331,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     } else if (clickCount % 2 == 1) {
                         Toast.makeText(getApplicationContext(), "Press again to start following mode", Toast.LENGTH_SHORT).show();
                     }
-                    //clickCount = 0;
                 }
-                return false;
             }
         });
         gotoLocation(currentLatitude, currentLongitude, 15);
