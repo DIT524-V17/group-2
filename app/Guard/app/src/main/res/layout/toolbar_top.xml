@@ -14,16 +14,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/menuButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_menu"
-                android:tint="@color/colorMutedLight"
-                android:contentDescription="@string/menuIconDesc"/>
 
             <TextView
                 android:id="@+id/toolbarTitle"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,15 +55,17 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         Intent wifiIntent = new Intent(getActivity(), WifiActivity.class);
-        Intent controlIntent = new Intent(getActivity(), ControllerActivity.class);
+       // Intent controlIntent = new Intent(getActivity(), ControllerFragment.class);
         Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
-        Intent homeIntent = new Intent(getActivity(), MainActivity.class);
+       // Intent homeIntent = new Intent(getActivity(), MainFragment.class);
         //Intent gpsIntent= new Intent(getActivity(), GpsActivity.class);
 
 
         switch (v.getId()) {
             case R.id.homeNavigation:
-                startActivity(homeIntent);
+                MainFragment mainFragment = new MainFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().attach(mainFragment).commit();
                 return;
             case R.id.connectNavigation:
                 startActivity(wifiIntent);
@@ -71,7 +74,9 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
 //                startActivity(gpsIntent);
 //                return;
             case R.id.controlNavigation:
-                startActivity(controlIntent);
+                ControllerFragment controllerFragment = new ControllerFragment();
+                FragmentManager fragmentManagerC = getActivity().getSupportFragmentManager();
+                fragmentManagerC.beginTransaction().replace(this.getView().getId(), controllerFragment).commit();
                 return;
             case R.id.mapsNavigation:
                 startActivity(mapIntent);

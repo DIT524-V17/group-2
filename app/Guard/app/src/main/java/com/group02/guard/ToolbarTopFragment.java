@@ -41,17 +41,17 @@ public class ToolbarTopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.toolbar_top, parent, false);
         this.toolbar = (Toolbar) view.findViewById(R.id.top_toolbar);
-        this.menuButton = (ImageButton) view.findViewById(R.id.menuButton);
+        //this.menuButton = (ImageButton) view.findViewById(R.id.menuButton);
         this.batteryButton = (ImageButton) view.findViewById(R.id.batteryButton);
         this.appTitle = (TextView) view.findViewById(R.id.toolbarTitle);
         appTitle.setText("G.U.A.R.D");
 
-        menuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showOptionMenu(v);
-            }
-        });
+//        menuButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showOptionMenu(v);
+//            }
+//        });
 
         batteryButton.setOnClickListener(new View.OnClickListener(){
             @Override
