@@ -21,7 +21,7 @@ import java.net.URLEncoder;
 public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
 
     private int responseCode;
-    String method;
+    private String method;
     private Context context;
 
     /**

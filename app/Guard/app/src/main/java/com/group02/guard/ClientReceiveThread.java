@@ -53,9 +53,8 @@ public class ClientReceiveThread extends Thread {
 
                 Log.i(TAG, otherLine);
                /**
-                Random r = new Random();
                 AsyncChangeSmartCarData addCoords = new AsyncChangeSmartCarData();
-                addCoords.execute("http://129.16.155.11:3000/guard/cars", String.valueOf(r.nextDouble()), String.valueOf(r.nextDouble()), "0");
+                addCoords.execute("http://129.16.155.11:3000/guard/cars", lat, long, "0");
                 */
             }
             msg = Message.obtain();

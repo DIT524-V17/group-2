@@ -15,6 +15,7 @@ import java.net.URL;
 //Add the following to sync the coordinates to the DB, replace lat/long with acutal coords
 //AsyncChangeSmartCarData addCoords = new AsyncChangeSmartCarData();
 //addCoords.execute("http://129.16.155.11:3000/guard/cars", lat, long, "0");
+    
 class AsyncChangeSmartCarData extends AsyncChangeTravellerData {
 
     private int responseCode;
