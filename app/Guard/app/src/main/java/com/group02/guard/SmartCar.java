@@ -16,8 +16,7 @@ public class SmartCar {
 
     private String ip = "192.168.0.1";
     private String ssid = "GUARD";
-    //TODO: REMOVE HARDCODED NETWORK PASS WHEN DB IS DONE.
-    private String networkPass = "shaunisbest";
+    private String networkPass = "group2group2";
 
     public SmartCar(){
     }

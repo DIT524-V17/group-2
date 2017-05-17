@@ -12,6 +12,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -51,15 +52,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         connectivityData.execute();
 
-        String address = "20:15:10:20:11:37";
-        if (!connectivityData.getSsid().equals(null)){
+        Log.d("MAINACTIVITY", "" + connectivityData.responseCode);
+
+        /*if (connectivityData.responseCode == 200){
+            String address = "20:15:10:20:11:37";
             String ssid = connectivityData.getSsid();
             String networkPass = connectivityData.getPassword();
             String ip = connectivityData.getIpAddress();
             smartCar = new SmartCar(address, ip, ssid, networkPass);
-        }else {
+        }else {*/
             smartCar = new SmartCar();
-        }
+       // }
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (!adapter.isEnabled()) {

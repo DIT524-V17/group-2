@@ -21,6 +21,7 @@ import java.net.URL;
 
 public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer> {
 
+    private final String TAG = "ASYNCGETCONNECTIVITY";
     int responseCode;
     private String ssid;
     private String password;
@@ -39,7 +40,7 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
      */
     @Override
     protected Integer doInBackground(String... params) {
-        String urlString = "129.16.155.11:3000/guard/connectivity";
+        String urlString = "http://129.16.155.11:3000/guard/connectivity";
 
         //Creating readers to get data
         InputStreamReader inputReader;
@@ -50,29 +51,37 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
         String guardPass = "PerpetratorOf911";
         String auth = guardUser + ":" + guardPass;
         String encoded = Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP);
+        Log.d(TAG, "inb4 Trying connection.");
 
         try {
+            Log.d(TAG, "Trying connection.");
             //Opening a connection
             URL url = new URL(urlString);
+            Log.d(TAG, "URL.");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            Log.d(TAG, "Opened connection.");
             connection.setRequestProperty("Authorization", "Basic " + encoded);
             inputReader = new InputStreamReader(connection.getInputStream());
+            Log.d(TAG, "Input Stream.");
             BufferedReader bufferedReader = new BufferedReader(inputReader);
 
             //Building the response into a String
             String inputLine;
             while ((inputLine = bufferedReader.readLine()) != null) {
                 response.append(inputLine);
+                Log.d(TAG, inputLine);
             }
 
             //Closing the connection
+            Log.d(TAG, "CLOSING CONNECTION");
             inputReader.close();
             bufferedReader.close();
-            responseCode = connection.getResponseCode();
             connection.disconnect();
+            responseCode = connection.getResponseCode();
             parseResponse(response.toString());
 
         } catch (IOException e) {
+            e.printStackTrace();
             Log.e("IOException", "Problem encountered while retrieving connection info");
         }
         return responseCode;
@@ -99,9 +108,12 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
 
             //Going through the JSON array to find the fields needed
             for(int i=0; i< travellerObject.length(); i++) {
-                ssid = travellerObject.getJSONObject(i).getString("ssid");
-                password = travellerObject.getJSONObject(i).getString("password");
-                ipAddress = travellerObject.getJSONObject(i).getString("ip_address");
+                this.ssid = travellerObject.getJSONObject(i).getString("ssid");
+                Log.d("AsyncGetConnectivity", ssid);
+                this.password = travellerObject.getJSONObject(i).getString("password");
+                Log.d("AsyncGetConnectivity", password);
+                this.ipAddress = travellerObject.getJSONObject(i).getString("ip_address");
+                Log.d("AsyncGetConnectivity", ipAddress);
             }
         }
         catch (JSONException e){
