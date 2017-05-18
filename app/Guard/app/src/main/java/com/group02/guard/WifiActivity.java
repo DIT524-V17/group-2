@@ -24,6 +24,7 @@ import java.util.ArrayList;
  * Creates a the possibility to connect to other devices via WiFi-Direct (Peer2Peer).
  * Layout used for the class is actiivity_wifi.xml
  * @version 1.0.0
+ * @deprecated from sprint 7 and onwards
  */
 public class WifiActivity extends AppCompatActivity {
     private WifiP2pManager wifiManager;

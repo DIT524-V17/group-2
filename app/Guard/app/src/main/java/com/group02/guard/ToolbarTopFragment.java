@@ -18,6 +18,7 @@ import android.widget.Toast;
  * Creates a top toolbar with app title, option menu button and battery button
  * @author Justinas Stirbys
  * @version 1.0.0
+ * @deprecated from sprint 7 and onwards
  */
 
 public class ToolbarTopFragment extends Fragment {

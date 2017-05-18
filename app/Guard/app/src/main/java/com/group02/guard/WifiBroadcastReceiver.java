@@ -11,6 +11,7 @@ import android.net.wifi.p2p.WifiP2pManager;
  * @author Justinas Stirbys (JS)
  * A BroadcastReceiver that notifies of important WiFi Direct (Peer2Peer) events.
  * @version  1.0.0
+ * @deprecated from sprint 7 and onwards
  */
 public class WifiBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager wifiManager;
