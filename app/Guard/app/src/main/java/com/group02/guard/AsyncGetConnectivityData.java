@@ -1,9 +1,13 @@
 package com.group02.guard;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +23,7 @@ import java.net.URL;
  * @version 1.0.0
  */
 
-public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer> {
+public class AsyncGetConnectivityData extends AsyncTask<Void, Void, AsyncGetConnectivityData.Wrapper> {
 
     private final String TAG = "ASYNCGETCONNECTIVITY";
     int responseCode;
@@ -27,19 +31,33 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
     private String password;
     private String ipAddress;
 
+    private Context context;
 
-    /**
-     * Default empty constructor
-     */
-    public AsyncGetConnectivityData(){}
+    public interface AsyncResponse {
+        void processFinish(Wrapper output);
+    }
 
-    /**
-     * Receives connection data from Database
-     * @param params URL passed through the execute method
-     * @return a response code from the connection
-     */
+    public AsyncResponse delegate = null;
+
+    public AsyncGetConnectivityData(AsyncResponse delegate, Context context){
+        this.delegate = delegate;
+        this.context = context;
+    }
+
     @Override
-    protected Integer doInBackground(String... params) {
+    protected void onPostExecute(Wrapper result) {
+
+        handleResponseCode(responseCode);
+        Log.d("processFinish", "onPostExecute()");
+        delegate.processFinish(result);
+        Toast.makeText(context, "Finished", Toast.LENGTH_LONG);
+    }
+
+    @Override
+    protected Wrapper doInBackground(Void... params) {
+
+        Log.d("processFinish", "doInBackground()");
+
         String urlString = "http://129.16.155.11:3000/guard/connectivity";
 
         //Creating readers to get data
@@ -51,18 +69,13 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
         String guardPass = "PerpetratorOf911";
         String auth = guardUser + ":" + guardPass;
         String encoded = Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP);
-        Log.d(TAG, "inb4 Trying connection.");
-
         try {
-            Log.d(TAG, "Trying connection.");
             //Opening a connection
             URL url = new URL(urlString);
-            Log.d(TAG, "URL.");
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            Log.d(TAG, "Opened connection.");
             connection.setRequestProperty("Authorization", "Basic " + encoded);
             inputReader = new InputStreamReader(connection.getInputStream());
-            Log.d(TAG, "Input Stream.");
             BufferedReader bufferedReader = new BufferedReader(inputReader);
 
             //Building the response into a String
@@ -81,20 +94,23 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
             parseResponse(response.toString());
 
         } catch (IOException e) {
-            e.printStackTrace();
             Log.e("IOException", "Problem encountered while retrieving connection info");
         }
-        return responseCode;
+        Log.d(TAG, "" + responseCode);
+
+        Wrapper w = new Wrapper();
+        w.ssid = ssid;
+        w.ip = ipAddress;
+        w.password = password;
+
+        return w;
     }
 
     /**
-     * Calls a metod to handle the response code
-     * @param result The response code returned from doInBackground()
+     * Receives connection data from Database
+     * @param params URL passed through the execute method
+     * @return a response code from the connection
      */
-    @Override
-    protected void onPostExecute(Integer result){
-        handleResponseCode(result);
-    }
 
     /**
      * Parses JSON object to collect the required data
@@ -152,16 +168,14 @@ public class AsyncGetConnectivityData extends AsyncTask<String, String, Integer>
             Log.e("GetConnectivity", messageToDisplay);
         }
     }
-    public String getSsid() {
-        return ssid;
+
+    public class Wrapper
+    {
+        public String ssid;
+        public String password;
+        public String ip;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public String getIpAddress() {
-        return ipAddress;
-    }
 
 }

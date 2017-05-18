@@ -17,14 +17,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.security.Timestamp;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Creates the "MainScreen" of the G.U.A.R.D. app. Layout used is activity_main.xml
  * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
  * @version 1.1.0 JE
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener{
 
     Button control;
     Button gps;
@@ -32,8 +35,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button reconnect;
     Button logout;
 
-    SmartCar smartCar;
+    private String mSsid = "";
+    private String mIp = "";
+    private String mNetworkpass = "";
 
+    SmartCar smartCar;
     Session session;
 
     private boolean btCon = false;
@@ -47,22 +53,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AsyncGetConnectivityData connectivityData =
-                new AsyncGetConnectivityData();
+        AsyncGetConnectivityData asyncTask = new AsyncGetConnectivityData
+                (new AsyncGetConnectivityData.AsyncResponse() {
+            @Override
+            public void processFinish(AsyncGetConnectivityData.Wrapper output) {
+                mSsid = output.ssid;
+                Log.d("processFinish", output.ssid);
+                mIp = output.ip;
+                Log.d("processFinish", output.ip);
+                mNetworkpass = output.password;
+                Log.d("processFinish", output.password);
+            }
+        }, this);
 
-        connectivityData.execute();
+        asyncTask.execute();
+        Log.d("processFinish", "execute()");
 
-        Log.d("MAINACTIVITY", "" + connectivityData.responseCode);
+        Log.d("processFinish", "" + asyncTask.responseCode);
 
-        /*if (connectivityData.responseCode == 200){
+        while (asyncTask.responseCode == 0 ) {}
+            if (asyncTask.responseCode == 200) {
+                if (mSsid.equals("")) {
+                    try {
+                        asyncTask.get();
+                        Log.d("processFinish", "get()");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
             String address = "20:15:10:20:11:37";
-            String ssid = connectivityData.getSsid();
-            String networkPass = connectivityData.getPassword();
-            String ip = connectivityData.getIpAddress();
-            smartCar = new SmartCar(address, ip, ssid, networkPass);
-        }else {*/
+            Log.d("processFinish", "Creating SmartCar");
+            smartCar = new SmartCar(address, mIp, mSsid, mNetworkpass);
+
+        } else {
+            Log.d("processFinish", "Creating EMPTY SmartCar");
             smartCar = new SmartCar();
-       // }
+        }
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (!adapter.isEnabled()) {
@@ -105,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
 
     private void logout() {
         session.setLoggedin(false);
@@ -244,6 +273,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
 
 }
