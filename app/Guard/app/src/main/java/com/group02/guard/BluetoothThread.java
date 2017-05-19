@@ -1,9 +1,5 @@
 package com.group02.guard;
 
-/**
- * Created by jeberlen on 2017-03-06.
- */
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;

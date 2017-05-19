@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void loginSql(String email, String password){
         if(db.getUser(email, password)){
             session.setLoggedin(true);
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
             finish();
         }else{
             Toast.makeText(this, "Wrong email/password", Toast.LENGTH_SHORT).show();

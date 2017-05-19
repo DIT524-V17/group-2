@@ -106,7 +106,7 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
     protected void onPostExecute(Traveller result){
         if (this.password.equals(result.getPassword())) {
             session.setLoggedin(true);
-            Intent mainActivity = new Intent(context, MainActivity.class);
+            Intent mainActivity = new Intent(context, NavigationActivity.class);
 
             //Making a Bundle filled with Traveler Data
             Bundle travellerData = new Bundle();

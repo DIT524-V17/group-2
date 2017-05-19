@@ -125,11 +125,8 @@ public class AsyncGetConnectivityData extends AsyncTask<Void, Void, AsyncGetConn
             //Going through the JSON array to find the fields needed
             for(int i=0; i< travellerObject.length(); i++) {
                 this.ssid = travellerObject.getJSONObject(i).getString("ssid");
-                Log.d("AsyncGetConnectivity", ssid);
                 this.password = travellerObject.getJSONObject(i).getString("password");
-                Log.d("AsyncGetConnectivity", password);
                 this.ipAddress = travellerObject.getJSONObject(i).getString("ip_address");
-                Log.d("AsyncGetConnectivity", ipAddress);
             }
         }
         catch (JSONException e){

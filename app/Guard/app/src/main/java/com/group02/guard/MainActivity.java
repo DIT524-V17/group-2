@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity
             btCon = true;
         }
 
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!wifi.isWifiEnabled()){
             turnOnWifi(wifi);
         } else {
