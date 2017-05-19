@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
@@ -18,7 +19,7 @@ import android.util.Log;
 
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
- * @author Joacim Eberlen, Erik Laurin, Axel Granli
+ * @author Joacim Eberlen, Erik Laurin, Axel Granli, Shaun McMurray
  * @version 1.1.0 JE
  */
 public class ControllerActivity extends AppCompatActivity {
@@ -45,6 +46,9 @@ public class ControllerActivity extends AppCompatActivity {
     private Control analogue;
     private TextView showMoveEvent;
 
+    private String videoStream;
+    private WebView webView;
+
     /**
      * Creates UI elements and initializes the BluetoothThread.
      * @param savedInstanceState Saved Instance State
@@ -59,6 +63,27 @@ public class ControllerActivity extends AppCompatActivity {
         {
             address = bundle.getString("address");
             btCon = bundle.getBoolean("btCon");
+        }
+
+        try {
+
+            webView = (WebView) findViewById(R.id.videoview);
+            videoStream = "http://192.168.42.1:8080/stream";
+
+            int default_zoom_level = 100;
+            webView.setInitialScale(default_zoom_level);
+            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
+            webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    int width = webView.getWidth();
+                    int height = webView.getHeight();
+                    webView.loadUrl(videoStream + "?width=" + width + "&height=" + height);
+                }
+            });
+        }catch (Exception e){
+            Log.d(TAG, e.getMessage());
         }
 
         analogue = (Control) findViewById(R.id.controlView);
