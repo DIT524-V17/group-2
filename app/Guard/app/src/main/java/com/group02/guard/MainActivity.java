@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -71,7 +72,8 @@ public class MainActivity extends AppCompatActivity
 
         Log.d("processFinish", "" + asyncTask.responseCode);
 
-        while (asyncTask.responseCode == 0 ) {}
+        while (asyncTask.responseCode == 0 && isNetworkAvailable()) {}
+        Log.d("processFinish", "" + asyncTask.responseCode);
             if (asyncTask.responseCode == 200) {
                 if (mSsid.equals("")) {
                     try {
@@ -272,6 +274,14 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+
+
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 
 }
