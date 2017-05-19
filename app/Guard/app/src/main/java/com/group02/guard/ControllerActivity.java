@@ -264,35 +264,52 @@ public class ControllerActivity extends AppCompatActivity {
 
         Log.d(TAG, inputString);
 
-        switch (inputString.charAt(0) + inputString.charAt(1)) {
-            case 'B' + 'B':
-                analogReadValue = Integer.parseInt(inputString.substring(2).trim());
-                topFragment.setAnalogReadValue(analogReadValue);
-                setBatteryLevel();
-                break;
-            case 'F' + 'M':
-                sfmImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
-                break;
-            case 'F' + 'L':
-                sflImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
-                break;
-            case 'F' + 'R':
-                sfrImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
-                break;
-            case 'S' + 'L':
-                slImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
-                break;
-            case 'S' + 'R':
-                srImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
-                break;
-            case 'S' + 'B':
-                sbImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
-                break;
-            default:
-                break;
+        try {
 
+            switch (inputString.charAt(0) + inputString.charAt(1)) {
+                case 'B' + 'B':
+                    analogReadValue = Integer.parseInt(inputString.substring(2).trim());
+                    topFragment.setAnalogReadValue(analogReadValue);
+                    setBatteryLevel();
+                    break;
+                case 'F' + 'M':
+                    sfmImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                    break;
+                case 'F' + 'L':
+                    sflImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                    break;
+                case 'F' + 'R':
+                    sfrImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                    break;
+                case 'S' + 'L':
+                    slImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                    break;
+                case 'S' + 'R':
+                    srImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                    break;
+                case 'S' + 'B':
+                    sbImage.setDistance(Integer.parseInt(inputString.substring(2).trim()));
+                    break;
+                default:
+                    break;
+            }
+        }catch (Exception e){
+            Log.d(TAG, e.getMessage());
         }
+
+
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
 
+        try {
+            btt.resetConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
