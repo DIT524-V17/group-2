@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Random;
 
 /**
  * @author Gabriel Bulai
@@ -51,6 +52,10 @@ public class ClientReceiveThread extends Thread {
             while ((otherLine = bufferedReader.readLine()) != null) {
 
                 Log.i(TAG, otherLine);
+               /**
+                AsyncChangeSmartCarData addCoords = new AsyncChangeSmartCarData();
+                addCoords.execute("http://129.16.155.11:3000/guard/cars", lat, long, "0");
+                */
             }
             msg = Message.obtain();
             msg.obj = "Server disconnected";

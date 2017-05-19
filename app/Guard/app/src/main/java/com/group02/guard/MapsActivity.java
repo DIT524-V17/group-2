@@ -103,7 +103,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Toast.makeText(getApplicationContext(), "GPS is Disabled in your device", Toast.LENGTH_SHORT).show();
                     Log.e("About GPS", "GPS is Disabled in your device");
                 }
-
             }
         }
     };
@@ -129,32 +128,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void initFollowing() {
-        preferences = getPreferences(MODE_PRIVATE);
-        gpsOn = preferences.getBoolean("gpsOn", false);
-
-        // Initialize the Bluetooth thread, passing in a MAC serverAddress
-        connectBluetooth = new BluetoothThread(address, new Handler() {
-            @Override
-            public void handleMessage(Message message) {
-                write(gpsOn);
-            }
-        });
-        writeHandler = connectBluetooth.getWriteHandler();
-        connectBluetooth.start();
-//        bottom = new ToolbarBottomFragment();
-
-    }
-
-    public void write(boolean gpsMode) {
-        Message gps = Message.obtain();
-        if (gpsMode) {
-            gps.obj = "G";
-            writeHandler.sendMessage(gps);
-        } else {
-            gps.obj = "M";
-            writeHandler.sendMessage(gps);
-        }
+    private void initFollowing(String s) {
+        clientSendThread.txMsg(s);
     }
     private void initGoogleAPIClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -216,34 +191,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void gotoLocation(double lat, double lng, int zoom) {
-        if (phoneMarker != null) {
-            phoneMarker.remove();
-        }
+        //create LatLng object with the coordinates passed in the method
         LatLng phoneLatLng = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(phoneLatLng, zoom);
-        MarkerOptions phoneMarkerOptions = new MarkerOptions()
-                .position(phoneLatLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.guard_launcher))
-                .title("Follow me");
-        phoneMarker = mMap.addMarker(phoneMarkerOptions);
-        phoneMarker.showInfoWindow();
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(final Marker marker) {
-                if (marker.equals(phoneMarker)) {
-                    clickCount += 1;
-                    Toast.makeText(getApplicationContext(), "Press again to start following mode", Toast.LENGTH_SHORT).show();
-                    if (clickCount % 2 == 0) {
-                        initFollowing();
-                        write(true);
-                        startActivity(new Intent(MapsActivity.this, ControllerActivity.class));
-                        Toast.makeText(getApplicationContext(), "Manual mode activated", Toast.LENGTH_SHORT).show();
-                    }
-                    //clickCount = 0;
-                }
-                return false;
-            }
-        });
         mMap.animateCamera(update);
         if (serverOK()) {
             LatLng carLatLng = new LatLng(Double.parseDouble(getCarCoords()[0]), Double.parseDouble(getCarCoords()[1]));
@@ -255,7 +205,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
                     .title("SmartCar");
             carMarker = mMap.addMarker(carMarkerOptions);
-            carMarker.showInfoWindow();
+            //carMarker.showInfoWindow();
         }
     }
 
@@ -358,7 +308,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
+        //create LatLng with current location
+        LatLng phoneLatLng = new LatLng(currentLatitude, currentLongitude);
+        if (phoneMarker != null) {
+            phoneMarker.remove();
+        }
+        MarkerOptions phoneMarkerOptions = new MarkerOptions()
+                .position(phoneLatLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.guard_launcher))
+                .title("Click twice to activate following mode");
+        phoneMarker = mMap.addMarker(phoneMarkerOptions);
+        phoneMarker.showInfoWindow();
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                if (marker.equals(phoneMarker)) {
+                    clickCount += 1;
+                    if (clickCount % 2 == 0) {
+                        initFollowing("3 0");
+                        //startActivity(new Intent(MapsActivity.this, ControllerActivity.class));
+                        Toast.makeText(getApplicationContext(), "Manual mode activated", Toast.LENGTH_SHORT).show();
+                    } else if (clickCount % 2 == 1) {
+                        Toast.makeText(getApplicationContext(), "Press again to start following mode", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
         gotoLocation(currentLatitude, currentLongitude, 15);
+        //send location to the Pi if it is accurate = means if the gps is set tu high Accuracy
         if (location.hasAccuracy()) {
             clientSendThread.txMsg(currentLatitude.toString() + " " + currentLongitude.toString());
         } else {
@@ -476,8 +453,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             // do something when the button is clicked
             public void onClick(DialogInterface arg0, int arg1) {
-                initFollowing();
-                write(true);
+                initFollowing("2 0");
                 //startActivity(new Intent(MapsActivity.this, ControllerActivity.class));
                 Toast.makeText(getApplicationContext(), "Manual mode activated", Toast.LENGTH_LONG).show();
                 clickCount = 0;
@@ -493,6 +469,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         AlertDialog dialog = alertbox.create();
         dialog.show();
-
     }
 }

@@ -6,7 +6,7 @@ from GpsAngle import calculateBearing, distance
 """
 * Script that handles the logic behind the SmartCar autonomously following the traveler (phone application)
 * @author Erik Laurin
-* @version 1.0.1
+* @version 1.0.2
 """
 
 # serial for SmartCar
@@ -90,7 +90,7 @@ class phone_coordinates(threading.Thread):
 
 def get_phone_coordinates(threadName):
     """
-    Receives and process the phone coordinates
+    Receives and process the phone coordinates (also changes SmartCar mode and cancel the script)
     :param threadName: the name of the thread
     """
     while not exitFlag:
@@ -103,6 +103,10 @@ def get_phone_coordinates(threadName):
                 exit('phone - exit command (0)')
             elif (phone_latitudes == '1'):  # '1' codes for that the phone has insufficient GPS signal
                 no_fix('phone')
+            elif (phone_latitudes == '2'):  # '2' codes for manual control and will be sent to SmartCar to change mode
+                send_mode("M")
+            elif (phone_latitudes == '3'):  # '3' codes for GPSfollowing and will be sent to SmartCar to change mode
+                send_mode("G")
             elif isfloat(phone_latitudes):  # if float, the value is regarded as a valid coordinate
                 global no_fix_bol_phone
                 no_fix_bol_phone = False
@@ -299,6 +303,15 @@ def send_speed(speed):
     serial_arduino.write(byte_speed)
     print("Sent to SmartCar: " + s + str(speed))
 
+def send_mode(mode):
+    """
+    Sends the mode to the SmartCar
+    :param mode: the mode the SmartCar should be set to
+    """
+    m = mode
+    byte_mode = str.encode(m + '\n')
+    serial_arduino.write(byte_mode)
+    print("Sent to SmartCar: " + str(m))
 
 # Overwrite old GPS coordinates on start of script
 try:
@@ -327,8 +340,9 @@ thread_phone_coordinates.join()
 thread_smartcar_coordinates.join()
 thread_drive.join()
 
-# Makes sure that the car stops when the script terminates
+# Makes sure that the car stops when the script terminates and changes to manual mode
 print("Sending stop command to SmartCar")
 send_speed(0)
 time.sleep(2)
+send_mode("M")
 print("Bye")
