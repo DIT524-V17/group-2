@@ -64,7 +64,7 @@ public class MainFragment extends Fragment
 
         control.setOnClickListener(this);
         map.setOnClickListener(this);
-        reconnect.setOnClickListener(this);
+        //reconnect.setOnClickListener(this);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,9 +190,6 @@ public class MainFragment extends Fragment
                 return;
             case R.id.mapsButton:
                 startActivity(mapIntent);
-                return;
-            case R.id.gpsButton:
-                //startActivity(gpsIntent);
                 return;
             case R.id.reconnect:
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);

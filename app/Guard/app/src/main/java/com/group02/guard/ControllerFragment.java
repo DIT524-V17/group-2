@@ -12,6 +12,7 @@ import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,8 +36,10 @@ public class ControllerFragment extends Fragment {
 
     private Sensor sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
     private Control analogue;
-    private TextView showMoveEvent;
     ImageButton batteryButton;
+
+    private String videoStream;
+    private WebView webView;
 
 
 
@@ -48,15 +51,68 @@ public class ControllerFragment extends Fragment {
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
 
-    ToolbarTopFragment topFragment = null;
-
     //Set MAX_SPEED for motors
     final int MAX_SPEED = 70;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-//        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        return inflater.inflate(R.layout.fragment_controller2, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+
+        View view = inflater.inflate(R.layout.fragment_controller2, parent, false);
+
+        try {
+
+            webView = (WebView) view.findViewById(R.id.videoview);
+            videoStream = "http://192.168.42.1:8080/stream";
+
+            int default_zoom_level = 100;
+            webView.setInitialScale(default_zoom_level);
+            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
+            webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    int width = webView.getWidth();
+                    int height = webView.getHeight();
+                    webView.loadUrl(videoStream + "?width=" + width + "&height=" + height);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        analogue = (Control) view.findViewById(R.id.controlView);
+
+        sfmImage = (Sensor) view.findViewById(R.id.sensor_front_middle);
+        sfrImage = (Sensor) view.findViewById(R.id.sensor_front_right);
+        sflImage = (Sensor) view.findViewById(R.id.sensor_front_left);
+        slImage = (Sensor) view.findViewById(R.id.sensor_left);
+        srImage = (Sensor) view.findViewById(R.id.sensor_right);
+        sbImage = (Sensor) view.findViewById(R.id.sensor_back);
+
+        batteryButton = (ImageButton) view.findViewById(R.id.batteryButton);
+        batteryButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                displayBatteryStats(v);
+            }
+        });
+
+        analogue.setOnMoveListener(new Control.OnMoveListener() {
+            public void onMoveInDirection(final double polarAngle) {
+                double speed = analogue.getSpeed(MAX_SPEED);
+                Log.e("", "" + speed);
+                // [0] is left, [1] is right
+                int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
+                write(motors[0], motors[1]);
+            }
+
+            @Override
+            public void onMoveStopped() {
+                write(0, 0);
+            }
+        });
+
+        return view;
     }
 
 
@@ -65,28 +121,12 @@ public class ControllerFragment extends Fragment {
      *
      */
     @Override
-    public void onStart() {
+    public void onCreate(Bundle SharedPreferences) {
 
-        super.onStart();
+        super.onCreate(SharedPreferences);
+        setRetainInstance(true);
 
-        showMoveEvent = (TextView) getView().findViewById(R.id.coords);
 
-        analogue = (Control) getView().findViewById(R.id.controlView);
-
-        sfmImage = (Sensor) getView().findViewById(R.id.sensor_front_middle);
-        sfrImage = (Sensor) getView().findViewById(R.id.sensor_front_right);
-        sflImage = (Sensor) getView().findViewById(R.id.sensor_front_left);
-        slImage = (Sensor) getView().findViewById(R.id.sensor_left);
-        srImage = (Sensor) getView().findViewById(R.id.sensor_right);
-        sbImage = (Sensor) getView().findViewById(R.id.sensor_back);
-
-        batteryButton = (ImageButton) getView().findViewById(R.id.batteryButton);
-        batteryButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                displayBatteryStats(v);
-            }
-        });
 
         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages
@@ -106,28 +146,6 @@ public class ControllerFragment extends Fragment {
 
         // Run the thread
         btt.start();
-
-        analogue.setOnMoveListener(new Control.OnMoveListener() {
-            public void onMoveInDirection(final double polarAngle) {
-                double speed = analogue.getSpeed(MAX_SPEED);
-                Log.e("", "" + speed);
-                // [0] is left, [1] is right
-                int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
-                showMoveEvent.setText("Angle: " + analogue.nAngle()
-                        + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
-                        + "\nSpeed: " + speed);
-
-                write(motors[0], motors[1]);
-            }
-
-            @Override
-            public void onMoveStopped() {
-                showMoveEvent.setText("Angle: " + analogue.nAngle()
-                        + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
-                        + "\nSpeed: " + 0);
-                write(0, 0);
-            }
-        });
     }
 
     /**
@@ -292,5 +310,16 @@ public class ControllerFragment extends Fragment {
         arduinoVoltage = newValue;
     }
 
+    public void onResume() {
+        super.onResume();
 
+        if (btt == null){
+
+            try {
+                btt.resetConnection();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

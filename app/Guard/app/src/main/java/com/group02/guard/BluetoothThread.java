@@ -266,4 +266,31 @@ public class BluetoothThread extends Thread {
         disconnect();
         sendToReadHandler("DISCONNECTED");
     }
+
+    public void resetConnection() {
+        if (inStream != null) {
+            try {
+                inStream.close();
+            } catch (Exception e) {
+            }
+            inStream = null;
+        }
+
+        if (outStream != null) {
+            try {
+                outStream.close();
+            } catch (Exception e) {
+            }
+            outStream = null;
+        }
+
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (Exception e) {
+            }
+            socket = null;
+        }
+    }
+
 }

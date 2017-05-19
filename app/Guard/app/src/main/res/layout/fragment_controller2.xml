@@ -11,6 +11,8 @@
     tools:layout_editor_absoluteY="25dp"
     tools:layout_editor_absoluteX="0dp">
 
+    <include layout="@layout/background_video" />
+
     <ImageButton
         android:id="@+id/batteryButton"
         android:layout_width="wrap_content"

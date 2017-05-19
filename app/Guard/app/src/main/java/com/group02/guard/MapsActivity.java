@@ -126,7 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(this, "Map Not Connected!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            setContentView(R.layout.activity_main);
+            setContentView(R.layout.fragment_main);
         }
     }
 
