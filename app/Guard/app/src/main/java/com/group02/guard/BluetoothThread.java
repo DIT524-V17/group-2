@@ -115,6 +115,7 @@ public class BluetoothThread extends Thread {
         adapter.cancelDiscovery();
 
         // Connect to the socket
+
         socket.connect();
 
 
@@ -269,5 +270,31 @@ public class BluetoothThread extends Thread {
         // If thread is interrupted, close connections
         disconnect();
         sendToReadHandler("DISCONNECTED");
+    }
+
+    public void resetConnection() {
+        if (inStream != null) {
+            try {
+                inStream.close();
+            } catch (Exception e) {
+            }
+            inStream = null;
+        }
+
+        if (outStream != null) {
+            try {
+                outStream.close();
+            } catch (Exception e) {
+            }
+            outStream = null;
+        }
+
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (Exception e) {
+            }
+            socket = null;
+        }
     }
 }
