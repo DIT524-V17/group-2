@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.security.Timestamp;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -30,24 +29,20 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener{
 
+    // final check number for bluetooth prompt
+    private final static int REQUEST_ENABLE_BT = 1;
     Button control;
     Button gps;
     Button map;
     Button reconnect;
     Button logout;
-
+    SmartCar smartCar;
+    Session session;
     private String mSsid = "";
     private String mIp = "";
     private String mNetworkpass = "";
-
-    SmartCar smartCar;
-    Session session;
-
     private boolean btCon = false;
     private boolean wifiCon = false;
-
-    // final check number for bluetooth prompt
-    private final static int REQUEST_ENABLE_BT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +54,23 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void processFinish(AsyncGetConnectivityData.Wrapper output) {
                 mSsid = output.ssid;
-                Log.d("processFinish", output.ssid);
+                //Log.d("processFinish", output.ssid);
                 mIp = output.ip;
-                Log.d("processFinish", output.ip);
+                //Log.d("processFinish", output.ip);
                 mNetworkpass = output.password;
-                Log.d("processFinish", output.password);
+                //Log.d("processFinish", output.password);
             }
         }, this);
 
         asyncTask.execute();
+        AsyncReachInternet reachInternet = new AsyncReachInternet();
+        reachInternet.execute();
         Log.d("processFinish", "execute()");
 
         Log.d("processFinish", "" + asyncTask.responseCode);
 
-        while (asyncTask.responseCode == 0 && isNetworkAvailable()) {}
+        while (asyncTask.responseCode == 0 && isNetworkAvailable() && reachInternet.getInternet()) {
+        }
         Log.d("processFinish", "" + asyncTask.responseCode);
             if (asyncTask.responseCode == 200) {
                 if (mSsid.equals("")) {
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity
             btCon = true;
         }
 
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!wifi.isWifiEnabled()){
             turnOnWifi(wifi);
         } else {
@@ -283,5 +281,6 @@ public class MainActivity extends AppCompatActivity
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
     }
+
 
 }

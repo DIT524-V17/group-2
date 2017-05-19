@@ -5,6 +5,7 @@ package com.group02.guard;
  * @author Gabriel Bulai
  * @version 1.0
  */
+
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,7 +15,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * The class creates an activity that handles database and session and allows the user to log in
@@ -27,6 +31,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etPass;
     private DbHelper db;
     private Session session;
+
+    public static boolean isInternetReachable() {
+        InetAddress inet;
+        try {
+            inet = InetAddress.getByName("www.google.com");
+            return true;
+        } catch (UnknownHostException e) {
+            return false;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +114,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             AsyncGetTravellerData getTraveller = new AsyncGetTravellerData(this, session);
             String url = "http://129.16.155.11:3000/guard/travellers";
             getTraveller.execute(url, hashedEmail, hashedPass);
-
         //Unavailable connection get data from SQL DB inside phone
         }else{
             loginSql(hashedEmail, hashedPass);
