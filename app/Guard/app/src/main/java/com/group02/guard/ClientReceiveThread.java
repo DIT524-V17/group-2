@@ -32,7 +32,6 @@ public class ClientReceiveThread extends Thread {
         dstPort = port;
     }
 
-
     @Override
     public void run() {
 
