@@ -82,6 +82,30 @@ REST_ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
+    //Command 'GET'
+    //Gets all values from the connectivity table
+    router.get("/connectivity", Auth.BasicAuthentication, function(req, res){
+        var query = "SELECT * FROM connectivity";
+        query = mysql.format(query);
+
+        //Getting a connection from the pool
+        pool.getConnection(function(err, connection){
+            connection.query(query, function(err, rows){
+                //Putting the connection back in the pool for later reuse
+                connection.release();
+                //JSON response
+                if(err) {
+                    res.json({"Error" : true,
+                    "Message" : "Error while getting connection info"});
+                } else {
+                    res.json({"Error" : false,
+                    "Message" : "Connection info received",
+                    "Info" : rows});
+                }
+            });
+        });
+    });
+
     //Command 'PUT'
     //Updates Traveler's password for specific email
     router.put("/travellers", Auth.BasicAuthentication, function(req, res){
@@ -107,7 +131,7 @@ REST_ROUTER.prototype.handleRoutes = function(router, pool) {
     });
 
     //Command 'PUT'
-    //Updates Traveler's email based on password
+    //Updates Traveler's email based on user_id
     router.put("/travellers/:user_id", Auth.BasicAuthentication, function(req, res){
         var query = "UPDATE travellers SET email = ? WHERE user_id = ?";
         var table = [req.body.email, req.params.user_id];
