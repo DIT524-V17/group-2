@@ -11,6 +11,8 @@
     tools:layout_editor_absoluteY="25dp"
     tools:layout_editor_absoluteX="0dp">
 
+    <include layout="@layout/background_video" />
+
     <fragment
         android:name="com.group02.guard.ToolbarTopFragment"
         tools:layout="@layout/toolbar_top"

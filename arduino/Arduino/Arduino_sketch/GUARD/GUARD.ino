@@ -1,8 +1,8 @@
 #include <SimpleTimer.h>
 #include <Smartcar.h>
 #include <NewPing.h>
-#include <SoftwareSerial.h>
 #include <LSM303.h>
+#include <Wire.h>
 
 #define TRIGGER_PIN_RIGHT_FRONT  51  // Arduino pin tied to trigger pin on the ultrasonic sensor
 #define ECHO_PIN_RIGHT_FRONT     50  // Arduino pin tied to echo pin on the right ultrasonic sensor
@@ -133,7 +133,7 @@ void handleInputRPi(){
     if(inputRPi.startsWith("G")){ //Activates GPS mode 
       mode = 1;
     }
-    else if(input.startsWith("M")){
+    else if(input.startsWith("M")){ //Activates manual control mode
       mode = 0;
     }
   }
@@ -144,14 +144,15 @@ void GPSfollowing(){ //Execute the maneuvering commands send by the RPi
 
   if (Serial.available()) { //Handle serial input from Raspberry Pi
     inputRPi = Serial.readStringUntil('\n');
-  }
-  if (inputRPi.startsWith("A")){
-    angleGPS = inputRPi.substring(1).toInt();
-    rotateOnSpot(angleGPS); //Turn to specific degree
-  }
-  else if (inputRPi.startsWith("S")){
-    speedGPS = inputRPi.substring(1).toInt();
-    motors.setSpeed(speedGPS);  //Set speed
+  
+    if (inputRPi.startsWith("A")){
+      angleGPS = inputRPi.substring(1).toInt();
+      rotateOnSpot(angleGPS); //Turn to specific degree
+    }
+    else if (inputRPi.startsWith("S")){
+      speedGPS = inputRPi.substring(1).toInt();
+      motors.setSpeed(speedGPS);  //Set speed
+    }
   }
 }
 
@@ -178,7 +179,6 @@ void rotateOnSpot(int targetDegrees) { //Method rotates the car to a certain hea
   while (!(heading < (targetDegrees + 1) && heading > (targetDegrees - 1))) {
     getHeading();
   }
-  Serial.print("Stopped on heading: "); Serial.println(heading);
   car.stop(); //we have reached the target, so stop the car
 }
 
