@@ -1,5 +1,6 @@
 package com.group02.guard;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,7 +35,6 @@ public class TravellerProfileFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_traveller_profile, parent, false);
-
 //        //Get arguments from activity
 //        Bundle bundle = this.getArguments();
 //        this.email = bundle.getString("EMAIL");
