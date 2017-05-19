@@ -67,6 +67,7 @@ public class ClientSendThread extends Thread {
 
                 //bufferedReader block the code
                 String line = bufferedReader.readLine();
+
             }
 
         } catch (IOException e) {
