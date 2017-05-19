@@ -66,3 +66,5 @@ guardweb/
 
 # EXTERNAL PYTHON
 BreezySLAM/
+
+*.bak

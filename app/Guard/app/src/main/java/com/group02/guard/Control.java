@@ -27,9 +27,9 @@ public class Control extends View {
     double r, t;
     int cx, cy, w, h;
     static final int RADIUS = 20;
-    Paint backGround = new Paint();
-    Paint smallDotAndOuterBorder = new Paint();
-    Paint smallDotBorder = new Paint();
+    private Paint backGround = new Paint();
+    private Paint smallDotAndOuterBorder = new Paint();
+    private Paint smallDotBorder = new Paint();
 
 
 
@@ -289,6 +289,14 @@ public class Control extends View {
         }
         invalidate();
     }
+
+    public void setClickable(){
+        backGround.setAlpha(100);
+        smallDotAndOuterBorder.setAlpha(100);
+        smallDotBorder.setAlpha(100);
+        invalidate();
+    }
+
     /**
      * An interface to make choices to different Motion events.
      * @param listener Listens to changes.

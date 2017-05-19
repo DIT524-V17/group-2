@@ -152,8 +152,7 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
 
     /**
      * Displays message for app user based on the response code
-     * @param responseCode Integer that is received from the HttpUrlConnection informing of the
-     *                     request's status
+     * @param responseCode Integer received from the connection informing of the request's status
      */
     private void handleResponseCode(int responseCode){
         String messageToDisplay;
@@ -188,6 +187,5 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
         }
     }
-
 }
 

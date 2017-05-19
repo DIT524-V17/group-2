@@ -2,20 +2,19 @@ package com.group02.guard;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.v7.app.NotificationCompat;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * An activity that includes the video stream, the controller, the batteryImageButton levels of the car.
@@ -24,14 +23,19 @@ import android.widget.Toast;
  */
 public class ControllerActivity extends AppCompatActivity {
 
-    private final static int REQUEST_ENABLE_BT = 1;
-    //Set MAX_SPEED for motors
-    final int MAX_SPEED = 70;
-    String address = "20:15:10:20:11:37";
+    private final String TAG = "ControllerActivity";
+
     // The thread that does all the work
     BluetoothThread btt;
     // Handler for writing messages to the Bluetooth connection
-    Handler writeHandler;
+    private Handler writeHandler;
+
+    //Set MAX_SPEED for motors
+    final int MAX_SPEED = 70;
+
+    private String address;
+    private boolean btCon;
+
     ToolbarTopFragment topFragment;
     // Following variables is used by the batteryImageButton function
     private double analogReadValue;
@@ -49,63 +53,74 @@ public class ControllerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
-        // Initialize the Bluetooth thread, passing in a MAC serverAddress
-        // and a Handler that will receive incoming messages
 
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-
-
-        if (!adapter.isEnabled()) {
-            //Set a filter to only receive bluetooth state changed events.
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent , 0);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.getString("address") != null)
+        {
+            address = bundle.getString("address");
+            btCon = bundle.getBoolean("btCon");
         }
-
-
-        btt = new BluetoothThread(address, new Handler() {
-
-            @Override
-            public void handleMessage(Message message) {
-                String s = (String) message.obj;
-                readInput(s);
-            }
-        });
-        // Get the handler that is used to send messages
-        writeHandler = btt.getWriteHandler();
-        // Run the thread
-        btt.start();
-
-        showMoveEvent = (TextView) findViewById(R.id.coords);
 
         analogue = (Control) findViewById(R.id.controlView);
 
-        sfmImage = (Sensor) findViewById(R.id.sensor_front_middle);
-        sfrImage = (Sensor) findViewById(R.id.sensor_front_right);
-        sflImage = (Sensor) findViewById(R.id.sensor_front_left);
-        slImage = (Sensor) findViewById(R.id.sensor_left);
-        srImage = (Sensor) findViewById(R.id.sensor_right);
-        sbImage = (Sensor) findViewById(R.id.sensor_back);
+        if(btCon) {
+            Log.d(TAG, "Start Thread: startThread initiated.");
+            // Initialize the Bluetooth thread, passing in a MAC address
+            // and a Handler that will receive incoming messages
+            btt = new BluetoothThread(address, new Handler() {
+                @Override
+                public void handleMessage(Message message) {
+                    String s = (String) message.obj;
+                    readInput(s);
+                }
+            });
+            // Get the handler that is used to send messages
+            writeHandler = btt.getWriteHandler();
+            // Run the thread
+            btt.start();
 
-        analogue.setOnMoveListener(new Control.OnMoveListener() {
-            public void onMoveInDirection(final double polarAngle) {
-                double speed = analogue.getSpeed(MAX_SPEED);
-                Log.e("", "" + speed);
-                // [0] is left, [1] is right
-                int[] motors = analogue.motorSpeed((int)speed, (int)analogue.nAngle());
-                showMoveEvent.setText("Angle: " + analogue.nAngle()
-                        + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
-                        + "\nSpeed: " + speed);
-                write(motors[0], motors[1]);
-            }
+            showMoveEvent = (TextView) findViewById(R.id.coords);
+            sfmImage = (Sensor) findViewById(R.id.sensor_front_middle);
+            sfrImage = (Sensor) findViewById(R.id.sensor_front_right);
+            sflImage = (Sensor) findViewById(R.id.sensor_front_left);
+            slImage = (Sensor) findViewById(R.id.sensor_left);
+            srImage = (Sensor) findViewById(R.id.sensor_right);
+            sbImage = (Sensor) findViewById(R.id.sensor_back);
 
-            @Override
-            public void onMoveStopped() {
-                showMoveEvent.setText("Angle: " + analogue.nAngle()
-                        + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
-                        + "\nSpeed: " + 0);
-                write(0, 0);
-            }
-        });
+            analogue.setOnMoveListener(new Control.OnMoveListener() {
+                public void onMoveInDirection(final double polarAngle) {
+                    double speed = analogue.getSpeed(MAX_SPEED);
+                    Log.e("", "" + speed);
+                    // [0] is left, [1] is right
+                    int[] motors = analogue.motorSpeed((int) speed, (int) analogue.nAngle());
+                    showMoveEvent.setText("Angle: " + analogue.nAngle()
+                            + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
+                            + "\nSpeed: " + speed);
+                    write(motors[0], motors[1]);
+                }
+
+                @Override
+                public void onMoveStopped() {
+                    showMoveEvent.setText("Angle: " + analogue.nAngle()
+                            + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
+                            + "\nSpeed: " + 0);
+                    write(0, 0);
+                }
+            });
+
+        } else {
+            analogue.setAlpha(0.5f);
+            analogue.setClickable();
+            analogue.setOnMoveListener(new Control.OnMoveListener() {
+                @Override
+                public void onMoveInDirection(final double polarAngle) {
+                }
+                @Override
+                public void onMoveStopped() {
+
+                }
+            });
+        }
 
         topFragment = (ToolbarTopFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.topBar);
@@ -115,21 +130,8 @@ public class ControllerActivity extends AppCompatActivity {
                 .findFragmentById(R.id.bottomBarr);
         fragment.buttonChecked("control");
 
+
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            recreate();
-        }
-        if (resultCode == RESULT_CANCELED) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent , 0);
-        }
-    }
-
-
     /**
      *   Writing to the Arduino for motor control.
      *   @param right Right motor
@@ -229,11 +231,13 @@ public class ControllerActivity extends AppCompatActivity {
 
     /**
      * The method takes and decodes the strings received via Bluetooth from the SmartCar.
-     * Depending on type of string (its first two letter decides its use),
+     * Depending on type of string (its first letter decides its use),
      * various actions executes
      * @param inputString String received from the SmartCar containing data
      */
     private void readInput(String inputString){
+
+        Log.d(TAG, inputString);
 
         switch (inputString.charAt(0) + inputString.charAt(1)) {
             case 'B' + 'B':

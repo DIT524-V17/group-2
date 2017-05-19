@@ -12,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Creates and houses java object responsible for managing connection to DB
  * @author Gabriel Bulai(GB)
- * @version 1.0.0
+ * @version 1.0.0 GB
  */
 
 public class DbHelper extends SQLiteOpenHelper {
