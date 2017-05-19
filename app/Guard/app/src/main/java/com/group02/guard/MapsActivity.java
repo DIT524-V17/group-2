@@ -137,20 +137,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (mySwitch.isChecked()) {
-                    Toast.makeText(getApplicationContext(), "sending 3", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "sending 3", Toast.LENGTH_SHORT).show();
                     initFollowing("3 0");
+                    switchState.setText("FollowMe");
+                    Toast.makeText(getApplicationContext(), "FollowMe Activated", Toast.LENGTH_SHORT).show();
                     checked++;
                 } else if (checked == 3) {
                     checked = 0;
-                    switchState.setText("Car is stopping");
-                    //Toast.makeText(getApplicationContext(), "sending 3", Toast.LENGTH_SHORT).show();
+                    switchState.setText("FollowMe");
+                    Toast.makeText(getApplicationContext(), "FollowMe Activated", Toast.LENGTH_SHORT).show();
                     initFollowing("3 0");
                 } else {
                     if (!mySwitch.isChecked()) {
                         initFollowing("2 0");
                         checked++;
-                        switchState.setText("Manual Mode activated");
-                        Toast.makeText(getApplicationContext(), "sending 2", Toast.LENGTH_SHORT).show();
+                        switchState.setText("FollowMe");
+                        Toast.makeText(getApplicationContext(), "FollowMe Deactivated", Toast.LENGTH_SHORT).show();
                         initFollowing("2 0");
                     }
                 }
@@ -516,7 +518,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(DialogInterface arg0, int arg1) {
                 initFollowing("2 0");
                 //startActivity(new Intent(MapsActivity.this, ControllerActivity.class));
-                Toast.makeText(getApplicationContext(), "Manual mode activated", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "FollowMe Stopped", Toast.LENGTH_LONG).show();
                 clickCount = 0;
                 finish();
             }
