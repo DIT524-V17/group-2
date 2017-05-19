@@ -12,32 +12,6 @@
     tools:showIn="@layout/app_bar_navigation2"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/controlButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_controller"
-        android:text="@string/controllerActivity"
-        android:drawableTint="@color/colorMutedLight"
-        android:layout_weight="0.3"/>
-
-    <Button
-        android:id="@+id/mapsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_map"
-        android:text="@string/mapActivity"
-        android:drawableTint="@color/colorMutedLight"
-        android:layout_weight="0.3"/>
-
-    <Button
-        android:id="@+id/gpsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_gps"
-        android:text="@string/gpsActivity"
-        android:drawableTint="@color/colorMutedLight"
-        android:layout_weight="0.3" />
 
 
 </LinearLayout>

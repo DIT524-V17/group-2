@@ -14,6 +14,7 @@ import android.widget.ImageButton;
  * Creates a bottom toolbar used for navigating withing different activities
  * @author Justinas Stirbys
  * @version 1.0.0
+ * @deprecated from Sprint 7
  */
 
 public class ToolbarBottomFragment extends Fragment implements View.OnClickListener {

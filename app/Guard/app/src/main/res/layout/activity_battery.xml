@@ -12,13 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <fragment
-            android:id="@+id/topBar"
-            android:name="com.group02.guard.ToolbarTopFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/toolbar_top" />
-
         <TextView
             android:id="@+id/actualVoltage"
             android:layout_width="wrap_content"
@@ -45,13 +38,5 @@
             android:text="@string/arduinoVoltageText" />
 
     </LinearLayout>
-
-    <fragment
-        android:id="@+id/bottomBar"
-        android:name="com.group02.guard.ToolbarBottomFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        tools:layout="@layout/toolbar_bottom" />
 
 </RelativeLayout>

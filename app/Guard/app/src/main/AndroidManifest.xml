@@ -51,6 +51,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_app_menu"
+            android:launchMode="singleInstance"
+            android:theme="@style/GuardBasic" />
+        <activity
             android:name=".ControllerActivity"
             android:label="@string/title_activity_controller"
             android:launchMode="singleInstance"
