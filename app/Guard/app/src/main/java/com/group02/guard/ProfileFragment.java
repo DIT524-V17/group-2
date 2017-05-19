@@ -1,6 +1,5 @@
 package com.group02.guard;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import java.io.UnsupportedEncodingException;
  * @version 1.0.0
  */
 
-public class TravellerProfileFragment extends Fragment implements View.OnClickListener{
+public class ProfileFragment extends Fragment implements View.OnClickListener{
     private EditText newEmail;
     private EditText oldPass;
     private EditText newPass1;
@@ -30,17 +29,11 @@ public class TravellerProfileFragment extends Fragment implements View.OnClickLi
     /**
      * Default empty constructor
      */
-    public TravellerProfileFragment() {}
+    public ProfileFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_traveller_profile, parent, false);
-//        //Get arguments from activity
-//        Bundle bundle = this.getArguments();
-//        this.email = bundle.getString("EMAIL");
-//        this.password = bundle.getString("PASSWORD");
-//        this.userId = bundle.getInt("ID");
-
+        View view = inflater.inflate(R.layout.fragment_profile, parent, false);
         //Initiate objects in layout
         Button updateEmail = (Button) view.findViewById(R.id.updateEmail);
         Button updatePassword = (Button) view.findViewById(R.id.updatePassword);

@@ -1,5 +1,6 @@
 package com.group02.guard;
 
+import android.content.pm.ActivityInfo;
 import android.support.v4.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,6 +12,7 @@ import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
@@ -21,12 +23,11 @@ import android.util.Log;
 
 
 /**
- * An fragment that includes the video stream, the controller, the batteryImageButton levels of the car.
- * @author Boyan Dai
- * @version 1.0.0 BD
+ * Creates an analog controller to control the SmartCar
+ * @author Joacim Eberlen, Boyan Dai
+ * @version 1.0.1 BD
  */
 public class ControllerFragment extends Fragment {
-
     // Following variables is used by the batteryImageButton function
     private double analogReadValue;
     private double arduinoVoltage;
@@ -35,6 +36,9 @@ public class ControllerFragment extends Fragment {
     private Sensor sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
     private Control analogue;
     private TextView showMoveEvent;
+    ImageButton batteryButton;
+
+
 
     String address = "20:15:10:20:11:37";
 
@@ -44,12 +48,14 @@ public class ControllerFragment extends Fragment {
     // Handler for writing messages to the Bluetooth connection
     Handler writeHandler;
 
-    ToolbarTopFragment topFragment;
+    ToolbarTopFragment topFragment = null;
 
     //Set MAX_SPEED for motors
     final int MAX_SPEED = 70;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+//        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         return inflater.inflate(R.layout.fragment_controller2, container, false);
     }
 
@@ -60,9 +66,8 @@ public class ControllerFragment extends Fragment {
      */
     @Override
     public void onStart() {
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        super.onStart();
 
+        super.onStart();
 
         showMoveEvent = (TextView) getView().findViewById(R.id.coords);
 
@@ -74,6 +79,14 @@ public class ControllerFragment extends Fragment {
         slImage = (Sensor) getView().findViewById(R.id.sensor_left);
         srImage = (Sensor) getView().findViewById(R.id.sensor_right);
         sbImage = (Sensor) getView().findViewById(R.id.sensor_back);
+
+        batteryButton = (ImageButton) getView().findViewById(R.id.batteryButton);
+        batteryButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                displayBatteryStats(v);
+            }
+        });
 
         // Initialize the Bluetooth thread, passing in a MAC address
         // and a Handler that will receive incoming messages
@@ -89,6 +102,7 @@ public class ControllerFragment extends Fragment {
 
         // Get the handler that is used to send messages
         writeHandler = btt.getWriteHandler();
+
 
         // Run the thread
         btt.start();
@@ -114,14 +128,6 @@ public class ControllerFragment extends Fragment {
                 write(0, 0);
             }
         });
-
-//        topFragment = (ToolbarTopFragment)getActivity().getSupportFragmentManager()
-//               .findFragmentById(R.id.topBar);
-//        topFragment.getBatteryButton().setVisibility(View.VISIBLE);
-
-        ToolbarBottomFragment fragment = (ToolbarBottomFragment) getChildFragmentManager()
-                .findFragmentById(R.id.bottomBarr);
-        fragment.buttonChecked("control");
     }
 
     /**
@@ -148,28 +154,28 @@ public class ControllerFragment extends Fragment {
         voltage /=8; //To get average voltage for each batteryImageButton
 
         if(voltage >= 1.40) {   //Sets image depending on batteryImageButton voltage = approx level based on alkaline AA discharge curve
-            topFragment.getBatteryButton().clearColorFilter();
-            topFragment.getBatteryButton().setImageResource(R.drawable.full_battery);
+            batteryButton.clearColorFilter();
+            batteryButton.setImageResource(R.drawable.full_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.30 && voltage < 1.40) {
-            topFragment.getBatteryButton().clearColorFilter();
-            topFragment.getBatteryButton().setImageResource(R.drawable.charged_battery);
+            batteryButton.clearColorFilter();
+            batteryButton.setImageResource(R.drawable.charged_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.20 && voltage < 1.30) {
-            topFragment.getBatteryButton().clearColorFilter();
-            topFragment.getBatteryButton().setImageResource(R.drawable.half_charged_battery);
+            batteryButton.clearColorFilter();
+            batteryButton.setImageResource(R.drawable.half_charged_battery);
             criticalLevel = false;
         }
         else if(voltage >= 1.15 && voltage < 1.20) {
-            topFragment.getBatteryButton().clearColorFilter();
-            topFragment.getBatteryButton().setImageResource(R.drawable.low_battery);
+            batteryButton.clearColorFilter();
+            batteryButton.setImageResource(R.drawable.low_battery);
             criticalLevel = false;
         }
         if(voltage < 1.15){
-            topFragment.getBatteryButton().setImageResource(R.drawable.empty_battery);
-            topFragment.getBatteryButton().setColorFilter(Color.RED);  //For effect
+            batteryButton.setImageResource(R.drawable.empty_battery);
+            batteryButton.setColorFilter(Color.RED);  //For effect
             if(!criticalLevel) {
                 setCriticalBatteryLevelToast(); //Calls for toast
                 setCriticalBatteryLevelNotification();  //Calls for notification
@@ -216,7 +222,7 @@ public class ControllerFragment extends Fragment {
      */
     private double getVoltage(double analogReadValue){
         arduinoVoltage = analogReadValue* (5.0 / 1024.0); // Converts the analog reading to voltage
-        topFragment.setArduinoVoltage(arduinoVoltage);
+        this.setArduinoVoltage(arduinoVoltage);
         double voltage = arduinoVoltage * 5.0; //Restores the actual voltage (the voltage is divided by 5 since Arduino can handle max 5 V)
         return voltage;
     }
@@ -229,10 +235,11 @@ public class ControllerFragment extends Fragment {
      */
     private void readInput(String inputString){
 
+        try{
         switch (inputString.charAt(0) + inputString.charAt(1)) {
-            case 'B' + ' ':
-                analogReadValue = Integer.parseInt(inputString.substring(1).trim());
-                topFragment.setAnalogReadValue(analogReadValue);
+            case 'B' + 'B':
+                analogReadValue = Integer.parseInt(inputString.substring(2).trim());
+                this.setAnalogReadValue(analogReadValue);
                 setBatteryLevel();
                 break;
             case 'F' + 'M':
@@ -256,7 +263,33 @@ public class ControllerFragment extends Fragment {
             default:
                 return;
 
+              }
+
+        }catch (Exception e){
+            Log.e("eadasd", "asdas");
         }
+    }
+
+    /**
+     * Method is called when pressing the batteryImageButton.
+     * Opens a new View with detailed battery data (@author Erik Laurin)
+     * @param view current view is passed to the onClick method
+     */
+    public void displayBatteryStats(View view) {
+        Intent batteryStats = new Intent(getActivity(), BatteryActivity.class);
+        Bundle batteryBundle = new Bundle();    //Sends intent extras in bundle
+        batteryBundle.putDouble("EXTRA_ANALOG", analogReadValue);
+        batteryBundle.putDouble("EXTRA_ARDUINO_VOLTAGE", arduinoVoltage);
+        batteryStats.putExtras(batteryBundle);
+        startActivity(batteryStats);
+    }
+
+    public void setAnalogReadValue(double newValue){
+        analogReadValue = newValue;
+    }
+
+    public void setArduinoVoltage(double newValue){
+        arduinoVoltage = newValue;
     }
 
 

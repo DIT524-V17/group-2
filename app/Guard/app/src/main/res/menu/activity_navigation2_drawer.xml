@@ -4,15 +4,29 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_main"
+            android:title="Main"
+            android:icon="@drawable/ic_menu_home"/>
 
-            android:title="Main" />
         <item
             android:id="@+id/nav_controller"
+            android:title="@string/controllerActivity"
+            android:icon="@drawable/ic_menu_controller"/>
 
-            android:title="Controller" />
+        <item
+            android:id="@+id/nav_maps"
+            android:title="@string/mapActivity"
+            android:icon="@drawable/ic_menu_map"/>
 
     </group>
 
+        <item
+            android:id="@+id/nav_profile"
+            android:title="@string/profileText"
+            android:icon="@drawable/ic_menu_profile" />
 
+        <item
+            android:id="@+id/nav_logout"
+            android:title="@string/logoutButton"
+            android:icon="@drawable/ic_menu_logout" />
 
 </menu>

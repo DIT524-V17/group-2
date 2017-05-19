@@ -64,9 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        //Intent gpsIntent = new Intent(MainActivity.this, GpsActivity.class);
-//        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         switch (v.getId()) {
             case R.id.controlButton:
@@ -75,9 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.mapsButton:
                 startActivity(mapIntent);
                 return;
-//            case R.id.gpsButton:
-//                startActivity(gpsIntent);
-//                return;
+
            default:
                 return;
         }

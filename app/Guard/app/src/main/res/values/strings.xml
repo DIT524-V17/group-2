@@ -20,7 +20,7 @@
     <!-- Strings for Main activity, found in activity_main.xml -->
     <string name="wifiActivity">WiFi Direct</string>
     <string name="gpsActivity">GPS</string>
-    <string name="controllerActivity">Manual Control</string>
+    <string name="controllerActivity">Manual Controls</string>
     <string name="mapActivity">Map</string>
     <string name="logoutButton">Logout</string>
 
@@ -45,6 +45,7 @@
     <string name="analogValueText">Analog Value</string>
     <string name="arduinoVoltageText">Arduino Voltage</string>
     <string name="actualVoltageText">Actual Voltage</string>
+    <string name="battery">G.U.A.R.D. car battery</string>
 
     <!-- Strings for Menu Options, found in menu_options.xml -->
     <string name="profileText">My Profile</string>
@@ -64,7 +65,7 @@
     <string name="batteryIconDesc">Battery Icon</string>
     <string name="menuIconDesc">Menu Icon</string>
 
-    <!-- Strings for Traveller profile fragment, found in fragment_traveller_profile.xml -->
+    <!-- Strings for Traveller profile fragment, found in fragment_profile.xml -->
     <string name="updateButtonText">Update</string>
     <string name="updateEmail">Change my Email:</string>
     <string name="newEmailText">New Email</string>
@@ -72,6 +73,8 @@
     <string name="oldPasswordText">Enter old password</string>
     <string name="newPasswordText">Enter new password</string>
     <string name="confirmNewPasswordText">Confirm new password</string>
+    <string name="deleteButtonText">Delete My Account</string>
+
 
     <!-- Facebook-->
     <string name="facebook_app_id">234147937061811</string>

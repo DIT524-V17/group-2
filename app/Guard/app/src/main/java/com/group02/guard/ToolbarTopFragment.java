@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class ToolbarTopFragment extends Fragment {
 
     Toolbar toolbar;
-    ImageButton menuButton;
+    //ImageButton menuButton;
     ImageButton batteryButton;
     TextView appTitle;
 
@@ -53,12 +53,12 @@ public class ToolbarTopFragment extends Fragment {
 //            }
 //        });
 
-        batteryButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                displayBatteryStats(v);
-            }
-        });
+//        batteryButton.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v) {
+//                displayBatteryStats(v);
+//            }
+//        });
 
         return view;
     }
