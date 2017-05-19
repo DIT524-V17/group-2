@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/switch1"
         android:layout_centerHorizontal="true"
-        android:text="TextView" />
+        android:text="ActivateFollowMe" />
 
     <!--<ToggleButton-->
     <!--android:id="@+id/toggle1"-->
