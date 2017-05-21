@@ -13,6 +13,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <ImageButton
             android:id="@+id/homeNavigation"
             android:layout_width="wrap_content"
@@ -23,22 +28,6 @@
             app:srcCompat="@drawable/ic_menu_home"
             android:tint="@color/common_google_signin_btn_text_dark_focused"
             android:contentDescription="@string/homeIconDesc"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/connectNavigation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/ic_menu_wifi"
-            android:tint="@color/common_google_signin_btn_text_dark_focused"
-            android:contentDescription="@string/connectIconDesc"/>
 
         <View
             android:layout_width="0dp"
@@ -70,8 +59,12 @@
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_menu_map"
             android:tint="@color/common_google_signin_btn_text_dark_focused"
-            android:contentDescription="@string/mapIconDesc"
-            android:layout_marginEnd="15dp"/>
+            android:contentDescription="@string/mapIconDesc"/>
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

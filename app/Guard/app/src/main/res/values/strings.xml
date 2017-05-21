@@ -28,18 +28,6 @@
     <string name="wifiToggleButtonOn">ON</string>
     <string name="wifiToggleButtonOff">OFF</string>
 
-    <!-- Strings for GPS activity, found in activity_gps.xml -->
-    <string name="gpsActivityText">G.U.A.R.D. GPS</string>
-    <string name="gpsToggleButtonOn">Stop Following</string>
-    <string name="gpsToggleButtonOff">Follow Me</string>
-    <string name="phoneCoordinates">My Coordinates: </string>
-    <string name="phoneLatitude">Lat</string>
-    <string name="phoneLongitude">Long</string>
-    <string name="guardCoordinates">G.U.A.R.D. Car Coordinates: </string>
-    <string name="guardLatitude">Lat</string>
-    <string name="guardLongitude">Long</string>
-    <string name="gpsDistance">Distance: </string>
-
     <!-- Strings for Battery activity, found in activity_battery.xml -->
     <string name="analogValueText">Analog Value</string>
     <string name="arduinoVoltageText">Arduino Voltage</string>

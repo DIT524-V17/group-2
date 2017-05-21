@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
@@ -112,6 +113,10 @@ public class MainActivity extends AppCompatActivity
             wifiCon = true;
         }
 
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        preferences.edit().putBoolean("wifiCon", wifiCon).commit();
+        preferences.edit().putBoolean("btCon", btCon).commit();
+
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
         reconnect = (Button) findViewById(R.id.reconnect);
@@ -149,9 +154,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
 
-        Intent wifi = new Intent(MainActivity.this, WifiActivity.class);
-        wifi.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        wifi.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Intent controlIntent = new Intent(MainActivity.this, ControllerActivity.class);
         controlIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         controlIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -161,11 +163,6 @@ public class MainActivity extends AppCompatActivity
         Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        /*
-        Intent gpsIntent = new Intent(MainActivity.this, GpsActivity.class);
-        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        */
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 
         switch (v.getId()) {

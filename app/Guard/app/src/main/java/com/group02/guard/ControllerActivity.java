@@ -162,9 +162,9 @@ public class ControllerActivity extends AppCompatActivity {
         ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.bottomBarr);
         fragment.buttonChecked("control");
-
-
+        fragment.controlNav.setClickable(false);
     }
+
     /**
      *   Writing to the Arduino for motor control.
      *   @param right Right motor

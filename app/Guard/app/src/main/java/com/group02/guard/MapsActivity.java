@@ -128,6 +128,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             setContentView(R.layout.activity_main);
         }
+
+        ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.bottomBar);
+        fragment.buttonChecked("maps");
+        fragment.mapsNav.setClickable(false);
     }
 
     public void initSwitch() {
