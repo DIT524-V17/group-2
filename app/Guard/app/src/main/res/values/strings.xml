@@ -51,7 +51,7 @@
     <string name="batteryIconDesc">Battery Icon</string>
     <string name="menuIconDesc">Menu Icon</string>
 
-    <!-- Strings for Traveller profile fragment, found in fragment_profile.xml -->
+    <!-- Strings for Traveller profile fragment, found in activity_profile.xml -->
     <string name="updateButtonText">Update</string>
     <string name="updateEmail">Change my Email:</string>
     <string name="newEmailText">New Email</string>

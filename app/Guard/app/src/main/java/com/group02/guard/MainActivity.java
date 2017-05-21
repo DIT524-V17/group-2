@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity
         implements View.OnClickListener{
 
     Button control;
+    Button profile;
     Button map;
     Button reconnect;
     Button logout;
@@ -113,16 +114,14 @@ public class MainActivity extends AppCompatActivity
             wifiCon = true;
         }
 
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        preferences.edit().putBoolean("wifiCon", wifiCon).commit();
-        preferences.edit().putBoolean("btCon", btCon).commit();
-
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
+        profile = (Button) findViewById(R.id.profileButton);
         reconnect = (Button) findViewById(R.id.reconnect);
         logout = (Button) findViewById(R.id.logoutDebug);
 
         control.setOnClickListener(this);
+        profile.setOnClickListener(this);
         map.setOnClickListener(this);
         reconnect.setOnClickListener(this);
 
@@ -164,10 +163,16 @@ public class MainActivity extends AppCompatActivity
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        Intent profileIntent = new Intent(this, ProfileActivity.class);
+        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        profileIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         switch (v.getId()) {
             case R.id.controlButton:
                 startActivity(controlIntent);
+                return;
+            case R.id.profileButton:
+                startActivity(profileIntent);
                 return;
             case R.id.mapsButton:
                 startActivity(mapIntent);
@@ -242,7 +247,6 @@ public class MainActivity extends AppCompatActivity
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + networkSSID + "\"";   // Please note the quotes. String should contain ssid in quotes
         conf.preSharedKey = "\""+ networkPass +"\"";
-        Log.e("internetPass", networkPass + " smartcar pass: " + smartCar.getNetworkPass());
         wifi.addNetwork(conf);
         List<WifiConfiguration> list = wifi.getConfiguredNetworks();
         for( WifiConfiguration i : list ) {

@@ -1,7 +1,6 @@
 package com.group02.guard;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Creates a bottom toolbar used for navigating withing different activities
@@ -23,6 +20,7 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
     ImageButton controlNav;
     ImageButton mapsNav;
     ImageButton homeNav;
+    ImageButton profileNav;
     private boolean wifiCon;
     private boolean btCon;
     private String address;
@@ -38,18 +36,20 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.toolbar_bottom, parent, false);
 
-        SharedPreferences preferences = getActivity().getPreferences(MODE_PRIVATE);
-        wifiCon = preferences.getBoolean("wifiCon", false);
-        btCon = preferences.getBoolean("btCon", false);
+        //Setting values for controller
+        wifiCon = true;
+        btCon = true;
         address = "20:15:10:20:11:37";
 
         controlNav = (ImageButton) view.findViewById(R.id.controlNavigation);
         mapsNav = (ImageButton) view.findViewById(R.id.mapsNavigation);
         homeNav = (ImageButton) view.findViewById(R.id.homeNavigation);
+        profileNav = (ImageButton) view.findViewById(R.id.profileNavigation);
 
         controlNav.setOnClickListener(this);
         mapsNav.setOnClickListener(this);
         homeNav.setOnClickListener(this);
+        profileNav.setOnClickListener(this);
         return view;
     }
 
@@ -65,10 +65,15 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
         controlIntent.putExtra("wifiCon", wifiCon);
         Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
         Intent homeIntent = new Intent(getActivity(), MainActivity.class);
+        Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
 
         switch (v.getId()) {
             case R.id.homeNavigation:
                 startActivity(homeIntent);
+                getActivity().finish();
+                return;
+            case R.id.profileNavigation:
+                startActivity(profileIntent);
                 getActivity().finish();
                 return;
             case R.id.controlNavigation:
@@ -88,6 +93,8 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
             controlNav.setColorFilter(Color.WHITE);
         }else if(buttonName.equals("maps")){
             mapsNav.setColorFilter(Color.WHITE);
+        }else if(buttonName.equals("profile")){
+            profileNav.setColorFilter(Color.WHITE);
         }else{
             homeNav.setColorFilter(Color.WHITE);
         }

@@ -174,7 +174,4 @@ public class AsyncGetConnectivityData extends AsyncTask<Void, Void, AsyncGetConn
         public String password;
         public String ip;
     }
-
-
-
 }

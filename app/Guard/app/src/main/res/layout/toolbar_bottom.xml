@@ -62,6 +62,23 @@
             android:contentDescription="@string/mapIconDesc"/>
 
         <View
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/profileNavigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_menu_profile"
+            android:tint="@color/common_google_signin_btn_text_dark_focused"
+            android:contentDescription="@string/controlIconDesc"/>
+
+
+        <View
             android:layout_width="10dp"
             android:layout_height="0dp"
             android:layout_weight="1" />

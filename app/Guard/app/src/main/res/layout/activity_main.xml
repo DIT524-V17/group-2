@@ -37,6 +37,15 @@
         android:drawableTop="@drawable/ic_map"
         android:text="@string/mapActivity" />
 
+    <Button
+        android:id="@+id/profileButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:drawableTint="@color/colorMutedLight"
+        android:drawableTop="@drawable/ic_menu_profile"
+        android:text="@string/profileText" />
+
             <Button
                 android:id="@+id/logoutDebug"
                 android:layout_width="match_parent"

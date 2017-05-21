@@ -45,7 +45,6 @@ public class ControllerActivity extends AppCompatActivity {
     private boolean criticalLevel = false;
     private Sensor sfmImage, sfrImage, sflImage, srImage, slImage, sbImage;
     private Control analogue;
-    private TextView showMoveEvent;
 
     private String videoStream;
     private WebView webView;
@@ -66,7 +65,7 @@ public class ControllerActivity extends AppCompatActivity {
             wifiCon = bundle.getBoolean("wifiCon");
         }
 
-        if(wifiCon) {
+       if(wifiCon) {
 
             try {
 
@@ -90,10 +89,10 @@ public class ControllerActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d(TAG, e.getMessage());
             }
-        }else{
-            webView = (WebView) findViewById(R.id.videoview);
-            webView.setVisibility(View.GONE);
-        }
+       }else{
+           webView = (WebView) findViewById(R.id.videoview);
+           webView.setVisibility(View.GONE);
+       }
         analogue = (Control) findViewById(R.id.controlView);
 
         if(btCon) {
@@ -112,7 +111,6 @@ public class ControllerActivity extends AppCompatActivity {
             // Run the thread
             btt.start();
 
-            showMoveEvent = (TextView) findViewById(R.id.coords);
             sfmImage = (Sensor) findViewById(R.id.sensor_front_middle);
             sfrImage = (Sensor) findViewById(R.id.sensor_front_right);
             sflImage = (Sensor) findViewById(R.id.sensor_front_left);
@@ -126,17 +124,11 @@ public class ControllerActivity extends AppCompatActivity {
                     Log.e("", "" + speed);
                     // [0] is left, [1] is right
                     int[] motors = analogue.motorSpeed((int) speed, (int) analogue.nAngle());
-                    showMoveEvent.setText("Angle: " + analogue.nAngle()
-                            + "\nLEFT MOTOR: " + motors[0] + "\nRIGHT MOTOR: " + motors[1] + "."
-                            + "\nSpeed: " + speed);
                     write(motors[0], motors[1]);
                 }
 
                 @Override
                 public void onMoveStopped() {
-                    showMoveEvent.setText("Angle: " + analogue.nAngle()
-                            + "\nLEFT MOTOR: " + 0 + "\nRIGHT MOTOR: " + 0 + "."
-                            + "\nSpeed: " + 0);
                     write(0, 0);
                 }
             });

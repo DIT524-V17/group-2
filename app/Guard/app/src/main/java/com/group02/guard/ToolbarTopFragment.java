@@ -119,6 +119,7 @@ public class ToolbarTopFragment extends Fragment {
         batteryBundle.putDouble("EXTRA_ARDUINO_VOLTAGE", arduinoVoltage);
         batteryStats.putExtras(batteryBundle);
         startActivity(batteryStats);
+        getActivity().finish();
     }
 
     public ImageButton getBatteryButton(){
