@@ -14,7 +14,7 @@ public class SmartCar {
     // UUID that specifies a protocol for generic bluetooth serial communication
     private final UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    private String ip = "192.168.0.1";
+    private String ip = "192.168.42.1";
     private String ssid = "GUARD";
     private String networkPass = "group2group2";
 

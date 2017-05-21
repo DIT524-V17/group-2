@@ -1,10 +1,5 @@
 package com.group02.guard;
-/**
- * The class creates an activity that handles database and session and allows the user to log in
- *
- * @author Gabriel Bulai
- * @version 1.0
- */
+
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

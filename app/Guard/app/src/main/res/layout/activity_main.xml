@@ -19,43 +19,23 @@
         android:text="Reconnect"
         android:visibility="gone"/>
 
-    <TableLayout
+    <Button
+        android:id="@+id/controlButton"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:drawableTint="@color/colorMutedLight"
+        android:drawableTop="@drawable/ic_controller"
+        android:text="@string/controllerActivity" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Button
-                android:id="@+id/controlButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_controller"
-                android:text="@string/controllerActivity"
-                android:drawableTint="@color/colorMutedLight"
-                android:layout_weight="0.5"/>
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Button
-                android:id="@+id/mapsButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:drawableTint="@color/colorMutedLight"
-                android:drawableTop="@drawable/ic_map"
-                android:text="@string/mapActivity" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+    <Button
+        android:id="@+id/mapsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:drawableTint="@color/colorMutedLight"
+        android:drawableTop="@drawable/ic_map"
+        android:text="@string/mapActivity" />
 
             <Button
                 android:id="@+id/logoutDebug"
@@ -63,8 +43,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
                 android:text="Logout"/>
-        </TableRow>
 
-    </TableLayout>
 
 </LinearLayout>

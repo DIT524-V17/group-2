@@ -21,8 +21,8 @@ public class HashInformation {
             md.update(salt.getBytes("UTF-8"));
 
             byte[] bytes = md.digest(data.getBytes("UTF-8"));
-
             StringBuilder sb = new StringBuilder();
+
 
             for (int i = 0; i < bytes.length; i++) {
 

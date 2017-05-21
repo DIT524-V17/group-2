@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + networkSSID + "\"";   // Please note the quotes. String should contain ssid in quotes
         conf.preSharedKey = "\""+ networkPass +"\"";
-
+        Log.e("internetPass", networkPass + " smartcar pass: " + smartCar.getNetworkPass());
         wifi.addNetwork(conf);
         List<WifiConfiguration> list = wifi.getConfiguredNetworks();
         for( WifiConfiguration i : list ) {

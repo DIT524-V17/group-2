@@ -19,7 +19,6 @@
 
     <!-- Strings for Main activity, found in activity_main.xml -->
     <string name="wifiActivity">WiFi Direct</string>
-    <string name="gpsActivity">GPS</string>
     <string name="controllerActivity">Manual Control</string>
     <string name="mapActivity">Map</string>
     <string name="logoutButton">Logout</string>

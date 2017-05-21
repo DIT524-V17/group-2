@@ -169,8 +169,7 @@ public class AsyncGetConnectivityData extends AsyncTask<Void, Void, AsyncGetConn
         }
     }
 
-    public class Wrapper
-    {
+    public class Wrapper {
         public String ssid;
         public String password;
         public String ip;
