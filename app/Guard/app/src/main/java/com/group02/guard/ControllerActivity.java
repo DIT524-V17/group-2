@@ -66,16 +66,18 @@ public class ControllerActivity extends AppCompatActivity {
             wifiCon = bundle.getBoolean("wifiCon");
         }
 
-        try {
+        if(wifiCon) {
 
-            webView = (WebView) findViewById(R.id.videoview);
-            videoStream = "http://192.168.42.1:8080/stream";
+            try {
 
-            int default_zoom_level = 100;
-            webView.setInitialScale(default_zoom_level);
-            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+                webView = (WebView) findViewById(R.id.videoview);
+                videoStream = "http://192.168.42.1:8080/stream";
 
-            if(wifiCon){
+                int default_zoom_level = 100;
+                webView.setInitialScale(default_zoom_level);
+                webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
+
                 webView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -84,11 +86,14 @@ public class ControllerActivity extends AppCompatActivity {
                         webView.loadUrl(videoStream + "?width=" + width + "&height=" + height);
                     }
                 });
-            }
-        }catch (Exception e){
-            Log.d(TAG, e.getMessage());
-        }
 
+            } catch (Exception e) {
+                Log.d(TAG, e.getMessage());
+            }
+        }else{
+            webView = (WebView) findViewById(R.id.videoview);
+            webView.setVisibility(View.GONE);
+        }
         analogue = (Control) findViewById(R.id.controlView);
 
         if(btCon) {
