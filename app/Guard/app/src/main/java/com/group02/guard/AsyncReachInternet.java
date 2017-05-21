@@ -13,7 +13,9 @@ public class AsyncReachInternet extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
-            HttpURLConnection urlc = (HttpURLConnection) (new URL("http://clients3.google.com/generate_204").openConnection());
+            HttpURLConnection urlc = (HttpURLConnection)
+                    (new URL("http://clients3.google.com/generate_204")
+                    .openConnection());
             urlc.setRequestProperty("User-Agent", "Test");
             urlc.setRequestProperty("Connection", "close");
             urlc.setConnectTimeout(1500);

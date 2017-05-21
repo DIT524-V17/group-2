@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,6 +74,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String pass = etPass.getText().toString();
         String salt = "";
 
+
+        AsyncReachInternet reachInternet = new AsyncReachInternet();
+        reachInternet.execute();
+
         //Hashing password
         String hashedPass = null;
         try {
@@ -96,14 +101,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         //Check to see if internet connection is available to get information from DB
-        if (hasConnection()){
+        if (reachInternet.getInternet()){
             AsyncGetTravellerData getTraveller = new AsyncGetTravellerData(this, session);
             String url = "http://129.16.155.11:3000/guard/travellers";
             getTraveller.execute(url, hashedEmail, hashedPass);
-
+            Log.e("reach internet",": success");
         //Unavailable connection get data from SQL DB inside phone
         }else{
             loginSql(hashedEmail, hashedPass);
+            Log.e("did not,", " reach internet");
         }
 
     }
@@ -121,19 +127,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }else{
             Toast.makeText(this, "Wrong email/password", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    /**
-     * Checks to see if WiFi connection exist
-     * @return True if WiFi connection available
-     */
-    public boolean hasConnection(){
-        //Used to check connection state
-        ConnectivityManager conn = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo info = conn.getActiveNetworkInfo();
-
-        return (info != null && info.isConnected() &&
-                info.getType() == ConnectivityManager.TYPE_WIFI);
-
     }
 }
