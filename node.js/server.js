@@ -40,7 +40,7 @@ GuardRest.prototype.configureExpress = function(pool) {
 
 //Starts the server
 GuardRest.prototype.startServer = function() {
-      app.listen(3000, function(){
+      app.listen(3001, function(){
           console.log("Connected");
       });
 }

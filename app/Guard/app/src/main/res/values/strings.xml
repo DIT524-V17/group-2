@@ -68,6 +68,7 @@
     <!-- Strings for Traveller profile fragment, found in fragment_profile.xml -->
     <string name="updateButtonText">Update</string>
     <string name="updateEmail">Change my Email:</string>
+    <string name="oldEmailText">Current Email</string>
     <string name="newEmailText">New Email</string>
     <string name="updatePassword">Change my password:</string>
     <string name="oldPasswordText">Enter old password</string>
@@ -75,12 +76,9 @@
     <string name="confirmNewPasswordText">Confirm new password</string>
     <string name="deleteButtonText">Delete My Account</string>
 
-
-    <!-- Facebook-->
-    <string name="facebook_app_id">234147937061811</string>
-    <string name="title_activity_navigation">NavigationActivity</string>
-
+    <!-- Strings for Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
 
 </resources>

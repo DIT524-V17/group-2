@@ -2,6 +2,7 @@ package com.group02.guard;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Creates a Traveller Profile page
@@ -17,6 +20,8 @@ import java.io.UnsupportedEncodingException;
  */
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
+
+    private EditText oldEmail;
     private EditText newEmail;
     private EditText oldPass;
     private EditText newPass1;
@@ -34,9 +39,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, parent, false);
+
+        Bundle bundle = getArguments();
+        email = bundle.getString("EMAIL");
+        password = bundle.getString("PASSWORD");
+
         //Initiate objects in layout
         Button updateEmail = (Button) view.findViewById(R.id.updateEmail);
         Button updatePassword = (Button) view.findViewById(R.id.updatePassword);
+        oldEmail = (EditText) view.findViewById(R.id.oldEmail);
         newEmail = (EditText) view.findViewById(R.id.emailTextBox);
         oldPass = (EditText) view.findViewById(R.id.oldPasswordTextBox);
         newPass1 = (EditText) view.findViewById(R.id.newPasswordTextBox1);
@@ -53,13 +64,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
      */
     @Override
     public void onClick(View v) {
-        String url = "http://129.16.155.11:3000/guard/travellers";
         switch (v.getId()) {
             case R.id.updateEmail:
-                updateEmail(url);
+                updateEmail();
                 break;
             case R.id.updatePassword:
-                updatePassword(url);
+                updatePassword();
+                break;
+            case R.id.deleteAccount:
+                deleteMyAccount();
                 break;
             default:
         }
@@ -83,24 +96,33 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     /**
      * Method used to update the email
-     * @param url A URL directing to the node.js server
      */
-    public void updateEmail(String url){
-        if(newEmail.getText().toString().isEmpty()) {
+    public void updateEmail(){
+        String url = "http://129.16.155.11:3000/guard/email";
+        String oldEmailHash = hash(oldEmail.getText().toString());
+
+        if(newEmail.getText().toString().isEmpty() || oldEmail.getText().toString().isEmpty()) {
             Toast.makeText(getActivity(), "Email is empty",
+                    Toast.LENGTH_SHORT).show();
+        }else if (!oldEmailHash.equals(this.email)) {
+            Toast.makeText(getActivity(), "Incorrect old email",
+                    Toast.LENGTH_SHORT).show();
+        }else if (!isEmailValid(newEmail.getText().toString())){
+            Toast.makeText(getActivity(), "New email is not valid",
                     Toast.LENGTH_SHORT).show();
         }else{
             String email = hash(newEmail.getText().toString());
             AsyncChangeTravellerData updateEmail = new AsyncChangeTravellerData(getActivity());
-            updateEmail.execute(url, email, this.password, "PUTemail", this.userId +"");
+            updateEmail.execute(url, email, this.password, "PUTemail");
         }
     }
 
     /**
      * Method used to update the password
-     * @param url A URL directing to the node.js server
      */
-    public void updatePassword(String url) {
+    public void updatePassword() {
+        String url = "http://129.16.155.11:3000/guard/password";
+
         String pass1 = newPass1.getText().toString();
         String pass2 = newPass2.getText().toString();
         String oldPassword = oldPass.getText().toString();
@@ -111,7 +133,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             DbHelper db = new DbHelper(getActivity());
             db.addUser(this.email, password);
             AsyncChangeTravellerData updatePass = new AsyncChangeTravellerData(getActivity());
-            updatePass.execute(url, this.email, password, "PUTpass", this.userId + "");
+            updatePass.execute(url, this.email, password, "PUTpass");
         }
     }
 
@@ -154,5 +176,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         }else{
             return true;
         }
+    }
+
+    //email verification
+    public boolean isEmailValid(String email) {
+        final String EMAIL_PATTERN =
+                "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        final Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    public void deleteMyAccount(){
+        String url = "http://129.16.155.11:3000/guard/travellers";
+        AsyncChangeTravellerData updatePass = new AsyncChangeTravellerData(getActivity());
+        updatePass.execute(url, this.email, this.password, "DELETE");
     }
 }

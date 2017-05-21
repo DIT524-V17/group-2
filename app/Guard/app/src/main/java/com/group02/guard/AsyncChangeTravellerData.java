@@ -47,7 +47,6 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
         String email = params[1];
         String pass = params[2];
         this.method = params[3];
-        String userId = params[4];
         URL url;
         HttpURLConnection connection;
         OutputStreamWriter outputWriter;
@@ -60,11 +59,7 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
 
         try {
             //Making url
-            if(method.equals("PUTemail")){
-                url = new URL(urlString + "/" + userId);
-            }else{
-                url = new URL(urlString);
-            }
+            url = new URL(urlString);
 
             //Encoding the hashed email and password to be able to POST
             String query = String.format("email=%s&password=%s",

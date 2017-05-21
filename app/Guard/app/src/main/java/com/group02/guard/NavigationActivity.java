@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -28,12 +29,12 @@ public class NavigationActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
     private Fragment fragment;
     private FragmentTransaction fragmentTransaction;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        setRequestedOrientation(
-//                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_navigation2);
         fragment = new MainFragment();
         fragmentManager = getSupportFragmentManager();
@@ -45,7 +46,15 @@ public class NavigationActivity extends AppCompatActivity
         if(savedInstanceState == null) {
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.content, fragment).commit();
+            //Getting data from Login Activity
+            bundle = getIntent().getExtras();
+            int userId = bundle.getInt("ID");
+            String email = bundle.getString("EMAIL");
+            String password = bundle.getString("PASSWORD");
+//        }
+            Log.e("Check", "id: " + userId + " email " + email + " password " + password);
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -97,6 +106,7 @@ public class NavigationActivity extends AppCompatActivity
         }else if(id == R.id.nav_profile){
             Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
             ProfileFragment profileFragment = new ProfileFragment();
+            profileFragment.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.content,
                     profileFragment).addToBackStack("tag").commit();
         }else if(id == R.id.nav_logout){

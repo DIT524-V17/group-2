@@ -11,8 +11,8 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Creates and houses java object responsible for managing connection to DB
- * @author Gabriel Bulai(GB)
- * @version 1.0.0 GB
+ * @author Gabriel Bulai(GB), Justinas Stirbys (JS)
+ * @version 1.0.1 JS
  */
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -67,10 +67,18 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "user inserted" + id);
     }
 
+    /**
+     * Checks to see if a user exists in the SQLite database
+     * @param email Hashed email value that's entered in the login screen
+     * @param pass Hashed password value that's entered in the login screen
+     * @return True if user exists in the database
+     */
     public boolean getUser(String email, String pass) {
         //HashMap<String, String> user = new HashMap<String, String>();
-        String selectQuery = "select * from  " + USER_TABLE + " where " +
-                COLUMN_EMAIL + " = " + "'" + email + "'" + " and " + COLUMN_PASS + " = " + "'" + pass + "'";
+        String selectQuery = "select * from  " +
+                USER_TABLE + " where " +
+                COLUMN_EMAIL + " = " + "'" + email + "'" + " and " +
+                COLUMN_PASS + " = " + "'" + pass + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -83,5 +91,29 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         return false;
+    }
+
+    /**
+     * Retrieves a specific user ID from the SQLite Database
+     * @param email Hashed email value that's entered in the login screen
+     * @return an integer representing a user ID
+     */
+    public int getUserId(String email) {
+        int id = -1;
+        //HashMap<String, String> user = new HashMap<String, String>();
+        String selectQuery = "select " + COLUMN_ID + " from  " +
+                USER_TABLE + " where " +
+                COLUMN_EMAIL + " = " + "'" + email + "'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            id = cursor.getInt(0);
+            return id;
+        }
+        cursor.close();
+        db.close();
+
+        return id;
     }
 }

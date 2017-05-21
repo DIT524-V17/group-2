@@ -26,6 +26,14 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/oldEmail"
+        android:hint="@string/oldEmailText"
+        android:inputType="textEmailAddress"
+        android:layout_weight="0.1"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/emailTextBox"
         android:hint="@string/newEmailText"
         android:inputType="textEmailAddress"
@@ -43,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/changePassword"
-        android:text="@string/newPasswordText"
+        android:text="@string/updatePassword"
         android:fontFamily="sans-serif-medium"
         android:layout_weight="0.1"/>
 
