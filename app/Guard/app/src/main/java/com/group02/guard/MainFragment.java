@@ -37,7 +37,6 @@ public class MainFragment extends Fragment
     Button control;
     Button gps;
     Button map;
-    Button reconnect;
     Button logout;
 
     private String mSsid = "";
@@ -59,12 +58,10 @@ public class MainFragment extends Fragment
 
         control = (Button) view.findViewById(R.id.controlButton);
         map = (Button) view.findViewById(R.id.mapsButton);
-        //reconnect = (Button) view.findViewById(R.id.reconnect);
         logout = (Button) view.findViewById(R.id.logoutDebug);
 
         control.setOnClickListener(this);
         map.setOnClickListener(this);
-        //reconnect.setOnClickListener(this);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,8 +188,6 @@ public class MainFragment extends Fragment
             case R.id.mapsButton:
                 startActivity(mapIntent);
                 return;
-            //case R.id.reconnect:
-            //    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             default:
 
         }
@@ -249,7 +244,7 @@ public class MainFragment extends Fragment
             control.setClickable(false);
             control.setAlpha(0.5f);
         }
-        reconnect.setVisibility(View.VISIBLE);
+
     }
 
     @SuppressLint("ShowToast")
