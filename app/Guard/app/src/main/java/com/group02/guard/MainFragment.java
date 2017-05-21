@@ -59,7 +59,7 @@ public class MainFragment extends Fragment
 
         control = (Button) view.findViewById(R.id.controlButton);
         map = (Button) view.findViewById(R.id.mapsButton);
-        reconnect = (Button) view.findViewById(R.id.reconnect);
+        //reconnect = (Button) view.findViewById(R.id.reconnect);
         logout = (Button) view.findViewById(R.id.logoutDebug);
 
         control.setOnClickListener(this);
@@ -191,8 +191,8 @@ public class MainFragment extends Fragment
             case R.id.mapsButton:
                 startActivity(mapIntent);
                 return;
-            case R.id.reconnect:
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            //case R.id.reconnect:
+            //    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             default:
 
         }

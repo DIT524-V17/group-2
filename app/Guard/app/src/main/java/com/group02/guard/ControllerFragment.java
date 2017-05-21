@@ -219,7 +219,7 @@ public class ControllerFragment extends Fragment {
      */
     private void setCriticalBatteryLevelNotification(){
         NotificationCompat.Builder mBuilder= new NotificationCompat.Builder(getActivity());
-        Intent intent = new Intent(getActivity(), MainActivity.class);
+        Intent intent = new Intent(getActivity(), NavigationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
