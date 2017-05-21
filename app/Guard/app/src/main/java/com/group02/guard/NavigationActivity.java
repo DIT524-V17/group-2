@@ -79,23 +79,19 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_main) {
-            Toast.makeText(this, "Main", Toast.LENGTH_SHORT).show();
             MainFragment mainFragment = new MainFragment();
             fragmentManager.beginTransaction().replace(R.id.content,
                     mainFragment).addToBackStack("tag").commit();
         } else if (id == R.id.nav_controller) {
-            Toast.makeText(this, "Controller", Toast.LENGTH_SHORT).show();
             ControllerFragment controlFragment = new ControllerFragment();
             fragmentManager.beginTransaction().replace(R.id.content,
                     controlFragment).addToBackStack("tag").commit();
         } else if (id == R.id.nav_maps) {
-            Toast.makeText(this, "Map", Toast.LENGTH_SHORT).show();
             Intent mapIntent = new Intent(this, MapsActivity.class);
             mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(mapIntent);
         }else if(id == R.id.nav_profile){
-            Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
             ProfileFragment profileFragment = new ProfileFragment();
             fragmentManager.beginTransaction().replace(R.id.content,
                     profileFragment).addToBackStack("tag").commit();
