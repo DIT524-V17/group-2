@@ -25,13 +25,12 @@ import java.util.concurrent.ExecutionException;
 /**
  * Creates the "MainScreen" of the G.U.A.R.D. app. Layout used is activity_main.xml
  * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
- * @version 1.1.0 JE
+ * @version 1.1.1 JE
  */
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener{
 
     Button control;
-    Button gps;
     Button map;
     Button reconnect;
     Button logout;
@@ -59,20 +58,21 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void processFinish(AsyncGetConnectivityData.Wrapper output) {
                 mSsid = output.ssid;
-                Log.d("processFinish", output.ssid);
                 mIp = output.ip;
-                Log.d("processFinish", output.ip);
                 mNetworkpass = output.password;
-                Log.d("processFinish", output.password);
             }
         }, this);
 
         asyncTask.execute();
+
+        AsyncReachInternet reachInternet = new AsyncReachInternet();
+        reachInternet.execute();
+
         Log.d("processFinish", "execute()");
 
         Log.d("processFinish", "" + asyncTask.responseCode);
 
-        while (asyncTask.responseCode == 0 && isNetworkAvailable()) {}
+        while (asyncTask.responseCode == 0 && isNetworkAvailable() && reachInternet.getInternet()) {}
         Log.d("processFinish", "" + asyncTask.responseCode);
             if (asyncTask.responseCode == 200) {
                 if (mSsid.equals("")) {
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity
             btCon = true;
         }
 
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!wifi.isWifiEnabled()){
             turnOnWifi(wifi);
         } else {
@@ -114,13 +114,11 @@ public class MainActivity extends AppCompatActivity
 
         control = (Button) findViewById(R.id.controlButton);
         map = (Button) findViewById(R.id.mapsButton);
-        gps = (Button) findViewById(R.id.gpsButton);
         reconnect = (Button) findViewById(R.id.reconnect);
         logout = (Button) findViewById(R.id.logoutDebug);
 
         control.setOnClickListener(this);
         map.setOnClickListener(this);
-        gps.setOnClickListener(this);
         reconnect.setOnClickListener(this);
 
         session = new Session(this);
@@ -177,9 +175,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.mapsButton:
                 startActivity(mapIntent);
                 return;
-            case R.id.gpsButton:
-                //startActivity(gpsIntent);
-                return;
             case R.id.reconnect:
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
            default:
@@ -233,8 +228,6 @@ public class MainActivity extends AppCompatActivity
         if(!btCon && !wifiCon){
             map.setClickable(false);
             map.setAlpha(0.5f);
-            gps.setClickable(false);
-            gps.setAlpha(0.5f);
             control.setClickable(false);
             control.setAlpha(0.5f);
         }
@@ -274,8 +267,6 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-
-
     }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -283,5 +274,4 @@ public class MainActivity extends AppCompatActivity
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
     }
-
 }

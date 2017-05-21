@@ -64,18 +64,15 @@
     <string name="batteryIconDesc">Battery Icon</string>
     <string name="menuIconDesc">Menu Icon</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Strings for Traveller profile fragment, found in fragment_traveller_profile.xml -->
+    <!-- Strings for Traveller profile fragment, found in fragment_profile.xml -->
     <string name="updateButtonText">Update</string>
     <string name="updateEmail">Change my Email:</string>
     <string name="newEmailText">New Email</string>
+    <string name="oldEmailText">Enter current email</string>
     <string name="updatePassword">Change my password:</string>
-    <string name="oldPasswordText">Enter old password</string>
+    <string name="oldPasswordText">Enter current password</string>
     <string name="newPasswordText">Enter new password</string>
     <string name="confirmNewPasswordText">Confirm new password</string>
-
-    <!-- Facebook-->
-    <string name="facebook_app_id">234147937061811</string>
+    <string name="deleteButtonText">Delete my account</string>
 
 </resources>

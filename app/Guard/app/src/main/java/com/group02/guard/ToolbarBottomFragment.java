@@ -12,14 +12,13 @@ import android.widget.ImageButton;
 /**
  * Creates a bottom toolbar used for navigating withing different activities
  * @author Justinas Stirbys
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 public class ToolbarBottomFragment extends Fragment implements View.OnClickListener {
 
     ImageButton connectNav;
     ImageButton controlNav;
-    ImageButton gpsNav;
     ImageButton mapsNav;
     ImageButton homeNav;
 
@@ -35,13 +34,11 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
 
         connectNav = (ImageButton) view.findViewById(R.id.connectNavigation);
         controlNav = (ImageButton) view.findViewById(R.id.controlNavigation);
-        gpsNav = (ImageButton) view.findViewById(R.id.gpsNavigation);
         mapsNav = (ImageButton) view.findViewById(R.id.mapsNavigation);
         homeNav = (ImageButton) view.findViewById(R.id.homeNavigation);
 
         connectNav.setOnClickListener(this);
         controlNav.setOnClickListener(this);
-        gpsNav.setOnClickListener(this);
         mapsNav.setOnClickListener(this);
         homeNav.setOnClickListener(this);
         return view;
@@ -67,9 +64,6 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
             case R.id.connectNavigation:
                 startActivity(wifiIntent);
                 return;
-//            case R.id.gpsNavigation:
-//                startActivity(gpsIntent);
-//                return;
             case R.id.controlNavigation:
                 startActivity(controlIntent);
                 return;
@@ -81,9 +75,7 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
         }
     }
     public void buttonChecked(String buttonName){
-        if(buttonName.equals("gps"))  {
-            gpsNav.setColorFilter(Color.WHITE);
-        }else if(buttonName.equals("connect")) {
+        if(buttonName.equals("connect")) {
             connectNav.setColorFilter(Color.WHITE);
         }else if(buttonName.equals("control"))  {
             controlNav.setColorFilter(Color.WHITE);

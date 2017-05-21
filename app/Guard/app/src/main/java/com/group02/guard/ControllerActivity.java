@@ -36,6 +36,7 @@ public class ControllerActivity extends AppCompatActivity {
 
     private String address;
     private boolean btCon;
+    private boolean wifiCon;
 
     ToolbarTopFragment topFragment;
     // Following variables is used by the batteryImageButton function
@@ -59,10 +60,10 @@ public class ControllerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_controller);
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle.getString("address") != null)
-        {
+        if(bundle.getString("address") != null) {
             address = bundle.getString("address");
             btCon = bundle.getBoolean("btCon");
+            wifiCon = bundle.getBoolean("wifiCon");
         }
 
         try {
@@ -74,14 +75,16 @@ public class ControllerActivity extends AppCompatActivity {
             webView.setInitialScale(default_zoom_level);
             webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
-            webView.post(new Runnable() {
-                @Override
-                public void run() {
-                    int width = webView.getWidth();
-                    int height = webView.getHeight();
-                    webView.loadUrl(videoStream + "?width=" + width + "&height=" + height);
-                }
-            });
+            if(wifiCon){
+                webView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int width = webView.getWidth();
+                        int height = webView.getHeight();
+                        webView.loadUrl(videoStream + "?width=" + width + "&height=" + height);
+                    }
+                });
+            }
         }catch (Exception e){
             Log.d(TAG, e.getMessage());
         }

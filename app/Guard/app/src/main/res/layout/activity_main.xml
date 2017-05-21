@@ -36,15 +36,6 @@
                 android:drawableTint="@color/colorMutedLight"
                 android:layout_weight="0.5"/>
 
-            <Button
-                android:id="@+id/mapsButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_map"
-                android:text="@string/mapActivity"
-                android:drawableTint="@color/colorMutedLight"
-                android:layout_weight="0.5"/>
-
         </TableRow>
 
         <TableRow
@@ -52,13 +43,13 @@
             android:layout_height="match_parent" >
 
             <Button
-                android:id="@+id/gpsButton"
-                android:layout_width="match_parent"
+                android:id="@+id/mapsButton"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_gps"
-                android:text="@string/gpsActivity"
+                android:layout_weight="0.5"
                 android:drawableTint="@color/colorMutedLight"
-                android:layout_weight="0.25" />
+                android:drawableTop="@drawable/ic_map"
+                android:text="@string/mapActivity" />
 
         </TableRow>
 
