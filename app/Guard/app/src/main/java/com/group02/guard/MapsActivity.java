@@ -240,7 +240,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             MarkerOptions carMarkerOptions = new MarkerOptions()
                     .position(carLatLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.guard_launcher))
                     .title("SmartCar");
             carMarker = mMap.addMarker(carMarkerOptions);
         }
@@ -353,7 +353,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         MarkerOptions phoneMarkerOptions = new MarkerOptions()
                 .position(latLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.guard_launcher))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
                 .title(title);
         phoneMarker = mMap.addMarker(phoneMarkerOptions);
         phoneMarker.showInfoWindow();

@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/switch1"
         android:layout_centerHorizontal="true"
-        android:text="ActivateFollowMe"
+        android:text="Activate FollowMe"
         android:textColor="@color/colorMutedBlack"/>
 
     <!--<ToggleButton-->
