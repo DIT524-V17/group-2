@@ -62,4 +62,12 @@
     <string name="confirmNewPasswordText">Confirm new password</string>
     <string name="deleteButtonText">Delete my account</string>
 
+    <!-- Strings for Login and Register Screens, found throughout activity_login.xml-->
+    <string name="loginText">Login</string>
+    <string name="registerText">Register</string>
+    <string name="passwordText">Password</string>
+    <string name="confirmPasswordText">Confirm Password</string>
+    <string name="emailText">Email</string>
+    <string name="backToLoginText">Back To Login</string>
+
 </resources>

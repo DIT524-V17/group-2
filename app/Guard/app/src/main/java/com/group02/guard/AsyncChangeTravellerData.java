@@ -60,7 +60,7 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
 
         try {
             //Making url
-            if(method.equals("PUTemail")){
+            if(method.contains("PUT")){
                 url = new URL(urlString + "/" + userId);
             }else{
                 url = new URL(urlString);
@@ -114,27 +114,22 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
         } else if(result == 400){
             messageToDisplay = "Error with email/password syntax! Try different email/password";
             Log.e("AddTraveller", messageToDisplay);
-            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else if(result == 404){
             messageToDisplay = "Page not found. Database has been moved, try again later";
             Log.e("AddTraveller", messageToDisplay);
-            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else if(result == 500){
             messageToDisplay = "Server error. Try again later ";
             Log.e("AddTraveller", messageToDisplay);
-            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else if(result == 503){
             messageToDisplay = "Connection error. Check your Internet connection";
             Log.e("AddTraveller", messageToDisplay);
-            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else{
             messageToDisplay = "Error while registering. Error code: " + result;
             Log.e("AddTraveller", messageToDisplay);
-            Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -160,7 +155,7 @@ public class AsyncChangeTravellerData extends AsyncTask<String, Void, Integer> {
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
         }else if(responseCode == 200 && this.method.equals("PUTemail")){
-            messageToDisplay = "Password updated";
+            messageToDisplay = "Email updated";
             Log.e("AddTraveller", messageToDisplay);
             Toast.makeText(context, messageToDisplay, Toast.LENGTH_LONG).show();
 
