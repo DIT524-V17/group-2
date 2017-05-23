@@ -1,104 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/myProfileText"
-        android:text="@string/profileText"
-        android:layout_gravity="center"
-        android:fontFamily="sans-serif-medium"
-        android:layout_weight="0.1"/>
-
-    <!--Section use to update email-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/changeEmail"
-        android:text="@string/updateEmail"
-        android:fontFamily="sans-serif-medium"
-        android:layout_weight="0.1"/>
-
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/oldEmail"
-        android:hint="@string/oldEmailText"
-        android:inputType="textEmailAddress"
-        android:layout_weight="0.1"/>
+        android:orientation="vertical"
+        android:weightSum="1">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/emailTextBox"
-        android:hint="@string/newEmailText"
-        android:inputType="textEmailAddress"
-        android:layout_weight="0.1"/>
+        <TextView
+            android:id="@+id/myProfileText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/profileText" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/updateEmail"
-        android:text="@string/updateButtonText"
-        android:layout_weight="0.1"/>
+        <!--Section use to update email-->
+        <TextView
+            android:id="@+id/changeEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/updateEmail" />
 
-    <!--Section use to update password-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/changePassword"
-        android:text="@string/updatePassword"
-        android:fontFamily="sans-serif-medium"
-        android:layout_weight="0.1"/>
+        <EditText
+            android:id="@+id/oldEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:hint="@string/oldEmailText"
+            android:inputType="textEmailAddress" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/oldPasswordTextBox"
-        android:hint="@string/oldPasswordText"
-        android:inputType="textPassword"
-        android:layout_weight="0.1"/>
+        <EditText
+            android:id="@+id/emailTextBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:hint="@string/newEmailText"
+            android:inputType="textEmailAddress" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/newPasswordTextBox1"
-        android:hint="@string/newPasswordText"
-        android:inputType="textPassword"
-        android:layout_weight="0.1"/>
+        <Button
+            android:id="@+id/updateEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="@string/updateButtonText" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/newPasswordTextBox2"
-        android:hint="@string/confirmNewPasswordText"
-        android:inputType="textPassword"
-        android:layout_weight="0.1"/>
+        <!--Section use to update password-->
+        <TextView
+            android:id="@+id/changePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/updatePassword" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/updatePassword"
-        android:text="@string/updateButtonText"
-        android:layout_weight="0.1"/>
+        <EditText
+            android:id="@+id/oldPasswordTextBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:hint="@string/oldPasswordText"
+            android:inputType="textPassword" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/deleteAccount"
-        android:text="@string/deleteButtonText"
-        android:layout_weight="0.1"/>
+        <EditText
+            android:id="@+id/newPasswordTextBox1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:hint="@string/newPasswordText"
+            android:inputType="textPassword" />
 
-    <fragment
-        android:name="com.group02.guard.ToolbarBottomFragment"
-        tools:layout="@layout/toolbar_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/bottomBar"/>
+        <EditText
+            android:id="@+id/newPasswordTextBox2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:hint="@string/confirmNewPasswordText"
+            android:inputType="textPassword" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/updatePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="@string/updateButtonText" />
+
+        <Button
+            android:id="@+id/deleteAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="@string/deleteButtonText" />
+
+        <fragment
+            android:id="@+id/bottomBar"
+            android:name="com.group02.guard.ToolbarBottomFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/toolbar_bottom" />
+
+    </LinearLayout>
+
+</ScrollView>

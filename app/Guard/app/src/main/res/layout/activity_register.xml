@@ -8,7 +8,6 @@
     android:weightSum="1"
     tools:context="com.group02.guard.RegisterActivity">
 
-
     <TextView
         android:id="@+id/tvLogin"
         android:layout_width="wrap_content"
@@ -17,7 +16,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="40dp"
-        android:text="Back to login"
+        android:text="@string/backToLoginText"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white" />
 
@@ -29,7 +28,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="36dp"
         android:padding="20dp"
-        android:text="G.U.A.R.D"
+        android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="30sp" />
 
@@ -41,7 +40,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:hint="Email"
+        android:hint="@string/emailText"
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:textColorHint="@color/white" />
@@ -55,7 +54,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="11dp"
-        android:hint="Confirm Password"
+        android:hint="@string/confirmPasswordText"
         android:inputType="textPassword"
         android:maxLines="1"
         android:textColorHint="@color/white" />
@@ -68,7 +67,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:hint="Password"
+        android:hint="@string/passwordText"
         android:inputType="textPassword"
         android:maxLines="1"
         android:textColorHint="@color/white" />
@@ -81,7 +80,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:onClick="register"
-        android:text="Register" />
+        android:text="@string/registerText" />
 
 </RelativeLayout>

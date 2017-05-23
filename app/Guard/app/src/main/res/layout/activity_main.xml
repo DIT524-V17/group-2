@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:drawableTint="@color/colorMutedLight"
-        android:drawableTop="@drawable/ic_menu_profile"
+        android:drawableTop="@drawable/ic_profile"
         android:text="@string/profileText" />
 
             <Button
