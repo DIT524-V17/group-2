@@ -95,7 +95,6 @@
         android:layout_weight="0.1"/>
 
     <fragment
-        android:layout_alignParentBottom="true"
         android:name="com.group02.guard.ToolbarBottomFragment"
         tools:layout="@layout/toolbar_bottom"
         android:layout_width="wrap_content"

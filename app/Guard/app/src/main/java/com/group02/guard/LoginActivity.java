@@ -1,8 +1,7 @@
 package com.group02.guard;
 
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -100,13 +99,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             AsyncGetTravellerData getTraveller = new AsyncGetTravellerData(this, session);
             String url = "http://129.16.155.11:3000/guard/travellers";
             getTraveller.execute(url, hashedEmail, hashedPass);
-            Log.e("reach internet",": success");
+
         //Unavailable connection get data from SQL DB inside phone
         }else{
-            loginSql(hashedEmail, hashedPass);
-            Log.e("did not,", " reach internet");
-        }
+            //Storing values in preferences if user exists app without logout we still have them
+            SharedPreferences.Editor editor =
+                    getSharedPreferences("Traveller Info", MODE_PRIVATE).edit();
+            editor.putString("email", hashedEmail);
+            editor.putString("password", hashedPass);
+            editor.putInt("userId", 39);
+            editor.apply();
 
+            Log.e("processFinish", hashedEmail + " pass: " + hashedPass);
+
+            loginSql(hashedEmail, hashedPass);
+        }
     }
 
     /**

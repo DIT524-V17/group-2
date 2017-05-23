@@ -2,6 +2,7 @@ package com.group02.guard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
@@ -14,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Runs in the background thread for the purpose of getting Traveller data
@@ -108,13 +111,14 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
             session.setLoggedin(true);
             Intent mainActivity = new Intent(context, MainActivity.class);
 
-            //Making a Bundle filled with Traveler Data
-            Bundle travellerData = new Bundle();
-            travellerData.putString("EMAIL", traveller.getEmail());
-            travellerData.putString("PASSWORD", traveller.getPassword());
-            travellerData.putInt("ID", traveller.getUserId());
-            travellerData.putInt("STATUS", traveller.getAdminStatus());
-            mainActivity.putExtras(travellerData);
+            //Storing values in preferences if user exists app without logout we still have them
+            SharedPreferences.Editor editor =
+                context.getSharedPreferences("Traveller Info", MODE_PRIVATE).edit();
+            editor.putString("email", traveller.getEmail());
+            editor.putString("password", traveller.getPassword());
+            editor.putInt("userId", traveller.getUserId());
+            editor.apply();
+
             handleResponseCode(responseCode);
             context.startActivity(mainActivity);
         }else{

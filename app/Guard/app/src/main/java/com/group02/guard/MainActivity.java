@@ -18,8 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import java.security.Timestamp;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -28,8 +26,7 @@ import java.util.concurrent.ExecutionException;
  * @author Justinas Stirbys (JS), Gabriel Bulai(GB)
  * @version 1.1.1 JE
  */
-public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     Button control;
     Button profile;
@@ -152,7 +149,6 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onClick(View v) {
-
         Intent controlIntent = new Intent(MainActivity.this, ControllerActivity.class);
         controlIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         controlIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
