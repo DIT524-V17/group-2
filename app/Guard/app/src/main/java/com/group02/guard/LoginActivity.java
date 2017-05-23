@@ -107,7 +107,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     getSharedPreferences("Traveller Info", MODE_PRIVATE).edit();
             editor.putString("email", hashedEmail);
             editor.putString("password", hashedPass);
-            editor.putInt("userId", 39);
             editor.apply();
 
             Log.e("processFinish", hashedEmail + " pass: " + hashedPass);

@@ -6,13 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,16 +52,20 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         password = preferences.getString("password", null);
 
         //Initiate objects in layout
-        Button updateEmail = (Button) findViewById(R.id.updateEmail);
-        Button updatePassword = (Button) findViewById(R.id.updatePassword);
+        Button updateEmailButton = (Button) findViewById(R.id.updateEmail);
+        Button updatePasswordButton = (Button) findViewById(R.id.updatePassword);
+        Button deleteAccountButton = (Button) findViewById(R.id.deleteAccount);
+
         oldEmail = (EditText) findViewById(R.id.oldEmail);
         newEmail = (EditText) findViewById(R.id.emailTextBox);
         oldPass = (EditText) findViewById(R.id.oldPasswordTextBox);
         newPass1 = (EditText) findViewById(R.id.newPasswordTextBox1);
         newPass2 = (EditText) findViewById(R.id.newPasswordTextBox2);
 
-        updateEmail.setOnClickListener(this);
-        updatePassword.setOnClickListener(this);
+        updateEmailButton.setOnClickListener(this);
+        updatePasswordButton.setOnClickListener(this);
+        deleteAccountButton.setOnClickListener(this);
+
 
         //Changing colour of the profile button in the bottom toolbar
         ToolbarBottomFragment fragment = (ToolbarBottomFragment)getSupportFragmentManager()
@@ -219,7 +220,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     /**
-     * Deletes the traveller account from the database
+     * Creates a dialog and allows to delete the traveller account from the database
      */
     public void deleteMyAccount(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);
