@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.group02.guard.NavigationActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/GuardBasic.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#30000000"
+            app:popupTheme="@style/GuardBasic.PopupOverlay">
+
+            <!--<ImageButton-->
+                <!--android:id="@+id/batteryButton"-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:contentDescription="@string/batteryIconDesc"-->
+                <!--android:scaleType="centerInside"-->
+                <!--android:src="@drawable/empty_battery"-->
+                <!--android:visibility="invisible" />-->
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_navigation2" />
+
+
+</android.support.design.widget.CoordinatorLayout>
