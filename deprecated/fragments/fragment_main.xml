@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.group02.guard.MainFragment"
+    android:orientation="vertical">
+    
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+        android:id="@+id/reconnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reconnect"
+        android:visibility="gone" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            
+            <Button
+            android:id="@+id/controlButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/ic_controller"
+            android:text="@string/controllerActivity"
+            android:drawableTint="@color/colorMutedLight"
+            android:layout_weight="0.5"/>
+            
+        </TableRow>
+        
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            
+            <Button
+            android:id="@+id/mapsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/ic_map"
+            android:text="@string/mapActivity"
+            android:drawableTint="@color/colorMutedLight"
+            android:layout_weight="0.5"/>
+            
+        </TableRow>
+        
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            
+            <Button
+            android:id="@+id/logoutDebug"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="Logout"/>
+        </TableRow>
+        
+    </TableLayout>
+    
+</LinearLayout>
