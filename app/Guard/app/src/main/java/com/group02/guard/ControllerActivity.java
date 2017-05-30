@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
 import android.os.Handler;

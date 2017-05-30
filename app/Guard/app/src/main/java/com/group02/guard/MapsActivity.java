@@ -1,9 +1,4 @@
 package com.group02.guard;
-/**
- * @author Gabriel Bulai
- * This class implements the google API and uses it to retreive current location of the phone
- * @version 2.0.0 GB
- */
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -56,6 +51,12 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Implements the google API and uses it to retreive current location of the phone
+ * @author Gabriel Bulai
+ * @version 2.0.0 GB
+ */
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -85,7 +86,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String title = "";
     private Switch mySwitch;
     private TextView switchState;
-    /* Broadcast receiver to check status of GPS */
+
+    /**
+     * Broadcast receiver to check status of GPS
+     */
     private BroadcastReceiver gpsLocationReceiver = new BroadcastReceiver() {
 
         @Override
@@ -93,16 +97,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             //If Action is Location
             if (intent.getAction().matches(BROADCAST_ACTION)) {
-                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                LocationManager locationManager =
+                        (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
                 //Check if GPS is turned ON or OFF
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    Toast.makeText(getApplicationContext(), "GPS is Enabled in your device", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "GPS is Enabled in your device",
+                            Toast.LENGTH_SHORT).show();
                     Log.e("About GPS", "GPS is Enabled in your device");
                 } else {
                     //If GPS turned OFF show Location Dialog
                     //new Handler().postDelayed(new MyRunnable(), 10);
                     // showSettingDialog();
-                    Toast.makeText(getApplicationContext(), "GPS is Disabled in your device", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "GPS is Disabled in your device",
+                            Toast.LENGTH_SHORT).show();
                     Log.e("About GPS", "GPS is Disabled in your device");
                 }
             }
@@ -116,7 +125,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             setContentView(R.layout.activity_maps);
             initSwitch();
             if (android.os.Build.VERSION.SDK_INT > 9) {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.ThreadPolicy policy =
+                        new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
             }
             //initMap();
@@ -135,6 +145,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragment.mapsNav.setClickable(false);
     }
 
+    /**
+     * Creates Switch at the bottom of the Activity
+     */
     public void initSwitch() {
         switchState = (TextView) findViewById(R.id.switchText);
         mySwitch = (Switch) findViewById(R.id.switch1);
@@ -142,22 +155,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (mySwitch.isChecked()) {
-                    //Toast.makeText(getApplicationContext(), "sending 3", Toast.LENGTH_SHORT).show();
                     initFollowing("3 0");
                     switchState.setText("FollowMe");
-                    Toast.makeText(getApplicationContext(), "FollowMe Activated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "FollowMe Activated",
+                            Toast.LENGTH_SHORT).show();
                     checked++;
                 } else if (checked == 3) {
                     checked = 0;
                     switchState.setText("FollowMe");
-                    Toast.makeText(getApplicationContext(), "FollowMe Activated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "FollowMe Activated",
+                            Toast.LENGTH_SHORT).show();
                     initFollowing("3 0");
                 } else {
                     if (!mySwitch.isChecked()) {
                         initFollowing("2 0");
                         checked++;
                         switchState.setText("FollowMe");
-                        Toast.makeText(getApplicationContext(), "FollowMe Deactivated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                "FollowMe Deactivated",
+                                Toast.LENGTH_SHORT).show();
                         initFollowing("2 0");
                     }
                 }
@@ -166,9 +184,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    /**
+     * Sends message when GPS following initiated
+     * @param s, message to Send
+     */
     private void initFollowing(String s) {
         clientSendThread.txMsg(s);
     }
+
     private void initGoogleAPIClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -179,6 +202,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         showSettingDialog();
     }
 
+    /**
+     * Checks if necessary connections are established
+     * @return true, if connected to google services
+     */
     public boolean servicesOK() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
@@ -194,23 +221,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
+    /**
+     * Creates and initiates the map
+     * @return true if all permissions are granted
+     */
     public boolean initMap() {
         if (mMap == null) {
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            SupportMapFragment mapFragment =
+                    (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
                     mMap = googleMap;
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION) !=
+                            PackageManager.PERMISSION_GRANTED &&
+                            ActivityCompat.checkSelfPermission(getApplicationContext(),
+                                    Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                                    PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
-//                    mMap.setMyLocationEnabled(true);
                     mMap.getUiSettings().setZoomControlsEnabled(true);
                     mMap.getUiSettings().setAllGesturesEnabled(true);
                     mMap.getUiSettings().setMyLocationButtonEnabled(true);
                     mMap.getUiSettings().setCompassEnabled(true);
-                    MapStyleOptions retroMap = MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.maps_retro);
-                    MapStyleOptions nightMap = MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.maps_night);
+                    MapStyleOptions retroMap =
+                            MapStyleOptions.loadRawResourceStyle(getApplicationContext(),
+                                    R.raw.maps_retro);
+                    MapStyleOptions nightMap =
+                            MapStyleOptions.loadRawResourceStyle(getApplicationContext(),
+                                    R.raw.maps_night);
                     try {
                         // Customise the styling of the base map using a JSON object defined
                         // in a raw resource file.
@@ -224,17 +264,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
+    /**
+     * Listens to when the map is created
+     * @param googleMap, a map object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
     }
 
+    /**
+     * Switches and position the focus the location to the new position
+     * @param lat, new device latitude
+     * @param lng, new device longitude
+     * @param zoom, zoom in value
+     */
     private void gotoLocation(double lat, double lng, int zoom) {
         //create LatLng object with the coordinates passed in the method
         LatLng phoneLatLng = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(phoneLatLng, zoom);
         mMap.animateCamera(update);
         if (serverOK()) {
-            LatLng carLatLng = new LatLng(Double.parseDouble(getCarCoords()[0]), Double.parseDouble(getCarCoords()[1]));
+            LatLng carLatLng = new LatLng(Double.parseDouble(getCarCoords()[0]),
+                    Double.parseDouble(getCarCoords()[1]));
             if (carMarker != null) {
                 carMarker.remove();
             }
@@ -251,15 +302,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         requestLocationUpdates();
     }
 
+    /**
+     * Asks the user to grant location permissions
+     */
     private void requestLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+                requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             } else {
                 //ensures we can run the app below api 23
                 showSettingDialog();
-//                permissionIsGranted = true;
             }
             return;
         }
@@ -271,7 +329,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationRequest.setInterval(5 * 1000);
         locationRequest.setFastestInterval(1 * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        // locationRequest.getSmallestDisplacement(10);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
@@ -279,7 +336,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         builder.setAlwaysShow(true);
 
         PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
+                        builder.build());
+
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
             @Override
             public void onResult(LocationSettingsResult result) {
@@ -291,12 +350,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         // requests here.
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied. But could be fixed by showing the user
-                        // a dialog.
+                        // Location settings are not satisfied, but could be fixed by showing
+                        // the user a dialog.
                         try {
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
-                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
+                            status.startResolutionForResult(MapsActivity.this,
+                                    REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
                             e.printStackTrace();
                             // Ignore the error.
@@ -319,34 +379,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 switch (resultCode) {
                     case RESULT_OK:
                         Log.e("Settings", "Result OK");
-                        Toast.makeText(getApplicationContext(), "GPS is Enabled in your device", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),
+                                "GPS is Enabled in your device",
+                                Toast.LENGTH_LONG).show();
                         //startLocationUpdates();
                         break;
                     case RESULT_CANCELED:
                         Log.e("Settings", "Result Cancel");
-                        Toast.makeText(getApplicationContext(), "GPS is Disabled in your device", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),
+                                "GPS is Disabled in your device",
+                                Toast.LENGTH_LONG).show();
                         break;
                 }
                 break;
         }
     }
 
+    /**
+     * Responds connection lost
+     * @param i, connection response code
+     */
     @Override
     public void onConnectionSuspended(int i) {
 
     }
 
+    /**
+     * Responds if failed to connect
+     * @param connectionResult, Connection result object with information if successfully connected
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
+    /**
+     * Creates marker on the map to illustrate device location
+     * @param latLng, device latitude
+     * @param title, devic longitude
+     */
     private void initMarkers(LatLng latLng, String title) {
-//        if(activated){
-//
-//
-//        }else{
-//            title = "Click to activate following mode";
-//        }
         if (phoneMarker != null) {
             phoneMarker.remove();
         }
@@ -368,35 +439,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         activated = true;
                         initFollowing("2 0");
                     }
-//                     clickCount += 1;
-//                    if (clickCount % 2 == 0) {
-//                        initFollowing("3 0");
-//                        //phoneMarker.setTitle("Manual Mode active, click again to disable");
-//                        //phoneMarker.showInfoWindow();
-//                        activated = true;
-//                        //Toast.makeText(getApplicationContext(), "Manual Mode Activated", Toast.LENGTH_SHORT).show();
-//                        //startActivity(new Intent(MapsActivity.this, ControllerActivity.class));
-//                    } else if (clickCount % 2 == 1) {
-//                        //initMarkers(phoneLatLng, "Click once more to activate");
-//                        phoneMarker.setTitle("Click to confirm");
-//                        phoneMarker.showInfoWindow();
-
-                    //if pressed again "2 0";
                 }
                 activated = false;
             }
         });
     }
 
+    /**
+     * Listens and calls necessary method when device's location changed
+     * @param location, Location object representing the physical whereabouts of the device
+     */
     @Override
     public void onLocationChanged(Location location) {
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
-//        if(!activated){
-//            title = "Click twice to activate following mode";
-//        }else{
-//            title = "Manual Mode has been activated";
-//        }
 
         //create LatLng with current location
         final LatLng phoneLatLng = new LatLng(currentLatitude, currentLongitude);
@@ -410,6 +466,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * @return True if connected to java server, false otherwise
+     */
     public boolean serverOK() {
         if (clientReceiveThread.otherLine != null) {
             return true;
@@ -417,6 +476,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
+    /**
+     * @return SmartCar's coordinates
+     */
     public String[] getCarCoords() {
         String[] splitted = new String[2];
         if (serverOK()) {
@@ -426,6 +488,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return splitted;
     }
 
+    /**
+     * Initiates clients when activity started
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -446,13 +511,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 serverAddress,
                 port);
         clientReceiveThread.start();
-        // initToggle();
-//        Toast.makeText(getApplicationContext(), "Threads have been started", Toast.LENGTH_LONG).show();
-//        if (!serverOK()) {
-//            Toast.makeText(getApplicationContext(), "Connection with the server lost", Toast.LENGTH_SHORT).show();
-        //}
     }
 
+    /**
+     * Runs the google client when the Activity is entered again
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -461,10 +524,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestLocationUpdates();
             }
         }
-        registerReceiver(gpsLocationReceiver, new IntentFilter(BROADCAST_ACTION));//Register broadcast receiver to check the status of GPS
-
+        //Register broadcast receiver to check the status of GPS
+        registerReceiver(gpsLocationReceiver, new IntentFilter(BROADCAST_ACTION));
     }
 
+    /**
+     * Used when activity is temporarily exited
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -472,13 +538,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             locationProvider.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
-    //Run on UI
-//    private Runnable sendUpdatesToUI = new Runnable() {
-//        public void run() {
-//            showSettingDialog();
-//        }
-//    };
 
+    /**
+     * Disconnects from google client when activity stops
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -489,8 +552,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             unregisterReceiver(gpsLocationReceiver);
     }
 
+    /**
+     * Used when requesting necessary permissions for map
+     * @param requestCode, code representing the desired permission
+     * @param permissions, String array of all permissions
+     * @param grantResults, int array of response codes for the permissions
+     */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //permission handler according to which type of permission we want to check
         switch (requestCode) {
@@ -501,9 +573,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } else {
                     //permission denied
                     permissionIsGranted = false;
-                    Toast.makeText(getApplicationContext(), "This app requires permission to be granted", Toast.LENGTH_SHORT).show();
-                    //code to exit the map view
-//                    startActivity(new Intent(MapsActivity.this, MainActivity.class));
+                    Toast.makeText(getApplicationContext(),
+                            "This app requires permission to be granted",
+                            Toast.LENGTH_SHORT).show();
                 }
                 break;
             case MY_PERMISSIONS_REQUEST_COARSE_LOCATION:
@@ -512,6 +584,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Listens and reacts when the back button is pressed
+     */
     @Override
     public void onBackPressed() {
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
@@ -522,8 +597,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // do something when the button is clicked
             public void onClick(DialogInterface arg0, int arg1) {
                 initFollowing("2 0");
-                //startActivity(new Intent(MapsActivity.this, ControllerActivity.class));
-                Toast.makeText(getApplicationContext(), "FollowMe Stopped", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),
+                        "FollowMe Stopped",
+                        Toast.LENGTH_LONG).show();
                 clickCount = 0;
                 finish();
             }

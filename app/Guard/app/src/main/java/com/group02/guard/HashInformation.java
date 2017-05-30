@@ -12,6 +12,13 @@ import java.security.NoSuchAlgorithmException;
 
 public class HashInformation {
 
+    /**
+     * Used to hash information
+     * @param data, Value to be hashed
+     * @param salt, salt used for hashing
+     * @return a hashed string of the data
+     * @throws UnsupportedEncodingException If cannot use UTF-8
+     */
     public static String Hash(String data, String salt) throws UnsupportedEncodingException {
 
         String generatedData = null;

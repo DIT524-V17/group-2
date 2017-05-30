@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -108,7 +107,7 @@ public class AsyncGetTravellerData extends AsyncTask<String, String, Traveller> 
     @Override
     protected void onPostExecute(Traveller result){
         if (this.password.equals(result.getPassword())) {
-            session.setLoggedin(true);
+            session.setLoggedIn(true);
             Intent mainActivity = new Intent(context, MainActivity.class);
 
             //Storing values in preferences if user exists app without logout we still have them

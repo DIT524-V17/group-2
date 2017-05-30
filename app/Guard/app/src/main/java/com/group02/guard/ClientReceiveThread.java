@@ -2,7 +2,6 @@ package com.group02.guard;
 
 import android.os.Message;
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +10,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * @author Gabriel Bulai
  * A thread that allows receiving the car location in the background.
+ * @author Gabriel Bulai
  * @version 1.0.0 GB
  */
 
@@ -32,6 +31,9 @@ public class ClientReceiveThread extends Thread {
         dstPort = port;
     }
 
+    /**
+     * Operations made by the thread while is running
+     */
     @Override
     public void run() {
 

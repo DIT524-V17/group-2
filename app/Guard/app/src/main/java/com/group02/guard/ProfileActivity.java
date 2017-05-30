@@ -80,9 +80,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
      */
     @Override
     public void onClick(View v) {
-//        AsyncReachInternet reachInternet = new AsyncReachInternet();
-//        reachInternet.execute();
-//        if (reachInternet.getInternet()){
             switch (v.getId()) {
                 case R.id.updateEmail:
                     updateEmail();
@@ -95,11 +92,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 default:
             }
-//        }else {
-//            Toast.makeText(this,
-//                    "No Internet access required. Check connection",
-//                    Toast.LENGTH_SHORT).show();
-//        }
     }
 
     /**

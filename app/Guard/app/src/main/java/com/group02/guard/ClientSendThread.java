@@ -1,9 +1,4 @@
 package com.group02.guard;
-/**
- * @author Gabriel Bulai
- * A thread that allows sending the location in the background, once the location is changed.
- * @version 1.0.0 GB
- */
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +8,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * A thread that allows sending the location in the background, once the location is changed.
+ * @author Gabriel Bulai
+ * @version 1.0.0 GB
+ */
 
 public class ClientSendThread extends Thread {
 
@@ -25,8 +25,8 @@ public class ClientSendThread extends Thread {
 
     /**
      * Thread's constructor
-     *
-     * @param addr = Ip Address, port, handler = class used to send debugging messages
+     * @param addr = Ip Address for java server
+     * @param port, port number for java server
      */
     public ClientSendThread(String addr, int port) {
         super();
@@ -34,14 +34,19 @@ public class ClientSendThread extends Thread {
         dstPort = port;
     }
 
-    //send the location to the outputStream
+    /**
+     * Send the location to the outputStream
+     * @param msgToSend, message to be sent
+     */
     public void txMsg(String msgToSend) {
         if (printWriter != null) {
             printWriter.println(msgToSend);
         }
     }
 
-    //operations made by the thread while is running.
+    /**
+     * Operations made by the thread while is running
+     */
     @Override
     public void run() {
         //sendState("connecting...");

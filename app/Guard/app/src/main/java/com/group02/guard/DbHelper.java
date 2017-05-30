@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * Creates and houses java object responsible for managing connection to DB
  * @author Gabriel Bulai(GB)
@@ -25,8 +23,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PASS = "password";
 
-    /*
-    create table users(
+    /** Create table users(
         id integer primary key autoincrement,
         email text,
         password text);
@@ -36,15 +33,29 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_EMAIL + " TEXT,"
             + COLUMN_PASS + " TEXT);";
 
+    /**
+     * Constructor with parameters
+     * @param context, Activity context
+     */
     public DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
+    /**
+     * Creates new SQLite database table when DbHelper is created
+     * @param db, SQLite database to create
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_USERS);
     }
 
+    /**
+     * Replaces SQLite database with newer version if database already exist
+     * @param db, SQLite database to create
+     * @param oldVersion, old version of DB
+     * @param newVersion, newer version of DB
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
@@ -52,7 +63,9 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Storing user details in database
+     * Storing user data in SQLite database
+     * @param email, Entered email during registration
+     * @param password, Entered password during registration
      */
     public void addUser(String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -67,10 +80,18 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "user inserted" + id);
     }
 
+    /**
+     * Retrieves user from SQLite database
+     * @param email, Entered email during login
+     * @param pass, Entered password during login
+     * @return True if user exist in SQLite daabase, false otherwise
+     */
     public boolean getUser(String email, String pass) {
         //HashMap<String, String> user = new HashMap<String, String>();
-        String selectQuery = "select * from  " + USER_TABLE + " where " +
-                COLUMN_EMAIL + " = " + "'" + email + "'" + " and " + COLUMN_PASS + " = " + "'" + pass + "'";
+        String selectQuery = "select * from  " +
+                USER_TABLE + " where " +
+                COLUMN_EMAIL + " = " + "'" + email + "'" + " and " +
+                COLUMN_PASS + " = " + "'" + pass + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

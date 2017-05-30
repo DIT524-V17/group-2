@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         login.setOnClickListener(this);
         register.setOnClickListener(this);
 
-        if (session.loggedin()) {
+        if (session.getLoggedIn()) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     public void loginSql(String email, String password){
         if(db.getUser(email, password)){
-            session.setLoggedin(true);
+            session.setLoggedIn(true);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }else{

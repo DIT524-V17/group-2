@@ -88,6 +88,11 @@ public class ToolbarBottomFragment extends Fragment implements View.OnClickListe
                 return;
         }
     }
+
+    /**
+     * Repaints the button in the toolbar to better illustrate selected activity
+     * @param buttonName, string of current activity
+     */
     public void buttonChecked(String buttonName){
         if(buttonName.equals("control"))  {
             controlNav.setColorFilter(Color.WHITE);
