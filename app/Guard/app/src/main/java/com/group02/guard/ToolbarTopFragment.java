@@ -65,14 +65,25 @@ public class ToolbarTopFragment extends Fragment {
         getActivity().finish();
     }
 
+    /**
+     * @return Battery button
+     */
     public ImageButton getBatteryButton(){
         return batteryButton;
     }
 
+    /**
+     * Sets new value from the analog controller
+     * @param newValue new read value from analog controller
+     */
     public void setAnalogReadValue(double newValue){
         analogReadValue = newValue;
     }
 
+    /**
+     * Sets new Arduino voltage
+     * @param newValue new arduino value
+     */
     public void setArduinoVoltage(double newValue){
         arduinoVoltage = newValue;
     }

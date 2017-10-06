@@ -8,10 +8,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+/**
+ * The class creates an activity that handles database and session and allows the user to register
+ * @author Gabriel Bulai(GB), Justinas Stirbys (JS)
+ * @version 1.0.1 JS
+ */
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText etEmail, etPass, etPass2;
@@ -32,6 +37,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tvLogin.setOnClickListener(this);
     }
 
+
+    /**
+     * Listens and responds to button clicks that happen in the LoginActivity
+     * @param v View belonging to a button
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -47,7 +57,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    //email verification
+    /**
+     * Email verification
+     * @param email, Entered Email
+     * @return true if valid email
+     */
     public boolean isEmailValid(String email) {
         final String EMAIL_PATTERN =
                 "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -56,7 +70,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         return matcher.matches();
     }
 
-    //check password's validity
+    /**
+     * check password's validity
+     * @param pass, entered password
+     * @return boolean value for true or false
+     */
     private boolean checkPassword(String pass) {
         if (pass.length() > 7) {
             return true;
@@ -64,7 +82,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return false;
     }
 
-    //check password1 == password2
+    /**
+     * checks if password1 == password2
+     * @param pass, First password
+     * @param pass2, Second password
+     * @return boolean evaluating if both passwords mach
+     */
     private boolean checkPassword2(String pass, String pass2) {
         if (pass.equals(pass2)) {
             return true;
@@ -73,6 +96,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         return false;
     }
 
+    /**
+     * Registers traveler to database and Shared Preferences
+     */
     private void register() {
         String url = "http://129.16.155.11:3000/guard/travellers";
         String email = etEmail.getText().toString();
@@ -111,6 +137,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             displayToast("Your passwords must be at least 8 characters");
     }
 
+    /**
+     * Displays visual message to app user
+     * @param message, String of message to display
+     */
     private void displayToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }

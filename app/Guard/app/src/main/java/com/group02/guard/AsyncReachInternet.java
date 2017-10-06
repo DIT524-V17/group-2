@@ -1,10 +1,15 @@
 package com.group02.guard;
 
 import android.os.AsyncTask;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+/**
+ * Checks if internet connection available
+ * @author Gabriel Bulai (GB)
+ * @version 1.0.0 GB
+ */
 
 public class AsyncReachInternet extends AsyncTask<String, String, String> {
 

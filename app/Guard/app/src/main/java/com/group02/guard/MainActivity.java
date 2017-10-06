@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reconnect.setOnClickListener(this);
 
         session = new Session(this);
-        if (!session.loggedin()) {
+        if (!session.getLoggedIn()) {
             logout();
         }
 
@@ -134,9 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-
+    /**
+     * Used to sign out of the account
+     */
     private void logout() {
-        session.setLoggedin(false);
+        session.setLoggedIn(false);
         finish();
         startActivity(new Intent(this, LoginActivity.class));
     }
@@ -190,6 +192,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Turns off the WiFi on the device
+     * @param wifi, A WiFi manager object
+     */
     private void turnOnWifi(final WifiManager wifi){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuilder.setTitle("Wifi Settings");
@@ -220,6 +226,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alertDialog.show();
     }
 
+    /**
+     * Disables functions based on device's connectivity
+     */
     public void disableFunctions(){
 
         if(!btCon && !wifiCon){
@@ -231,6 +240,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reconnect.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Connects to GUARD WiFi network
+     * @param wifi, A WiFi manager object
+     */
     @SuppressLint("ShowToast")
     public void connectToGuard(WifiManager wifi){
 
@@ -264,6 +277,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+    /**
+     * Checks if device has access to a network
+     * @return Boolean evaluation for existing network
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

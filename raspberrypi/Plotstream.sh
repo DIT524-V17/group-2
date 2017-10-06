@@ -1,0 +1,1 @@
+uv4l --driver xscreen --auto-video_nr --display :0 --framerate --server-option '--port=9000'

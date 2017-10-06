@@ -3,7 +3,9 @@ package com.group02.guard;
 import java.util.UUID;
 
 /**
- * Created by jeberlen on 2017-05-05.
+ * Creates a SmartCar object representing SmartCar's connection data
+ * @author Joacim Eberlen (JE)
+ * @version 1.0.0
  */
 
 public class SmartCar {
@@ -18,9 +20,18 @@ public class SmartCar {
     private String ssid = "GUARD";
     private String networkPass = "group2group2";
 
-    public SmartCar(){
-    }
+    /**
+     * Default empty constructor
+     */
+    public SmartCar(){}
 
+    /**
+     * Constructor with values
+     * @param address, MAC address
+     * @param ip, WiFi ip
+     * @param ssid, Name of WiFi network
+     * @param networkPass, Network's passowrd
+     */
     public SmartCar(String address, String ip, String ssid, String networkPass){
         this.address = address;
         this.ip = ip;
@@ -28,30 +39,53 @@ public class SmartCar {
         this.networkPass = networkPass;
     }
 
+    /**
+     * @return MAC address
+     */
     public String getAddress() {
         return address;
     }
 
+    /**
+     * Sets new MAC address
+     * @param address, New address
+     */
     public void setAddress(String address) {
         this.address = address;
     }
 
+    /**
+     * @return Protocol for bluetooth serial communication
+     */
     public UUID getUuid() {
         return uuid;
     }
 
+    /**
+     * @return Network IP address
+     */
     public String getIp() {
         return ip;
     }
 
+    /**
+     * Sets new network ip address
+     * @param ip, new IP
+     */
     public void setIp(String ip) {
         this.ip = ip;
     }
 
+    /**
+     * @return Network name
+     */
     public String getSsid() {
         return ssid;
     }
 
+    /**
+     * @return Network password
+     */
     public String getNetworkPass() {
         return networkPass;
     }

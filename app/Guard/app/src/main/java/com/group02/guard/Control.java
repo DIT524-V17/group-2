@@ -9,14 +9,13 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * @author Joacim Eberlen
  * The Control class is a circular controller for an Arduino Smartcar.
  * The class also contains calculations of polar angle(), normal angle (nAngle()),
  * a onMoveListener(), a method for size change (onSizeChanged()), a scaling method(scale()).
  *
  * IMPORTANT: motorSpeed() sets two motor speeds calculated from nAngle() and the
  * speed(Distance from center).
- *
+ * @author Joacim Eberlen
  * @version 1.0.0 JE
  */
 public class Control extends View {
@@ -152,6 +151,7 @@ public class Control extends View {
      * @param input Input received
      * @param newMax New max double
      * @param newMin New min double
+     * @return a Scaled version for the analog controller bounds
      */
     public double scale(double oldMax, double oldMin, double newMax, double newMin, double input){
         double scaled = ((newMax - newMin) / (oldMax - oldMin) * (input - oldMax) + newMax);
@@ -186,6 +186,7 @@ public class Control extends View {
      * Dividing the speed and angle into different speeds for each motor.
      * @param speed The distance from center to the MotionEvent,
      * @param angle The angle from center.
+     * @return array with individual motors speeds
      */
     public int[] motorSpeed(double speed, double angle){
 

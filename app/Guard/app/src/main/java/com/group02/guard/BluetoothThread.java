@@ -1,22 +1,16 @@
 package com.group02.guard;
 
-/**
- * Created by jeberlen on 2017-03-06.
- */
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
 /**
- * @author Boyan Dai, Joacim Eberlen
  * A thread that connects to a remote device over Bluetooth, and reads/writes data
  * using message Handlers. A delimiter character is used to parse messages from a stream,
  * and must be implemented on the other side of the connection as well. If the connection
@@ -25,7 +19,7 @@ import java.util.UUID;
  * Usage:
  *
  *     BluetoothThread t = BluetoothThread("00:06:66:66:33:89", new Handler() {
- *         @Override
+ *         (@Override) is needed
  *         public void handleMessage(Message message) {
  *             String msg = (String) message.obj;
  *             do_something(msg);
@@ -34,8 +28,8 @@ import java.util.UUID;
  *
  *     Handler writeHandler = t.getWriteHandler();
  *     t.start();
- *
- *     @version 1.0.0 BD
+ * @author Boyan Dai, Joacim Eberlen
+ * @version 1.0.0 BD
  */
 public class BluetoothThread extends Thread {
 
@@ -67,7 +61,8 @@ public class BluetoothThread extends Thread {
      *
      * Constructor, takes in the MAC serverAddress of the remote Bluetooth device
      * and a Handler for received messages.
-     *
+     * @param address, MAC address
+     * @param handler, bluetooth connection handler
      */
     public BluetoothThread(String address, Handler handler) {
 
@@ -83,9 +78,9 @@ public class BluetoothThread extends Thread {
     }
 
     /**
-     *
      * Return the write handler for this connection. Messages received by this
      * handler will be written to the Bluetooth socket.
+     * @return bluetooth handler
      */
     public Handler getWriteHandler() {
         return writeHandler;
